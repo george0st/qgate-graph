@@ -25,7 +25,7 @@ setup_args = dict(
     author='Jiri Steuer',
     author_email='steuer.jiri@gmail.com',
     keywords=['Quality', 'QualityGate'],
-    url='https://github.com/ncthuc/gategraph',
+    url='https://github.com/george0st/qgate-graph/',
     download_url='https://pypi.org/project/qgate_graph/'
 )
 

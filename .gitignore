@@ -4,3 +4,6 @@
 /qgate_graph/__pycache__/
 *.pyc
 qgate_graph/__pycache__/
+/qgate_graph.egg-info/
+/dist/
+/build/
