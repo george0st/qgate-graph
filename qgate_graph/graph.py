@@ -128,19 +128,31 @@ class Graph:
         file_name=file_name.replace("__","_")
         return file_name
 
-    def generate_from_dir(self, input_dir: str, output_dir: str):
+    def generate_from_dir(self, input_dir: str="input", output_dir: str="output"):
+        """
+        Generate graphs based on input directory
+
+        :param input_dir:       Input directory (default "input")
+        :param output_dir:      Output directory (default "output")
+        """
         for file in os.listdir(input_dir):
             self.generate_from_file(os.path.join(input_dir, file), output_dir)
 
-    def generate_from_file(self, perf_data: str, output_dir: str):
+    def generate_from_file(self, input_file: str, output_dir: str="output"):
+        """
+        Generate graphs based on input input file
+
+        :param input_file:      Input file
+        :param output_dir:      Output directory (default "output")
+        """
         file_name=None
         total_performance={}
         avrg_time={}
         std_deviation={}
         executors={}
 
-        logging.info(f"Processing '{perf_data}' ...")
-        with open(perf_data, "r") as f:
+        logging.info(f"Processing '{input_file}' ...")
+        with open(input_file, "r") as f:
             while True:
                 line=f.readline()
                 if not line:
