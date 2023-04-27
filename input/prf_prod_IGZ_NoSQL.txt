@@ -1,0 +1,14 @@
+############### 2023-04-23 10:17:23.343513 ###############
+{"type": "headr", "label": "NoSQL, igz, prod", "bulk": [1, 10], "available_cpu": 14, "now": "2023-04-23 10:17:23.343513"}
+  {"type": "core", "plan_executors": 1, "plan_executors_detail": [1, 1], "real_executors": 1, "group": "1x process", "total_calls": 501, "avrg_time": 0.35944335474939404, "std_deviation": 0.4384194310208262, "total_call_per_sec": 2.782079531550126}
+  {"type": "core", "plan_executors": 2, "plan_executors_detail": [1, 2], "real_executors": 2, "group": "1x process", "total_calls": 1215, "avrg_time": 0.29602011969186837, "std_deviation": 0.22875174589429545, "total_call_per_sec": 6.756297518161364}
+  {"type": "core", "plan_executors": 2, "plan_executors_detail": [2, 1], "real_executors": 2, "group": "2x process", "total_calls": 969, "avrg_time": 0.37145321007274373, "std_deviation": 0.4363947838054363, "total_call_per_sec": 5.384258220862673}
+  {"type": "core", "plan_executors": 4, "plan_executors_detail": [2, 2], "real_executors": 4, "group": "2x process", "total_calls": 2003, "avrg_time": 0.35964134732961495, "std_deviation": 0.2844794299883254, "total_call_per_sec": 11.122191677070877}
+############# Duration: 722.1 seconds #############
+############### 2023-04-23 10:34:39.043750 ###############
+{"type": "headr", "label": "NoSQL, igz, prod", "bulk": [100, 50], "available_cpu": 14, "now": "2023-04-23 10:34:39.043750"}
+  {"type": "core", "plan_executors": 1, "plan_executors_detail": [1, 1], "real_executors": 1, "group": "1x process", "total_calls": 293, "avrg_time": 0.6145963676960395, "std_deviation": 0.5701093980521594, "total_call_per_sec": 162.70841361278093}
+  {"type": "core", "plan_executors": 2, "plan_executors_detail": [1, 2], "real_executors": 2, "group": "1x process", "total_calls": 491, "avrg_time": 0.7336048689374327, "std_deviation": 0.3953394628503434, "total_call_per_sec": 272.62632578990895}
+  {"type": "core", "plan_executors": 2, "plan_executors_detail": [2, 1], "real_executors": 2, "group": "2x process", "total_calls": 593, "avrg_time": 0.608504738163132, "std_deviation": 0.561144809216775, "total_call_per_sec": 328.6745155078524}
+  {"type": "core", "plan_executors": 4, "plan_executors_detail": [2, 2], "real_executors": 4, "group": "2x process", "total_calls": 1048, "avrg_time": 0.6875064594240304, "std_deviation": 0.42738609439447095, "total_call_per_sec": 581.8127153817674}
+############# Duration: 723.0 seconds #############
