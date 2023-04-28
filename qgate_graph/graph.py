@@ -140,6 +140,7 @@ class Graph:
         """
         for file in os.listdir(input_dir):
             self.generate_from_file(os.path.join(input_dir, file), output_dir)
+        logging.info("Done")
 
     def generate_from_file(self, input_file: str, output_dir: str="output"):
         """

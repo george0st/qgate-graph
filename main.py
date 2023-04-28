@@ -12,7 +12,6 @@ def graph(input,output):
 
     graph=grp.Graph()
     graph.generate_from_dir(input, output)
-    logging.info("Done")
 
 if __name__ == '__main__':
     graph()
