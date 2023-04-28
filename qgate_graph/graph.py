@@ -4,6 +4,9 @@ import qgate_graph.constant as cns
 import json, datetime
 import logging
 class Graph:
+    """
+    Generate graph based on input data
+    """
     def __init__(self):
         self._markers = ['o','x', '*', '^','X', 'D', 'p', 'H']
         self._marker_point=0
