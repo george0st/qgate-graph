@@ -5,7 +5,7 @@ except ImportError:
 
 import json
 import logging
-
+from qgate_graph.version import __version__
 #import dependencies
 #import packages
 
@@ -16,7 +16,7 @@ with open('README.md') as readme_file:
 #    HISTORY = history_file.read()
 setup_args = dict(
     name='qgate_graph',
-    version='v1.2-rc2',
+    version=__version__,
     description='Generate graphs based on outputs from Quality Gate',
     long_description_content_type="text/markdown",
     long_description=README, # + '\n\n' + HISTORY,

@@ -1,4 +1,5 @@
 import qgate_graph.graph as grp
+import qgate_graph
 import click
 import logging
 

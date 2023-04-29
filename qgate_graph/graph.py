@@ -1,6 +1,7 @@
 import os.path, os
 import matplotlib.pyplot as plt
 import qgate_graph.constant as cns
+import qgate_graph
 import json, datetime
 import logging
 class Graph:
@@ -70,7 +71,7 @@ class Graph:
         self._color_point=0
 
     def _watermark(self, plt, ax):
-        watermark='qgate_graph (v1.1)'
+        watermark=f'qgate_graph (v{qgate_graph.__version__})'
         plt.text(1.0, 0, watermark,
                  horizontalalignment='right',
                  verticalalignment='bottom',
