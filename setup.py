@@ -6,7 +6,7 @@ except ImportError:
 import json
 import logging
 from qgate_graph.version import __version__
-#import dependencies
+import dependencies
 #import packages
 
 with open('README.md') as readme_file:
@@ -29,9 +29,9 @@ setup_args = dict(
     download_url='https://pypi.org/project/qgate_graph/'
 )
 
-install_requires = [
-    'matplotlib>=3.5'
-]
+install_requires = dependencies.base_requirements(),
+tests_require = dependencies.dev_requirements(),
+extras_require = dependencies.extra_requirements(),
 
 if __name__ == '__main__':
     setup(**setup_args, install_requires=install_requires)
