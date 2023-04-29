@@ -3,8 +3,8 @@ import click
 import logging
 
 @click.command()
-@click.option("--input", help="input directory (default is directory 'input'", default=f"input")
-@click.option("--output", help="output directory (default is directory 'output'", default=f"output")
+@click.option("--input", help="input directory (default is directory 'input'", default="input")
+@click.option("--output", help="output directory (default is directory 'output'", default="output")
 def graph(input,output):
     """Generate graphs based in input data."""
     logging.basicConfig()
@@ -12,6 +12,9 @@ def graph(input,output):
 
     graph=grp.Graph()
     graph.generate_from_dir(input, output)
+
+    # TODO: update buildu
+    #python -m twine upload  dist/* -u%username% -p%password%
 
 if __name__ == '__main__':
     graph()

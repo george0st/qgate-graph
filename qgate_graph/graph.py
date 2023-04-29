@@ -6,6 +6,17 @@ import logging
 class Graph:
     """
     Generate graph based on input data
+
+        example::
+
+            import qgate_graph.graph as grp
+            import logging
+
+            logging.basicConfig()
+            logging.getLogger().setLevel(logging.INFO)
+
+            graph=grp.Graph()
+            graph.generate_from_dir("input_adr", "output_adr")
     """
     def __init__(self):
         self._markers = ['o','x', '*', '^','X', 'D', 'p', 'H']
@@ -134,6 +145,13 @@ class Graph:
     def generate_from_dir(self, input_dir: str="input", output_dir: str="output"):
         """
         Generate graphs based on input directory
+
+        example::
+
+            import qgate_graph.graph as grp
+
+            graph=grp.Graph()
+            graph.generate_from_dir("input_adr", "output_adr")
 
         :param input_dir:       Input directory (default "input")
         :param output_dir:      Output directory (default "output")

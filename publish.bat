@@ -4,4 +4,4 @@ pip install --upgrade twine
 rm dist/*
 
 python setup.py sdist bdist_wheel
-twine upload dist/*
+twine upload dist/* --verbose -ugeorge0st
