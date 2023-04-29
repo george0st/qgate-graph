@@ -14,8 +14,5 @@ def graph(input,output):
     graph=grp.Graph()
     graph.generate_from_dir(input, output)
 
-    # TODO: update buildu
-    #python -m twine upload  dist/* -u%username% -p%password%
-
 if __name__ == '__main__':
     graph()

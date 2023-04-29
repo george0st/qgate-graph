@@ -24,14 +24,13 @@ setup_args = dict(
     packages=find_packages(),
     author='Jiri Steuer',
     author_email='steuer.jiri@gmail.com',
-    keywords=['Quality', 'QualityGate'],
+    keywords=['Quality', 'QualityGate', 'Graph'],
     url='https://github.com/george0st/qgate-graph/',
     download_url='https://pypi.org/project/qgate_graph/'
 )
 
 install_requires = [
-    'matplotlib~=3.7',
-    'click~=8.1'
+    'matplotlib>=3.5'
 ]
 
 if __name__ == '__main__':
