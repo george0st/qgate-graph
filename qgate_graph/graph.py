@@ -19,11 +19,12 @@ class Graph:
             graph=grp.Graph()
             graph.generate_from_dir("input_adr", "output_adr")
     """
-    def __init__(self):
+    def __init__(self, dpi=100):
         self._markers = ['o','x', '*', '^','X', 'D', 'p', 'H']
         self._marker_point=0
         self._colors=['c', 'm', 'r', 'b', 'g', 'y', 'k', 'w']
         self._color_point=0
+        self.dpi=dpi
 
     def _find_key(self, performance_line: str, keys):
         for key in keys:
@@ -132,7 +133,7 @@ class Graph:
             plt.xticks(self._get_executor_list(collection=executors[key]))
 
         output_file=os.path.join(output_dir,file_name+".png")
-        plt.savefig(output_file, dpi=200)
+        plt.savefig(output_file, dpi=self.dpi)
         logging.info(f"  ... {output_file}")
         plt.close()
 
