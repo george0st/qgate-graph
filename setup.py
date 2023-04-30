@@ -9,6 +9,9 @@ from qgate_graph.version import __version__
 import dependencies
 #import packages
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("qgate-graph-setup")
+
 with open('README.md') as readme_file:
     README = readme_file.read()
 

@@ -1,42 +1,35 @@
 import os.path, os
 import matplotlib.pyplot as plt
-import qgate_graph.constant as cns
-import qgate_graph
+import qgate_graph.file_format as const
 import json, datetime
 import logging
-class Graph:
+from qgate_graph.graph_base import GraphBase
+
+class GraphPerformance(GraphBase):
     """
     Generate graph based on input data
 
         example::
 
-            import qgate_graph.graph as grp
+            import qgate_graph.graph_performance as grp
             import logging
 
             logging.basicConfig()
             logging.getLogger().setLevel(logging.INFO)
 
-            graph=grp.Graph()
+            graph=grp.GraphPerformance()
             graph.generate_from_dir("input_adr", "output_adr")
     """
     def __init__(self, dpi=100):
-        self._markers = ['o','x', '*', '^','X', 'D', 'p', 'H']
-        self._marker_point=0
-        self._colors=['c', 'm', 'r', 'b', 'g', 'y', 'k', 'w']
-        self._color_point=0
-        self.dpi=dpi
-
-    def _find_key(self, performance_line: str, keys):
-        for key in keys:
-            start=performance_line.index(key)
-            if start>0:
-                start+=len(key)
-                end = performance_line.index(",",start)
-                val=performance_line[start:end]
-                return val.strip()
-        return None
+        super().__init__(dpi)
 
     def _get_executor_list(self, collections=None, collection=None):
+        """
+        Get list of executor for graph X-line
+        :param collections:
+        :param collection:
+        :return:
+        """
         list=[]
         if collections:
             for key in collections.keys():
@@ -48,36 +41,6 @@ class Graph:
                 if executor not in list:
                     list.append(executor)
         return list
-
-    def _next_marker(self):
-        self._marker_point = self._marker_point + 1
-        if self._marker_point >= len(self._markers):
-            self._marker_point=0
-
-    def _next_color(self):
-        self._color_point = self._color_point + 1
-        if self._color_point >= len(self._colors):
-            self._color_point=0
-
-    def _get_marker(self):
-        return self._markers[self._marker_point]
-
-    def _get_color(self):
-        return self._colors[self._color_point]
-
-    def _reset_marker(self):
-        self._marker_point=0
-
-    def _reset_color(self):
-        self._color_point=0
-
-    def _watermark(self, plt, ax):
-        watermark=f'qgate_graph (v{qgate_graph.__version__})'
-        plt.text(1.0, 0, watermark,
-                 horizontalalignment='right',
-                 verticalalignment='bottom',
-                 transform = ax.transAxes,
-                 alpha=0.4, fontsize=8)
 
     def _show_graph(self, executors, total_performance, avrg_time, std_deviation, title, file_name,output_dir):
         plt.style.use("bmh") #"ggplot" "seaborn-v0_8-poster"
@@ -94,10 +57,7 @@ class Graph:
         self._reset_color()
 
         for key in executors.keys():
-            plt.plot(executors[key], total_performance[key], color=self._get_color(), linestyle="-", marker=self._get_marker(), label=f"{key} [{round(max(total_performance[key]),2)}]")
-            self._next_marker()
-            self._next_color()
-
+            plt.plot(executors[key], total_performance[key], color=self._next_color(), linestyle="-", marker=self._next_marker(), label=f"{key} [{round(max(total_performance[key]),2)}]")
 
         plt.legend()
         #plt.xlabel('Executors')
@@ -113,7 +73,7 @@ class Graph:
             # view response time
             key_view+=1
             ax=plt.subplot(2, key_count, key_view)
-            plt.errorbar(executors[key], avrg_time[key], std_deviation[key], alpha=0.5,color=self._get_color(), ls='none', marker=self._get_marker(), linewidth=2, capsize=6)
+            plt.errorbar(executors[key], avrg_time[key], std_deviation[key], alpha=0.5,color=self._next_color(), ls='none', marker=self._next_marker(), linewidth=2, capsize=6)
             self._watermark(plt, ax)
 
             for x, y in zip(executors[key], avrg_time[key]):
@@ -125,8 +85,6 @@ class Graph:
                              size=8,
                              weight='bold')
 
-            self._next_marker()
-            self._next_color()
             plt.xlabel('Executors')
             if key_count+1==key_view:
                 plt.ylabel('Response [sec]')
@@ -137,12 +95,6 @@ class Graph:
         logging.info(f"  ... {output_file}")
         plt.close()
 
-    def _unife_file_name(self, file_name):
-        remove_item=" ,&?"
-        for itm in remove_item:
-            file_name=file_name.replace(itm,"_")
-        file_name=file_name.replace("__","_")
-        return file_name
 
     def generate_from_dir(self, input_dir: str="input", output_dir: str="output"):
         """
@@ -150,9 +102,9 @@ class Graph:
 
         example::
 
-            import qgate_graph.graph as grp
+            import qgate_graph.graph_performance as grp
 
-            graph=grp.Graph()
+            graph=grp.GraphPerformance()
             graph.generate_from_dir("input_adr", "output_adr")
 
         :param input_dir:       Input directory (default "input")
@@ -191,23 +143,23 @@ class Graph:
                     std_deviation.clear()
                     continue
                 input_dict=json.loads(line)
-                if input_dict[cns.Vocabulary.PRF_TYPE]==cns.Vocabulary.PRF_HDR_TYPE:
+                if input_dict[const.FileFormat.PRF_TYPE]==const.FileFormat.PRF_HDR_TYPE:
                     # header
-                    report_date=datetime.datetime.fromisoformat(input_dict[cns.Vocabulary.PRF_HDR_NOW]).strftime("%Y-%m-%d %H-%M-%S")
-                    label=input_dict[cns.Vocabulary.PRF_HDR_LABEL]
-                    bulk=input_dict[cns.Vocabulary.PRF_HDR_BULK]
-                    file_name=self._unife_file_name(f"{label}-{report_date}-bulk-{bulk[0]}x{bulk[1]}")
+                    report_date=datetime.datetime.fromisoformat(input_dict[const.FileFormat.PRF_HDR_NOW]).strftime("%Y-%m-%d %H-%M-%S")
+                    label=input_dict[const.FileFormat.PRF_HDR_LABEL]
+                    bulk=input_dict[const.FileFormat.PRF_HDR_BULK]
+                    file_name=self._unife_file_name("",label,report_date,bulk)
                     title=f"'{label}', {report_date}, bulk {bulk[0]}/{bulk[1]}"
 
-                elif input_dict[cns.Vocabulary.PRF_TYPE]==cns.Vocabulary.PRF_CORE_TYPE:
+                elif input_dict[const.FileFormat.PRF_TYPE]==const.FileFormat.PRF_CORE_TYPE:
                     # core
-                    if input_dict[cns.Vocabulary.PRF_CORE_GROUP] in executors:
-                        executors[input_dict[cns.Vocabulary.PRF_CORE_GROUP]].append(input_dict[cns.Vocabulary.PRF_CORE_REAL_EXECUTOR])
-                        total_performance[input_dict[cns.Vocabulary.PRF_CORE_GROUP]].append(input_dict[cns.Vocabulary.PRF_CORE_TOTAL_CALL_PER_SEC])
-                        avrg_time[input_dict[cns.Vocabulary.PRF_CORE_GROUP]].append(input_dict[cns.Vocabulary.PRF_CORE_AVRG_TIME])
-                        std_deviation[input_dict[cns.Vocabulary.PRF_CORE_GROUP]].append(input_dict[cns.Vocabulary.PRF_CORE_STD_DEVIATION])
+                    if input_dict[const.FileFormat.PRF_CORE_GROUP] in executors:
+                        executors[input_dict[const.FileFormat.PRF_CORE_GROUP]].append(input_dict[const.FileFormat.PRF_CORE_REAL_EXECUTOR])
+                        total_performance[input_dict[const.FileFormat.PRF_CORE_GROUP]].append(input_dict[const.FileFormat.PRF_CORE_TOTAL_CALL_PER_SEC])
+                        avrg_time[input_dict[const.FileFormat.PRF_CORE_GROUP]].append(input_dict[const.FileFormat.PRF_CORE_AVRG_TIME])
+                        std_deviation[input_dict[const.FileFormat.PRF_CORE_GROUP]].append(input_dict[const.FileFormat.PRF_CORE_STD_DEVIATION])
                     else:
-                        executors[input_dict[cns.Vocabulary.PRF_CORE_GROUP]] = [input_dict[cns.Vocabulary.PRF_CORE_REAL_EXECUTOR]]
-                        total_performance[input_dict[cns.Vocabulary.PRF_CORE_GROUP]] = [input_dict[cns.Vocabulary.PRF_CORE_TOTAL_CALL_PER_SEC]]
-                        avrg_time[input_dict[cns.Vocabulary.PRF_CORE_GROUP]] = [input_dict[cns.Vocabulary.PRF_CORE_AVRG_TIME]]
-                        std_deviation[input_dict[cns.Vocabulary.PRF_CORE_GROUP]]=[input_dict[cns.Vocabulary.PRF_CORE_STD_DEVIATION]]
+                        executors[input_dict[const.FileFormat.PRF_CORE_GROUP]] = [input_dict[const.FileFormat.PRF_CORE_REAL_EXECUTOR]]
+                        total_performance[input_dict[const.FileFormat.PRF_CORE_GROUP]] = [input_dict[const.FileFormat.PRF_CORE_TOTAL_CALL_PER_SEC]]
+                        avrg_time[input_dict[const.FileFormat.PRF_CORE_GROUP]] = [input_dict[const.FileFormat.PRF_CORE_AVRG_TIME]]
+                        std_deviation[input_dict[const.FileFormat.PRF_CORE_GROUP]]=[input_dict[const.FileFormat.PRF_CORE_STD_DEVIATION]]
