@@ -12,10 +12,10 @@ def graph(input,output):
     logging.basicConfig()
     logging.getLogger().setLevel(logging.INFO)
 
-#    graph=GraphPerformance()
-#    graph.generate_from_dir(input, output)
+    graph=GraphPerformance()
+    graph.generate_from_dir(input, output)
     graph=GraphExecutor()
-    graph.generate_from_file("input/prf_count_01.txt", output)
+    graph.generate_from_dir(input, output)
 #    graph.generate_from_file("input/prf_nonprod_BDP_NoSQL.txt", output)
 
 

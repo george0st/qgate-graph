@@ -106,7 +106,7 @@ class GraphExecutor(GraphBase):
                     label = input_dict[const.FileFormat.PRF_HDR_LABEL]
                     bulk = input_dict[const.FileFormat.PRF_HDR_BULK]
                     bulk_name=f"{bulk[0]}/{bulk[1]}"
-                    file_name = self._unife_file_name("",label,report_date,bulk)
+                    file_name = self._unife_file_name("EXE",label,report_date,bulk)
                     title = f"'{label}', {report_date}, bulk {bulk[0]}/{bulk[1]}"
 
                 elif input_dict[const.FileFormat.PRF_TYPE] == const.FileFormat.PRF_CORE_TYPE:

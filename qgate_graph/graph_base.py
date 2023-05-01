@@ -66,7 +66,7 @@ class GraphBase:
         :param bulk:        Bulk (rows, columns) size
         :return:            Return relevant name
         """
-        file_name=f"{prefix}{label}-{report_date}-bulk-{bulk[0]}x{bulk[1]}"
+        file_name=f"{prefix}-{label}-{report_date}-bulk-{bulk[0]}x{bulk[1]}"
         remove_item=" ,&?"
         for itm in remove_item:
             file_name=file_name.replace(itm,"_")

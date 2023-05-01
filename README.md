@@ -6,16 +6,22 @@ Generate graphs based on performance outputs from Quality Gate solution.
 ## Usage
 
 ```lang-python
-    import qgate_graph.graph as grp
+    from qgate_graph.graph_performance import GraphPerformance
+    from qgate_graph.graph_executor import GraphExecutor
     import logging
 
     # setup login level
     logging.basicConfig()
     logging.getLogger().setLevel(logging.INFO)
 
-    # generate output graphs
-    graph=grp.Graph()
+    # generate performance/throughput graphs
+    graph=GraphPerformance()
     graph.generate_from_dir()
+    
+    # generate excutors in time graphs
+    graph=grp.GraphExecutor()
+    graph.generate_from_dir()
+
 ```
 
 # Outputs
