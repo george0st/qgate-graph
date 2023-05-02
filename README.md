@@ -21,7 +21,6 @@ Generate graphs based on performance outputs from Quality Gate solution.
     # generate excutors in time graphs
     graph=grp.GraphExecutor()
     graph.generate_from_dir()
-
 ```
 
 # Outputs
