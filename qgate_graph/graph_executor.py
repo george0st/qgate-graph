@@ -121,8 +121,8 @@ class GraphExecutor(GraphBase):
                         if input_dict.get(const.FileFormat.PRF_CORE_TIME_END):
                             end_date=input_dict[const.FileFormat.PRF_CORE_TIME_END]
 
-                        file_name=f"{file_name}-plan-{plan}"
-                        self._show_graph(start_date, executors, end_date, title, file_name, output_dir)
+                        #file_name=f"{file_name}-plan-{plan}"
+                        self._show_graph(start_date, executors, end_date, title, f"{file_name}-plan-{plan}", output_dir)
                         executors.clear()
                         executor.clear()
                 elif input_dict[const.FileFormat.PRF_TYPE] == const.FileFormat.PRF_DETAIL_TYPE:
