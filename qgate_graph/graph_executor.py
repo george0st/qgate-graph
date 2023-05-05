@@ -115,7 +115,7 @@ class GraphExecutor(GraphBase):
                     #     input_dict[const.FileFormat.PRF_CORE_TIME_END])
 
                     if executor:
-                        plan=f"{input_dict[const.FileFormat.PRF_CORE_PLAN_EXECUTOR][0]},{input_dict[const.FileFormat.PRF_CORE_PLAN_EXECUTOR][1]}"
+                        plan=f"{input_dict[const.FileFormat.PRF_CORE_PLAN_EXECUTOR][0]}x{input_dict[const.FileFormat.PRF_CORE_PLAN_EXECUTOR][1]}"
                         executors[plan]=executor
 
                         if input_dict.get(const.FileFormat.PRF_CORE_TIME_END):
