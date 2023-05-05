@@ -167,7 +167,7 @@ class GraphExecutor(GraphBase):
         # order
         self._order(new_array)
 
-        # recalc
+        # recalc (+/- values)
         for i in range(len(new_array)):
             if i==0:
                 count=new_array[i][1]
@@ -178,7 +178,6 @@ class GraphExecutor(GraphBase):
         # transform
         new_array2=[]
         for i in new_array:
-            print(f"{i[0]} > {i[1]}")
             new_array_count.append(i[1])
             new_array2.append(i[0])
 
