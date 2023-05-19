@@ -147,7 +147,7 @@ class GraphExecutor(GraphBase):
         plt.suptitle("Executors in time",weight='bold', fontsize=18, ha="center", va="top")
         plt.title(title, fontsize=14,ha="center", va="top")
         self._reset_marker()
-        self._reset_color()
+        self._reset_color(6)
 
         new_array=[]
         new_array_count=[]

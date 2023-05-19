@@ -1,7 +1,12 @@
 [![PyPI version fury.io](https://badge.fury.io/py/qgate-graph.svg)](https://pypi.python.org/pypi/qgate-graph/)
 # QGate-Graph
 
-Generate graphs based on performance outputs from Quality Gate solution.
+Graph generator based on performance test outputs from Quality Gate Performance Generator. Key benefits:
+ - provide graph about Performance/Throughtput & Response time
+ - provide graph about Executors in time
+
+These graphs only visualize outputs from generator, it is not replacement of
+detail views to Grafana, Prometheus, etc. in detail of CPU, GPU, RAM, I/O etc. on side of testing system.
 
 ## Usage
 

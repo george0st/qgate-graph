@@ -23,7 +23,7 @@ class GraphBase:
     def __init__(self, dpi=100):
         self._markers = ['o','x', '*', '^','X', 'D', 'p', 'H']
         self._reset_marker()
-        self._colors=['c', 'm', 'r', 'b', 'g', 'y', 'k', 'w']
+        self._colors=['c', 'm', 'r', 'b', 'g', 'y', 'k']
         self._reset_color()
         self.dpi=dpi
 
@@ -40,8 +40,8 @@ class GraphBase:
         self._color_point = self._color_point+1 if (self._color_point+1) < len(self._colors) else 0
         return self._colors[current]
 
-    def _reset_color(self):
-        self._color_point=0
+    def _reset_color(self, color_point=0):
+        self._color_point=color_point
 
     def _watermark(self, plt, ax):
         """
