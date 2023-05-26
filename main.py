@@ -5,8 +5,8 @@ import click
 import logging
 
 @click.command()
-@click.option("--input", help="input directory (default is directory 'input'", default="input")
-@click.option("--output", help="output directory (default is directory 'output'", default="output")
+@click.option("--input", help="input directory (default is directory 'input')", default="input")
+@click.option("--output", help="output directory (default is directory 'output')", default="output")
 def graph(input,output):
     """Generate graphs based in input data."""
     logging.basicConfig()
