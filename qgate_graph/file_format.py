@@ -7,7 +7,10 @@ class FileFormat:
     PRF_HDR_TYPE="headr"
     PRF_HDR_LABEL="label"
     PRF_HDR_BULK="bulk"
-    PRF_HDR_AVIALABLE_CPU="available_cpu"
+    PRF_HDR_AVIALABLE_CPU="cpu"
+    PRF_HDR_HOST="host"
+    PRF_HDR_MEMORY="mem"
+    PRF_HDR_MEMORY_FREE="mem_free"
     PRF_HDR_NOW="now"
 
     # detail
@@ -21,9 +24,9 @@ class FileFormat:
     PRF_DETAIL_MAX="max"
     PRF_DETAIL_STDEV="st-dev"
     PRF_DETAIL_ERR="err"
-    PRF_DETAIL_TIME_INIT= "initexec"
-    PRF_DETAIL_TIME_START= "startexec"
-    PRF_DETAIL_TIME_END= "endexec"
+    PRF_DETAIL_TIME_INIT="initexec"
+    PRF_DETAIL_TIME_START="startexec"
+    PRF_DETAIL_TIME_END="endexec"
 
     # core output
     PRF_CORE_TYPE="core"
@@ -35,4 +38,4 @@ class FileFormat:
     PRF_CORE_AVRG_TIME="avrg_time"
     PRF_CORE_STD_DEVIATION="std_deviation"
     PRF_CORE_TOTAL_CALL_PER_SEC="total_call_per_sec"
-    PRF_CORE_TIME_END= "endexec"
+    PRF_CORE_TIME_END="endexec"
