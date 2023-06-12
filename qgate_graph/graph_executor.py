@@ -127,10 +127,11 @@ class GraphExecutor(GraphBase):
                         executor.clear()
                 elif input_dict[const.FileFormat.PRF_TYPE] == const.FileFormat.PRF_DETAIL_TYPE:
                     # detail
-                    executor.append([
-                        input_dict[const.FileFormat.PRF_DETAIL_TIME_INIT],
-                        input_dict[const.FileFormat.PRF_DETAIL_TIME_START],
-                        input_dict[const.FileFormat.PRF_DETAIL_TIME_END]])
+                    if not input_dict.get(const.FileFormat.PRF_DETAIL_ERR):
+                        executor.append([
+                            input_dict[const.FileFormat.PRF_DETAIL_TIME_INIT],
+                            input_dict[const.FileFormat.PRF_DETAIL_TIME_START],
+                            input_dict[const.FileFormat.PRF_DETAIL_TIME_END]])
 
     def _show_graph(self, start_date, executors, end_date, title, file_name,output_dir):
         plt.style.use("bmh") #"ggplot" "seaborn-v0_8-poster"
