@@ -12,8 +12,6 @@ def graph(input,output):
     logging.basicConfig()
     logging.getLogger().setLevel(logging.INFO)
 
-    # TODO: create dir output
-    # TODO: change precision in performance graph from 0.1 to e.g. 0.12, ...
     graph=GraphPerformance()
     graph.generate_from_dir(input, output)
     graph=GraphExecutor()

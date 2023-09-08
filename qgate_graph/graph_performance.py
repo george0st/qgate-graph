@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import qgate_graph.file_format as const
 import json, datetime
 import logging
+import numpy
 from qgate_graph.graph_base import GraphBase
 
 class GraphPerformance(GraphBase):
@@ -42,6 +43,21 @@ class GraphPerformance(GraphBase):
                     list.append(executor)
         return list
 
+    def _expected_round(self,avrg_time):
+
+        avrg=numpy.average(avrg_time)
+        zero_count=1    #   minimal number of zeros
+
+        split=str(avrg).split('.')
+        if len(split)>1:
+            # calculation amount of zeros
+            for c in split[1]:
+                if c!='0':
+                    break
+                else:
+                    zero_count=zero_count+1
+        return zero_count
+
     def _show_graph(self, executors, total_performance, avrg_time, std_deviation, title, file_name,output_dir):
         plt.style.use("bmh") #"ggplot" "seaborn-v0_8-poster"
         ax=plt.figure(figsize=(15, 6))
@@ -76,14 +92,15 @@ class GraphPerformance(GraphBase):
             plt.errorbar(executors[key], avrg_time[key], std_deviation[key], alpha=0.5,color=self._next_color(), ls='none', marker=self._next_marker(), linewidth=2, capsize=6)
             self._watermark(plt, ax)
 
+            expected_round=self._expected_round(avrg_time[key])
             for x, y in zip(executors[key], avrg_time[key]):
-                plt.annotate(round(y,1),
+                plt.annotate(round(y,expected_round),   # previous code plt.annotate(round(y,1),
                              (x,y),
                              textcoords="offset points",
                              xytext=(0,-2),
                              ha='center',
                              size=8,
-                             weight='bold')
+                             weight='normal')           # previous code weight='bold'
 
             plt.xlabel('Executors')
             if key_count+1==key_view:
@@ -128,6 +145,11 @@ class GraphPerformance(GraphBase):
         executors={}
 
         logging.info(f"Processing '{input_file}' ...")
+
+        # create output dir if not exist
+        if not os.path.exists(output_dir):
+            os.mkdir(output_dir)
+
         with open(input_file, "r") as f:
             while True:
                 line=f.readline()
