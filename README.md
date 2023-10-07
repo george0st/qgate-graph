@@ -2,7 +2,7 @@
 # QGate-Graph
 
 Graph generator based on performance test outputs from Quality Gate Performance Generator. Key benefits:
- - provide graph about Performance/Throughtput & Response time
+ - provide graph about Performance/Throughput and Response time (on typically client side)
  - provide graph about Executors in time
 
 These graphs only visualize outputs from generator, it is not replacement of
@@ -10,7 +10,7 @@ detail views to Grafana, Prometheus, etc. in detail of CPU, GPU, RAM, I/O etc. o
 
 ## Usage
 
-```lang-python
+```python
     from qgate_graph.graph_performance import GraphPerformance
     from qgate_graph.graph_executor import GraphExecutor
     import logging
