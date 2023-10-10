@@ -65,6 +65,7 @@ class GraphPerformance(GraphBase):
 
         # view total performance
         ax=plt.subplot(2,1,1)
+        #fix, ax=plt.subplots(2,1)
         self._watermark(plt,ax)
 
         plt.suptitle("Performance & Response time",weight='bold', fontsize=18, ha="center", va="top")
