@@ -9,3 +9,5 @@ qgate_graph/__pycache__/
 /build/
 /.idea/
 .idea/misc.xml
+/.idea/
+/.coverage
