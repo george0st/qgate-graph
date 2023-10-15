@@ -1,12 +1,17 @@
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![PyPI version fury.io](https://badge.fury.io/py/qgate-graph.svg)](https://pypi.python.org/pypi/qgate-graph/)
+![coverage](https://github.com/george0st/qgate-graph/blob/main/coverage.svg)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/w/george0st/qgate-graph)
+![GitHub release](https://img.shields.io/github/v/release/george0st/qgate-graph)
+
 # QGate-Graph
 
-Graph generator based on performance test outputs from Quality Gate Performance Generator. Key benefits:
- - provide graph about Performance/Throughput and Response time (on typically client side)
- - provide graph about Executors in time
+The QGate graph generates graphical outputs based on performance tests (QGate Perf). Key benefits:
+ - provide graphs about Performance/Throughput and Response time (on typically client side)
+ - provide graphs about Executors in time
 
-These graphs only visualize outputs from generator, it is not replacement of
-detail views to Grafana, Prometheus, etc. in detail of CPU, GPU, RAM, I/O etc. on side of testing system.
+These graphs only visualize outputs from performance tests, it is not replacement of
+detail views from Grafana, Prometheus, etc. in detail of CPU, GPU, RAM, I/O etc. on side of testing system.
 
 ## Usage
 
@@ -24,7 +29,7 @@ detail views to Grafana, Prometheus, etc. in detail of CPU, GPU, RAM, I/O etc. o
     graph.generate_from_dir()
     
     # generate excutors in time graphs
-    graph=grp.GraphExecutor()
+    graph=GraphExecutor()
     graph.generate_from_dir()
 ```
 
