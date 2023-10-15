@@ -20,12 +20,14 @@ class TestCaseBasic(unittest.TestCase):
         logging.basicConfig()
         logging.getLogger().setLevel(logging.INFO)
 
+
         # setup relevant path
-        if not os.path.isfile(path.join(TestCaseBasic.PREFIX, TestCaseBasic.INPUT_FILE)):
-            TestCaseBasic.PREFIX=".."
-        TestCaseBasic.OUTPUT_ADR=path.join(TestCaseBasic.PREFIX,TestCaseBasic.OUTPUT_ADR)
-        TestCaseBasic.INPUT_FILE=path.join(TestCaseBasic.PREFIX, TestCaseBasic.INPUT_FILE)
-        TestCaseBasic.INPUT_ADR=path.join(TestCaseBasic.PREFIX, TestCaseBasic.INPUT_ADR)
+        prefix = "."
+        if not os.path.isfile(path.join(prefix, TestCaseBasic.INPUT_FILE)):
+            prefix=".."
+        TestCaseBasic.OUTPUT_ADR=path.join(prefix,TestCaseBasic.OUTPUT_ADR)
+        TestCaseBasic.INPUT_FILE=path.join(prefix, TestCaseBasic.INPUT_FILE)
+        TestCaseBasic.INPUT_ADR=path.join(prefix, TestCaseBasic.INPUT_ADR)
 
         # clean directory
         shutil.rmtree(TestCaseBasic.OUTPUT_ADR, True)
