@@ -1,6 +1,6 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![PyPI version fury.io](https://badge.fury.io/py/qgate-graph.svg)](https://pypi.python.org/pypi/qgate-graph/)
-![coverage](https://github.com/george0st/qgate-graph/blob/master/coverage.svg)
+![coverage](https://github.com/george0st/qgate-graph/blob/main/coverage.svg)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/george0st/qgate-graph)
 ![GitHub release](https://img.shields.io/github/v/release/george0st/qgate-graph)
 
