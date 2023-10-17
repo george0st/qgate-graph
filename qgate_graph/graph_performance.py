@@ -1,4 +1,6 @@
 import os.path, os
+
+import matplotlib.axes
 import matplotlib.pyplot as plt
 import qgate_graph.file_format as const
 import json, datetime
@@ -60,26 +62,27 @@ class GraphPerformance(GraphBase):
 
     def _show_graph(self, executors, total_performance, avrg_time, std_deviation, title, file_name,output_dir):
         plt.style.use("bmh") #"ggplot" "seaborn-v0_8-poster"
-        ax=plt.figure(figsize=(15, 6))
-        plt.grid()
+        fig, ax = plt.subplots(2, 1, sharex='none', squeeze=False, figsize=(15, 6))
+        ax_main: matplotlib.axes.Axes = ax[0][0]
 
         # view total performance
-        ax=plt.subplot(2,1,1)
-        #fix, ax=plt.subplots(2,1)
-        self._watermark(plt,ax)
+        self._watermark(plt, ax_main)
 
         plt.suptitle("Performance & Response time",weight='bold', fontsize=18, ha="center", va="top")
-        plt.title(title, fontsize=14,ha="center", va="top")
+        ax_main.set_title(title, fontsize=14, ha="center", va="top")
         self._reset_marker()
         self._reset_color()
 
         for key in executors.keys():
-            plt.plot(executors[key], total_performance[key], color=self._next_color(), linestyle="-", marker=self._next_marker(), label=f"{key} [{round(max(total_performance[key]),2)}]")
+            ax_main.plot(executors[key], total_performance[key], color=self._next_color(), linestyle="-", marker=self._next_marker(), label=f"{key} [{round(max(total_performance[key]), 2)}]")
 
-        plt.legend()
-        #plt.xlabel('Executors')
-        plt.ylabel('Performance [calls/sec]')
-        plt.xticks(self._get_executor_list(collections=executors))
+        ax_main.legend()
+        #ax_main.set_xlabel('Executors')
+        ax_main.set_ylabel('Performance [calls/sec]')
+        ax_main.set_xticks(self._get_executor_list(collections=executors))
+
+        # remove duplicit axis (because matplotlib>=3.8)
+        ax[1][0].remove()
 
         # draw detail graphs
         key_count=len(executors.keys())
@@ -90,12 +93,12 @@ class GraphPerformance(GraphBase):
             # view response time
             key_view+=1
             ax=plt.subplot(2, key_count, key_view)
-            plt.errorbar(executors[key], avrg_time[key], std_deviation[key], alpha=0.5,color=self._next_color(), ls='none', marker=self._next_marker(), linewidth=2, capsize=6)
+            ax.errorbar(executors[key], avrg_time[key], std_deviation[key], alpha=0.5,color=self._next_color(), ls='none', marker=self._next_marker(), linewidth=2, capsize=6)
             self._watermark(plt, ax)
 
             expected_round=self._expected_round(avrg_time[key])
             for x, y in zip(executors[key], avrg_time[key]):
-                plt.annotate(round(y,expected_round),   # previous code plt.annotate(round(y,1),
+                ax.annotate(round(y,expected_round),   # previous code plt.annotate(round(y,1),
                              (x,y),
                              textcoords="offset points",
                              xytext=(0,-2),
@@ -103,10 +106,11 @@ class GraphPerformance(GraphBase):
                              size=8,
                              weight='normal')           # previous code weight='bold'
 
-            plt.xlabel('Executors')
+            ax.set_xlabel('Executors')
             if key_count+1==key_view:
-                plt.ylabel('Response [sec]')
-            plt.xticks(self._get_executor_list(collection=executors[key]))
+                ax.set_ylabel('Response [sec]')
+            ax.set_xticks(self._get_executor_list(collection=executors[key]))
+            ax.grid(visible=True)
 
         output_file=os.path.join(output_dir,file_name+".png")
         plt.savefig(output_file, dpi=self.dpi)

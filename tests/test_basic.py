@@ -20,7 +20,6 @@ class TestCaseBasic(unittest.TestCase):
         logging.basicConfig()
         logging.getLogger().setLevel(logging.INFO)
 
-
         # setup relevant path
         prefix = "."
         if not os.path.isfile(path.join(prefix, TestCaseBasic.INPUT_FILE)):

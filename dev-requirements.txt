@@ -1,5 +1,5 @@
 click~=8.1
-matplotlib>=3.5
+matplotlib >=3.5, <=3.8
 coverage>=7
 coverage-badge>=1
 

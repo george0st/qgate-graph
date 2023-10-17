@@ -1,2 +1,2 @@
-matplotlib>=3.5, <3.8
-
+matplotlib >=3.5, <=3.8
+click~=8.1
