@@ -37,16 +37,25 @@ class TestCaseBasic(unittest.TestCase):
 
     def test_perf_file(self):
         graph = GraphPerformance()
-        graph.generate_from_file(TestCaseBasic.INPUT_FILE, self.OUTPUT_ADR)
+        output=graph.generate_from_file(TestCaseBasic.INPUT_FILE, self.OUTPUT_ADR)
+
+        self.assertTrue(len(output)==2)
 
     def test_exec_file(self):
         graph = GraphExecutor()
-        graph.generate_from_file(TestCaseBasic.INPUT_FILE, self.OUTPUT_ADR)
+        output=graph.generate_from_file(TestCaseBasic.INPUT_FILE, self.OUTPUT_ADR)
+
+        self.assertTrue(len(output)==11)
 
     def test_perf_dir(self):
         graph = GraphPerformance()
-        graph.generate_from_dir(TestCaseBasic.INPUT_ADR, self.OUTPUT_ADR)
+        output=graph.generate_from_dir(TestCaseBasic.INPUT_ADR, self.OUTPUT_ADR)
+
+        self.assertTrue(len(output)==4)
 
     def test_exec_dir(self):
         graph = GraphExecutor()
-        graph.generate_from_dir(TestCaseBasic.INPUT_ADR, self.OUTPUT_ADR)
+        output=graph.generate_from_dir(TestCaseBasic.INPUT_ADR, self.OUTPUT_ADR)
+
+        self.assertTrue(len(output)==23)
+

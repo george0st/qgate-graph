@@ -23,7 +23,7 @@ class GraphExecutor(GraphBase):
     def __init__(self, dpi=100):
         super().__init__(dpi)
 
-    def generate_from_dir(self, input_dir: str = "input", output_dir: str = "output"):
+    def generate_from_dir(self, input_dir: str = "input", output_dir: str = "output") -> list[str]:
         """
         Generate graphs about executors in time based on input directory
 
@@ -36,10 +36,14 @@ class GraphExecutor(GraphBase):
 
         :param input_dir:       Input directory (default "input")
         :param output_dir:      Output directory (default "output")
+        :return:                List of generated files
         """
+        output_list=[]
         for file in os.listdir(input_dir):
-            self.generate_from_file(os.path.join(input_dir, file), output_dir)
+            for file in self.generate_from_file(os.path.join(input_dir, file), output_dir):
+                output_list.append(file)
         logging.info("Done")
+        return output_list
 
     def _order(self, date_arr: list):
         date_arr.sort(key=lambda x: x[0])
@@ -67,12 +71,13 @@ class GraphExecutor(GraphBase):
                     elif j==2:
                         new_array.append([new_item, -1])
 
-    def generate_from_file(self, input_file: str, output_dir: str = "output"):
+    def generate_from_file(self, input_file: str, output_dir: str = "output") -> list[str]:
         """
         Generate graphs about executors based on input input file
 
         :param input_file:      Input file
         :param output_dir:      Output directory (default "output")
+        :return:                List of generated files
         """
         file_name = None
         executors = {}
@@ -80,6 +85,7 @@ class GraphExecutor(GraphBase):
         input_dict={}
         end_date=None
         start_date=None
+        output_list=[]
 
         logging.info(f"Processing '{input_file}' ...")
 
@@ -93,14 +99,9 @@ class GraphExecutor(GraphBase):
                 if not line:
                     break
                 if line[0] == '#':
-#                    if file_name:
-#                        self._show_graph(start_date, executors, end_date, title, file_name, output_dir)
                     file_name = None
                     executors.clear()
                     executor.clear()
-                    # total_performance.clear()
-                    # avrg_time.clear()
-                    # std_deviation.clear()
                     continue
                 input_dict = json.loads(line)
                 if input_dict[const.FileFormat.PRF_TYPE] == const.FileFormat.PRF_HDR_TYPE:
@@ -127,7 +128,7 @@ class GraphExecutor(GraphBase):
                             end_date=input_dict[const.FileFormat.PRF_CORE_TIME_END]
 
                         #file_name=f"{file_name}-plan-{plan}"
-                        self._show_graph(start_date, executors, end_date, title, f"{file_name}-plan-{plan}", output_dir)
+                        output_list.append(self._show_graph(start_date, executors, end_date, title, f"{file_name}-plan-{plan}", output_dir))
                         executors.clear()
                         executor.clear()
                 elif input_dict[const.FileFormat.PRF_TYPE] == const.FileFormat.PRF_DETAIL_TYPE:
@@ -137,8 +138,9 @@ class GraphExecutor(GraphBase):
                             input_dict[const.FileFormat.PRF_DETAIL_TIME_INIT],
                             input_dict[const.FileFormat.PRF_DETAIL_TIME_START],
                             input_dict[const.FileFormat.PRF_DETAIL_TIME_END]])
+        return output_list
 
-    def _show_graph(self, start_date, executors, end_date, title, file_name,output_dir):
+    def _show_graph(self, start_date, executors, end_date, title, file_name,output_dir) -> str :
         plt.style.use("bmh") #"ggplot" "seaborn-v0_8-poster"
         ax=plt.figure(figsize=(15, 6))
         plt.grid()
@@ -195,5 +197,6 @@ class GraphExecutor(GraphBase):
         plt.savefig(output_file, dpi=self.dpi)
         logging.info(f"  ... {output_file}")
         plt.close()
+        return output_file
 
 
