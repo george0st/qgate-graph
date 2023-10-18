@@ -60,7 +60,7 @@ class GraphPerformance(GraphBase):
                     zero_count=zero_count+1
         return zero_count
 
-    def _show_graph(self, executors, total_performance, avrg_time, std_deviation, title, file_name,output_dir):
+    def _show_graph(self, executors, total_performance, avrg_time, std_deviation, title, file_name,output_dir) -> str:
         plt.style.use("bmh") #"ggplot" "seaborn-v0_8-poster"
         fig, ax = plt.subplots(2, 1, sharex='none', squeeze=False, figsize=(15, 6))
         ax_main: matplotlib.axes.Axes = ax[0][0]
@@ -116,9 +116,10 @@ class GraphPerformance(GraphBase):
         plt.savefig(output_file, dpi=self.dpi)
         logging.info(f"  ... {output_file}")
         plt.close()
+        return output_file
 
 
-    def generate_from_dir(self, input_dir: str="input", output_dir: str="output"):
+    def generate_from_dir(self, input_dir: str="input", output_dir: str="output") -> list[str]:
         """
         Generate graphs based on input directory
 
@@ -131,23 +132,30 @@ class GraphPerformance(GraphBase):
 
         :param input_dir:       Input directory (default "input")
         :param output_dir:      Output directory (default "output")
+        :return:                List of generated files
         """
-        for file in os.listdir(input_dir):
-            self.generate_from_file(os.path.join(input_dir, file), output_dir)
-        logging.info("Done")
+        output_list=[]
 
-    def generate_from_file(self, input_file: str, output_dir: str="output"):
+        for file in os.listdir(input_dir):
+            for file in self.generate_from_file(os.path.join(input_dir, file), output_dir):
+                output_list.append(file)
+        logging.info("Done")
+        return output_list
+
+    def generate_from_file(self, input_file: str, output_dir: str="output") -> list[str]:
         """
         Generate graphs based on input input file
 
         :param input_file:      Input file
         :param output_dir:      Output directory (default "output")
+        :return:                List of generated files
         """
         file_name=None
         total_performance={}
         avrg_time={}
         std_deviation={}
         executors={}
+        output_list=[]
 
         logging.info(f"Processing '{input_file}' ...")
 
@@ -162,7 +170,7 @@ class GraphPerformance(GraphBase):
                     break
                 if line[0]=='#':
                     if file_name:
-                        self._show_graph(executors, total_performance, avrg_time, std_deviation,title, file_name,output_dir)
+                        output_list.append(self._show_graph(executors, total_performance, avrg_time, std_deviation,title, file_name,output_dir))
                     file_name=None
                     executors.clear()
                     total_performance.clear()
@@ -190,3 +198,4 @@ class GraphPerformance(GraphBase):
                         total_performance[input_dict[const.FileFormat.PRF_CORE_GROUP]] = [input_dict[const.FileFormat.PRF_CORE_TOTAL_CALL_PER_SEC]]
                         avrg_time[input_dict[const.FileFormat.PRF_CORE_GROUP]] = [input_dict[const.FileFormat.PRF_CORE_AVRG_TIME]]
                         std_deviation[input_dict[const.FileFormat.PRF_CORE_GROUP]]=[input_dict[const.FileFormat.PRF_CORE_STD_DEVIATION]]
+        return output_list
