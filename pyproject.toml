@@ -1,0 +1,65 @@
+[project]
+
+name = "qgate_graph"  # Required
+
+dynamic = ["version", "readme", "dependencies", "optional-dependencies"]
+
+description = "Generate graphs based on outputs from Quality Gate"  # Optional
+
+requires-python = ">=3.6"
+
+license = {file = "LICENSE"}
+
+keywords = ["Quality", "QualityGate", "Graph"]    # Optional
+
+authors = [
+  {name = "Jiri Steuer", email = "steuer.jiri@gmail.com" }      # Optional
+]
+maintainers = [
+  {name = "Jiri Steuer", email = "steuer.jiri@gmail.com" }      # Optional
+]
+
+classifiers = [  # Optional
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: Apache Software License",
+  "Operating System :: POSIX :: Linux",
+  "Operating System :: Microsoft :: Windows",
+  "Operating System :: MacOS",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.6",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Topic :: Software Development :: Libraries",
+]
+
+[project.urls]  # Optional
+homepage='https://github.com/george0st/qgate-graph/'
+repository='https://pypi.org/project/qgate_graph/'
+#"Homepage" = 'https://github.com/george0st/qgate-perf/'
+#download_url='https://pypi.org/project/qgate_perf/'
+#"Source" = "https://github.com/pypa/sampleproject/"
+
+[tool.setuptools]
+include-package-data = false
+
+[tool.setuptools.packages.find]
+include = ["qgate_perf*"]
+exclude = ["input*", "output*", "tests*"]
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.dynamic]
+readme = {file = ["README.md"], content-type = "text/markdown"}
+version = {attr = "qgate_graph.__version__"}
+dependencies = { file = ["requirements.txt"] }
+optional-dependencies.dev = { file = ["dev-requirements.txt"] }
+
