@@ -49,8 +49,9 @@ repository='https://pypi.org/project/qgate_graph/'
 [tool.setuptools]
 include-package-data = false
 
+# it has relation only to --wheel
 [tool.setuptools.packages.find]
-include = ["qgate_perf*"]
+include = ["qgate_graph*"]
 exclude = ["input*", "output*", "tests*"]
 
 [build-system]
