@@ -8,7 +8,8 @@ description = "Generate graphs based on outputs from Quality Gate"  # Optional
 
 requires-python = ">=3.6"
 
-license = {file = "LICENSE"}
+license = {text = "MIT"}
+#license = {file = "LICENSE"}
 
 keywords = ["Quality", "QualityGate", "Graph"]    # Optional
 
