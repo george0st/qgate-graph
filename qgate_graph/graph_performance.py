@@ -40,9 +40,10 @@ class GraphPerformance(GraphBase):
                     if executor not in list:
                         list.append(executor)
         else:
-            for executor in collection:
-                if executor not in list:
-                    list.append(executor)
+            if collection:
+                for executor in collection:
+                    if executor not in list:
+                        list.append(executor)
         return list
 
     def _expected_round(self,avrg_time):
