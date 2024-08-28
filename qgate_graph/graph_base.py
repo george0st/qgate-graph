@@ -72,3 +72,26 @@ class GraphBase:
             file_name=file_name.replace(itm,"_")
         file_name=file_name.replace("__","_")
         return file_name
+
+    def _readable_duration(self, duration_seconds):
+        """Return duration in human readable form"""
+
+        if duration_seconds<0:
+            return "n/a"
+
+        str_duration=[]
+        days = duration_seconds // 86400
+        if days>0:
+            str_duration.append(f"{days} day")
+        hours = duration_seconds // 3600 % 24
+        if hours>0:
+            str_duration.append(f"{hours} hour")
+        minutes = duration_seconds // 60 % 60
+        if minutes>0:
+            str_duration.append(f"{minutes} min")
+        seconds = duration_seconds % 60
+        if seconds>0:
+            str_duration.append(f"{seconds} sec")
+        return ' '.join(str_duration)
+
+
