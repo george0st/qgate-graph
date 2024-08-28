@@ -73,7 +73,7 @@ class GraphExecutor(GraphBase):
 
     def generate_from_file(self, input_file: str, output_dir: str = "output") -> list[str]:
         """
-        Generate graphs about executors based on input input file
+        Generate graphs about executors based on input file
 
         :param input_file:      Input file
         :param output_dir:      Output directory (default "output")
@@ -112,7 +112,7 @@ class GraphExecutor(GraphBase):
                     label = input_dict[const.FileFormat.PRF_HDR_LABEL]
                     bulk = input_dict[const.FileFormat.PRF_HDR_BULK]
                     bulk_name=f"{bulk[0]}/{bulk[1]}"
-                    file_name = self._unife_file_name("EXE",label,report_date,bulk)
+                    file_name = self._unique_file_name("EXE", label, report_date, bulk)
                     title = f"'{label}', {report_date}, bulk {bulk[0]}/{bulk[1]}"
 
                 elif input_dict[const.FileFormat.PRF_TYPE] == const.FileFormat.PRF_CORE_TYPE:
