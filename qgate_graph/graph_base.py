@@ -56,7 +56,7 @@ class GraphBase:
                  transform = ax.transAxes,
                  alpha=0.4, fontsize=8)
 
-    def _unife_file_name(self, prefix, label, report_date, bulk):
+    def _unique_file_name(self, prefix, label, report_date, bulk):
         """
         Generate unique name based on key information
 

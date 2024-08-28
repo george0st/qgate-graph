@@ -71,12 +71,13 @@ class GraphExecutor(GraphBase):
                     elif j==2:
                         new_array.append([new_item, -1])
 
-    def generate_from_file(self, input_file: str, output_dir: str = "output") -> list[str]:
+    def generate_from_file(self, input_file: str, output_dir: str = "output", suppress_error = False) -> list[str]:
         """
-        Generate graphs about executors based on input input file
+        Generate graphs about executors based on input file
 
         :param input_file:      Input file
         :param output_dir:      Output directory (default "output")
+        :param suppress_error:  Ability to suppress error (default is False)
         :return:                List of generated files
         """
         file_name = None
@@ -112,7 +113,7 @@ class GraphExecutor(GraphBase):
                     label = input_dict[const.FileFormat.PRF_HDR_LABEL]
                     bulk = input_dict[const.FileFormat.PRF_HDR_BULK]
                     bulk_name=f"{bulk[0]}/{bulk[1]}"
-                    file_name = self._unife_file_name("EXE",label,report_date,bulk)
+                    file_name = self._unique_file_name("EXE", label, report_date, bulk)
                     title = f"'{label}', {report_date}, bulk {bulk[0]}/{bulk[1]}"
 
                 elif input_dict[const.FileFormat.PRF_TYPE] == const.FileFormat.PRF_CORE_TYPE:
@@ -128,7 +129,18 @@ class GraphExecutor(GraphBase):
                             end_date=input_dict[const.FileFormat.PRF_CORE_TIME_END]
 
                         #file_name=f"{file_name}-plan-{plan}"
-                        output_list.append(self._show_graph(start_date, executors, end_date, title, f"{file_name}-plan-{plan}", output_dir))
+                        if suppress_error:
+                            try:
+                                output_list.append(
+                                    self._show_graph(start_date, executors, end_date, title, f"{file_name}-plan-{plan}",
+                                                     output_dir))
+                            except Exception as ex:
+                                logging.info(f"  ... Error in '{file_name}-plan-{plan}', '{type(ex)}'")
+                        else:
+                            output_list.append(
+                                self._show_graph(start_date, executors, end_date, title, f"{file_name}-plan-{plan}",
+                                                 output_dir))
+
                         executors.clear()
                         executor.clear()
                 elif input_dict[const.FileFormat.PRF_TYPE] == const.FileFormat.PRF_DETAIL_TYPE:
@@ -140,13 +152,13 @@ class GraphExecutor(GraphBase):
                             input_dict[const.FileFormat.PRF_DETAIL_TIME_END]])
         return output_list
 
-    def _show_graph(self, start_date, executors, end_date, title, file_name,output_dir) -> str :
+    def _show_graph(self, start_date, executors, end_date, title, file_name, output_dir) -> str :
         plt.style.use("bmh") #"ggplot" "seaborn-v0_8-poster"
         ax=plt.figure(figsize=(15, 6))
         plt.grid()
 
         # osa X = end_date - start_date
-        # osa Y = pocet soucasných executions
+        # osa Y = current executions
 
         # view total performance
         ax=plt.subplot(1,1,1)
