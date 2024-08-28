@@ -143,12 +143,13 @@ class GraphPerformance(GraphBase):
         logging.info("Done")
         return output_list
 
-    def generate_from_file(self, input_file: str, output_dir: str="output") -> list[str]:
+    def generate_from_file(self, input_file: str, output_dir: str="output", suppress_error = False) -> list[str]:
         """
         Generate graphs based on input file
 
         :param input_file:      Input file
         :param output_dir:      Output directory (default "output")
+        :param suppress_error:  Ability to suppress error (default is False)
         :return:                List of generated files
         """
         file_name=None
@@ -171,7 +172,17 @@ class GraphPerformance(GraphBase):
                     break
                 if line[0]=='#':
                     if file_name:
-                        output_list.append(self._show_graph(executors, total_performance, avrg_time, std_deviation,title, file_name,output_dir))
+                        if suppress_error:
+                            try:
+                                output_list.append(
+                                    self._show_graph(executors, total_performance, avrg_time, std_deviation,title,
+                                                     file_name,output_dir))
+                            except Exception as ex:
+                                logging.info(f"  ... Error in '{file_name}', '{type(ex)}'")
+                        else:
+                            output_list.append(
+                                self._show_graph(executors, total_performance, avrg_time, std_deviation, title,
+                                                 file_name, output_dir))
                     file_name=None
                     executors.clear()
                     total_performance.clear()
