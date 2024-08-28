@@ -36,14 +36,30 @@ class TestCaseBasic(unittest.TestCase):
         pass
 
     def test_perf_file(self):
+        """Performance graphs"""
         graph = GraphPerformance()
         output=graph.generate_from_file(TestCaseBasic.INPUT_FILE, self.OUTPUT_ADR)
 
         self.assertTrue(len(output)==2)
 
+    def test_perf_file2(self):
+        """Performance graphs with suppress error"""
+        graph = GraphPerformance()
+        output=graph.generate_from_file(TestCaseBasic.INPUT_FILE, self.OUTPUT_ADR, suppress_error = True)
+
+        self.assertTrue(len(output)==2)
+
     def test_exec_file(self):
+        """Execution graphs"""
         graph = GraphExecutor()
         output=graph.generate_from_file(TestCaseBasic.INPUT_FILE, self.OUTPUT_ADR)
+
+        self.assertTrue(len(output)==11)
+
+    def test_exec_file2(self):
+        """Execution graphs with suppress error"""
+        graph = GraphExecutor()
+        output=graph.generate_from_file(TestCaseBasic.INPUT_FILE, self.OUTPUT_ADR, suppress_error = True)
 
         self.assertTrue(len(output)==11)
 
