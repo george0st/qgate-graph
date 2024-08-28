@@ -40,14 +40,14 @@ class TestCaseBasic(unittest.TestCase):
         graph = GraphPerformance()
         output=graph.generate_from_file(TestCaseBasic.INPUT_FILE, self.OUTPUT_ADR)
 
-        self.assertTrue(len(output)==2)
+        self.assertTrue(len(output)==3)
 
     def test_perf_file2(self):
         """Performance graphs with suppress error"""
         graph = GraphPerformance()
         output=graph.generate_from_file(TestCaseBasic.INPUT_FILE, self.OUTPUT_ADR, suppress_error = True)
 
-        self.assertTrue(len(output)==2)
+        self.assertTrue(len(output)==3)
 
     def test_exec_file(self):
         """Execution graphs"""
@@ -64,12 +64,14 @@ class TestCaseBasic(unittest.TestCase):
         self.assertTrue(len(output)==11)
 
     def test_perf_dir(self):
+        """Performance graphs for dir"""
         graph = GraphPerformance()
         output=graph.generate_from_dir(TestCaseBasic.INPUT_ADR, self.OUTPUT_ADR)
 
-        self.assertTrue(len(output)==4)
+        self.assertTrue(len(output)==5)
 
     def test_exec_dir(self):
+        """Execution graphs for dir"""
         graph = GraphExecutor()
         output=graph.generate_from_dir(TestCaseBasic.INPUT_ADR, self.OUTPUT_ADR)
 
