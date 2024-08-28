@@ -77,6 +77,7 @@ class GraphExecutor(GraphBase):
 
         :param input_file:      Input file
         :param output_dir:      Output directory (default "output")
+        :param suppress_error:  Ability to suppress error (default is False)
         :return:                List of generated files
         """
         file_name = None
