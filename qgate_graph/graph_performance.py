@@ -145,7 +145,7 @@ class GraphPerformance(GraphBase):
 
     def generate_from_file(self, input_file: str, output_dir: str="output") -> list[str]:
         """
-        Generate graphs based on input input file
+        Generate graphs based on input file
 
         :param input_file:      Input file
         :param output_dir:      Output directory (default "output")
