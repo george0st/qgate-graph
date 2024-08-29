@@ -1,6 +1,5 @@
 click~=8.1
 
-#matplotlib >=3.5, <=3.8
 matplotlib>=3.5.0,<=3.9.2
 
 # numpy higher version need python>=3.10 (not 3.9)
