@@ -1,5 +1,4 @@
 import os.path, os
-
 import matplotlib.axes
 import matplotlib.pyplot as plt
 import qgate_graph.file_format as const
@@ -77,7 +76,9 @@ class GraphPerformance(GraphBase):
         for key in executors.keys():
             ax_main.plot(executors[key], total_performance[key], color=self._next_color(), linestyle="-", marker=self._next_marker(), label=f"{key} [{round(max(total_performance[key]), 2)}]")
 
-        ax_main.legend()
+        if len(executors)>0:
+            ax_main.legend()
+
         #ax_main.set_xlabel('Executors')
         ax_main.set_ylabel('Performance [calls/sec]')
         ax_main.set_xticks(self._get_executor_list(collections=executors))
@@ -171,7 +172,7 @@ class GraphPerformance(GraphBase):
                 if not line:
                     break
                 if line[0]=='#':
-                    if file_name:
+                    if file_name and len(executors)>0:
                         if suppress_error:
                             try:
                                 output_list.append(
