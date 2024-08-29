@@ -1,5 +1,4 @@
 import os.path, os
-
 import matplotlib.axes
 import matplotlib.pyplot as plt
 import qgate_graph.file_format as const
