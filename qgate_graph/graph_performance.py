@@ -164,7 +164,7 @@ class GraphPerformance(GraphBase):
 
         # create output dir if not exist
         if not os.path.exists(output_dir):
-            os.mkdir(output_dir)
+            os.makedirs(output_dir)
 
         with open(input_file, "r") as f:
             while True:

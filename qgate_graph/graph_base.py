@@ -1,5 +1,6 @@
 import os.path, os
 import matplotlib.pyplot as plt
+import matplotlib
 import qgate_graph.file_format as const
 import qgate_graph
 import json, datetime
@@ -26,6 +27,10 @@ class GraphBase:
         self._colors=['c', 'm', 'r', 'b', 'g', 'y', 'k']
         self._reset_color()
         self.dpi=dpi
+
+        # use 'Agg' as non-interactive backend for matplotlib
+        if matplotlib.get_backend().lower()!="agg":
+            matplotlib.use('Agg', force = True)
 
     def _next_marker(self):
         current=self._marker_point
@@ -74,7 +79,7 @@ class GraphBase:
         return file_name
 
     def _readable_duration(self, duration_seconds):
-        """Return duration in human readable form"""
+        """Return duration in human-readable form"""
 
         if duration_seconds<0:
             return "n/a"

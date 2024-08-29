@@ -1,5 +1,4 @@
 /output/
-/input/
 /__pycache__/
 /qgate_graph/__pycache__/
 *.pyc
