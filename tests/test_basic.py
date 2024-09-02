@@ -77,3 +77,16 @@ class TestCaseBasic(unittest.TestCase):
 
         self.assertTrue(len(output)==32)
 
+    def test_check_path(self):
+        """Check that output dir is still the same"""
+        graph = GraphPerformance()
+        output_dir = self.OUTPUT_ADR
+        output=graph.generate_from_dir(TestCaseBasic.INPUT_ADR, output_dir)
+        self.assertTrue(output_dir==self.OUTPUT_ADR)
+
+
+        graph = GraphExecutor()
+        output_dir = self.OUTPUT_ADR
+        output=graph.generate_from_dir(TestCaseBasic.INPUT_ADR, self.OUTPUT_ADR)
+        self.assertTrue(output_dir==self.OUTPUT_ADR)
+
