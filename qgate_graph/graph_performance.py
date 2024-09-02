@@ -162,9 +162,12 @@ class GraphPerformance(GraphBase):
 
         logging.info(f"Processing '{input_file}' ...")
 
+        # copy dir because the path can be modificated
+        output_dir_target = output_dir
+
         # create output dir, if not exist
-        if not os.path.exists(output_dir):
-            os.makedirs(output_dir)
+        if not os.path.exists(output_dir_target):
+            os.makedirs(output_dir_target)
 
         with open(input_file, "r") as f:
             while True:
@@ -177,13 +180,13 @@ class GraphPerformance(GraphBase):
                             try:
                                 output_list.append(
                                     self._show_graph(executors, total_performance, avrg_time, std_deviation,title,
-                                                     file_name,output_dir))
+                                                     file_name,output_dir_target))
                             except Exception as ex:
                                 logging.info(f"  ... Error in '{file_name}', '{type(ex)}'")
                         else:
                             output_list.append(
                                 self._show_graph(executors, total_performance, avrg_time, std_deviation, title,
-                                                 file_name, output_dir))
+                                                 file_name, output_dir_target))
                     file_name=None
                     executors.clear()
                     total_performance.clear()
@@ -199,10 +202,10 @@ class GraphPerformance(GraphBase):
                     duration = input_dict.get(const.FileFormat.PRF_HDR_DURATION, -1)
                     if duration >= 0:
                         # update output dir based on duration (e.g. 1 min, 5 sec, etc.)
-                        output_dir = os.path.join(output_dir, self._readable_duration(duration))
+                        output_dir_target = os.path.join(output_dir_target, self._readable_duration(duration))
                         # create subdirectory based on duration
-                        if not os.path.exists(output_dir):
-                            os.makedirs(output_dir)
+                        if not os.path.exists(output_dir_target):
+                            os.makedirs(output_dir_target)
                     file_name=self._unique_file_name("PRF", label, report_date, bulk)
                     title=f"'{label}', {report_date}, bulk {bulk[0]}/{bulk[1]}, duration '{self._readable_duration(duration)}'"
 
