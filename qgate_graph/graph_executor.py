@@ -113,11 +113,12 @@ class GraphExecutor(GraphBase):
                     label = input_dict[const.FileFormat.PRF_HDR_LABEL]
                     bulk = input_dict[const.FileFormat.PRF_HDR_BULK]
                     duration = input_dict.get(const.FileFormat.PRF_HDR_DURATION, -1)
-                    # update output dir based on duration (e.g. 1 min, 5 sec, etc.)
-                    output_dir = os.path.join(output_dir, self._readable_duration(duration))
-                    # create subdirectory based on duration
-                    if not os.path.exists(output_dir):
-                        os.makedirs(output_dir)
+                    if duration >= 0:
+                        # update output dir based on duration (e.g. 1 min, 5 sec, etc.)
+                        output_dir = os.path.join(output_dir, self._readable_duration(duration))
+                        # create subdirectory based on duration
+                        if not os.path.exists(output_dir):
+                            os.makedirs(output_dir)
                     bulk_name=f"{bulk[0]}/{bulk[1]}"
                     file_name = self._unique_file_name("EXE", label, report_date, bulk)
                     title = f"'{label}', {report_date}, bulk {bulk[0]}/{bulk[1]}, duration '{self._readable_duration(duration)}'"
