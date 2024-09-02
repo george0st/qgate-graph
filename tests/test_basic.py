@@ -4,6 +4,7 @@ import logging
 import time
 from os import path
 import shutil
+import glob
 from qgate_graph.graph_performance import GraphPerformance
 from qgate_graph.graph_executor import GraphExecutor
 
@@ -78,15 +79,31 @@ class TestCaseBasic(unittest.TestCase):
         self.assertTrue(len(output)==32)
 
     def test_check_path(self):
-        """Check, dir is still the same"""
+        """Check, dir with duration"""
         graph = GraphPerformance()
         output_dir = os.path.join(self.OUTPUT_ADR, "path_stability")
         output=graph.generate_from_dir(TestCaseBasic.INPUT_ADR, output_dir)
         self.assertTrue(output_dir==os.path.join(self.OUTPUT_ADR, "path_stability"))
-
 
         graph = GraphExecutor()
         output_dir = os.path.join(self.OUTPUT_ADR, "path_stability")
         output=graph.generate_from_dir(TestCaseBasic.INPUT_ADR, output_dir)
         self.assertTrue(output_dir==os.path.join(self.OUTPUT_ADR, "path_stability"))
 
+    def test_check_path_perf(self):
+        """Check, dir with duration for perf"""
+        graph = GraphPerformance()
+        output_dir = os.path.join(self.OUTPUT_ADR, "path_stability")
+        output=graph.generate_from_dir(TestCaseBasic.INPUT_ADR, output_dir)
+
+        file=glob.glob(path.join(output_dir, "1 min", f"PRF-Cassandra-write-min-*-bulk-200x10.png"))
+        self.assertTrue(len(file)==1)
+
+    def test_check_path_exec(self):
+        """Check, dir with duration for exec"""
+        graph = GraphExecutor()
+        output_dir = os.path.join(self.OUTPUT_ADR, "path_stability")
+        output=graph.generate_from_dir(TestCaseBasic.INPUT_ADR, output_dir)
+
+        file=glob.glob(path.join(output_dir, "1 min", f"EXE-Cassandra-write-min-*-bulk-200x10-plan-8x1.png"))
+        self.assertTrue(len(file)==1)
