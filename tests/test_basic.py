@@ -4,6 +4,7 @@ import logging
 import time
 from os import path
 import shutil
+import glob
 from qgate_graph.graph_performance import GraphPerformance
 from qgate_graph.graph_executor import GraphExecutor
 
@@ -82,11 +83,16 @@ class TestCaseBasic(unittest.TestCase):
         graph = GraphPerformance()
         output_dir = os.path.join(self.OUTPUT_ADR, "path_stability")
         output=graph.generate_from_dir(TestCaseBasic.INPUT_ADR, output_dir)
-        self.assertTrue(output_dir==os.path.join(self.OUTPUT_ADR, "path_stability"))
 
+        self.assertTrue(output_dir==os.path.join(self.OUTPUT_ADR, "path_stability"))
+        file=glob.glob(path.join(output_dir, "1 min", f"PRF-Cassandra-write-min-*-bulk-200x10.png"))
+        self.assertTrue(len(file)==1)
 
         graph = GraphExecutor()
         output_dir = os.path.join(self.OUTPUT_ADR, "path_stability")
         output=graph.generate_from_dir(TestCaseBasic.INPUT_ADR, output_dir)
+
         self.assertTrue(output_dir==os.path.join(self.OUTPUT_ADR, "path_stability"))
+        file=glob.glob(path.join(output_dir, "1 min", f"EXE-Cassandra-write-min-*-bulk-200x10-plan-8x1.png"))
+        self.assertTrue(len(file)==1)
 
