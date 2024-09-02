@@ -60,7 +60,7 @@ class GraphPerformance(GraphBase):
                     zero_count=zero_count+1
         return zero_count
 
-    def _show_graph(self, executors, total_performance, avrg_time, std_deviation, title, file_name,output_dir) -> str:
+    def _show_graph(self, executors, total_performance, avrg_time, std_deviation, title, file_name, output_dir) -> str:
         plt.style.use("bmh") #"ggplot" "seaborn-v0_8-poster"
         fig, ax = plt.subplots(2, 1, sharex='none', squeeze=False, figsize=(15, 6))
         ax_main: matplotlib.axes.Axes = ax[0][0]
@@ -162,7 +162,7 @@ class GraphPerformance(GraphBase):
 
         logging.info(f"Processing '{input_file}' ...")
 
-        # create output dir if not exist
+        # create output dir, if not exist
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
 
@@ -197,6 +197,11 @@ class GraphPerformance(GraphBase):
                     label=input_dict[const.FileFormat.PRF_HDR_LABEL]
                     bulk=input_dict[const.FileFormat.PRF_HDR_BULK]
                     duration = input_dict.get(const.FileFormat.PRF_HDR_DURATION, -1)
+                    # update output dir based on duration (e.g. 1 min, 5 sec, etc.)
+                    output_dir = os.path.join(output_dir, self._readable_duration(duration))
+                    # create subdirectory based on duration
+                    if not os.path.exists(output_dir):
+                        os.makedirs(output_dir)
                     file_name=self._unique_file_name("PRF", label, report_date, bulk)
                     title=f"'{label}', {report_date}, bulk {bulk[0]}/{bulk[1]}, duration '{self._readable_duration(duration)}'"
 
