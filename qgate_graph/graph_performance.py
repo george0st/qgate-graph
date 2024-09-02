@@ -202,7 +202,7 @@ class GraphPerformance(GraphBase):
                     duration = input_dict.get(const.FileFormat.PRF_HDR_DURATION, -1)
                     if duration >= 0:
                         # update output dir based on duration (e.g. 1 min, 5 sec, etc.)
-                        output_dir_target = os.path.join(output_dir_target, self._readable_duration(duration))
+                        output_dir_target = os.path.join(output_dir, self._readable_duration(duration))
                         # create subdirectory based on duration
                         if not os.path.exists(output_dir_target):
                             os.makedirs(output_dir_target)
