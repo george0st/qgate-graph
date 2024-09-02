@@ -82,17 +82,20 @@ class GraphExecutor(GraphBase):
         """
         file_name = None
         executors = {}
-        executor=[]
-        input_dict={}
-        end_date=None
-        start_date=None
-        output_list=[]
+        executor = []
+        input_dict = {}
+        end_date = None
+        start_date = None
+        output_list = []
 
         logging.info(f"Processing '{input_file}' ...")
 
+        # copy dir because the path can be modificated
+        output_dir_target = output_dir
+
         # create output dir if not exist
-        if not os.path.exists(output_dir):
-            os.makedirs(output_dir)
+        if not os.path.exists(output_dir_target):
+            os.makedirs(output_dir_target)
 
         with open(input_file, "r") as f:
             while True:
@@ -115,10 +118,10 @@ class GraphExecutor(GraphBase):
                     duration = input_dict.get(const.FileFormat.PRF_HDR_DURATION, -1)
                     if duration >= 0:
                         # update output dir based on duration (e.g. 1 min, 5 sec, etc.)
-                        output_dir = os.path.join(output_dir, self._readable_duration(duration))
+                        output_dir_target = os.path.join(output_dir_target, self._readable_duration(duration))
                         # create subdirectory based on duration
-                        if not os.path.exists(output_dir):
-                            os.makedirs(output_dir)
+                        if not os.path.exists(output_dir_target):
+                            os.makedirs(output_dir_target)
                     bulk_name=f"{bulk[0]}/{bulk[1]}"
                     file_name = self._unique_file_name("EXE", label, report_date, bulk)
                     title = f"'{label}', {report_date}, bulk {bulk[0]}/{bulk[1]}, duration '{self._readable_duration(duration)}'"
@@ -140,13 +143,13 @@ class GraphExecutor(GraphBase):
                             try:
                                 output_list.append(
                                     self._show_graph(start_date, executors, end_date, title, f"{file_name}-plan-{plan}",
-                                                     output_dir))
+                                                     output_dir_target))
                             except Exception as ex:
                                 logging.info(f"  ... Error in '{file_name}-plan-{plan}', '{type(ex)}'")
                         else:
                             output_list.append(
                                 self._show_graph(start_date, executors, end_date, title, f"{file_name}-plan-{plan}",
-                                                 output_dir))
+                                                 output_dir_target))
 
                         executors.clear()
                         executor.clear()
