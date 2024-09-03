@@ -100,10 +100,10 @@ class TestCaseBasic(unittest.TestCase):
         self.assertTrue(len(file)==1)
 
     def test_check_path_exec(self):
-        """Check, dir with duration for exec"""
+        """Check, dir with duration and date for exec"""
         graph = GraphExecutor()
         output_dir = os.path.join(self.OUTPUT_ADR, "path_stability")
         output=graph.generate_from_dir(TestCaseBasic.INPUT_ADR, output_dir)
 
-        file=glob.glob(path.join(output_dir, "1 min", f"EXE-Cassandra-write-min-*-bulk-200x10-plan-8x1.png"))
+        file=glob.glob(path.join(output_dir, "1 min", "2024-08-29", f"EXE-Cassandra-write-min-*-bulk-200x10-plan-8x1.png"))
         self.assertTrue(len(file)==1)
