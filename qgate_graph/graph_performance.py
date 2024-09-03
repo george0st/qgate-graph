@@ -138,8 +138,8 @@ class GraphPerformance(GraphBase):
         """
         output_list=[]
 
-        for file in os.listdir(input_dir):
-            for file in self.generate_from_file(os.path.join(input_dir, file), output_dir):
+        for input_file in os.listdir(input_dir):
+            for file in self.generate_from_file(os.path.join(input_dir, input_file), output_dir):
                 output_list.append(file)
         logging.info("Done")
         return output_list
@@ -196,13 +196,16 @@ class GraphPerformance(GraphBase):
                 input_dict=json.loads(line)
                 if input_dict[const.FileFormat.PRF_TYPE]==const.FileFormat.PRF_HDR_TYPE:
                     # header
-                    report_date=datetime.datetime.fromisoformat(input_dict[const.FileFormat.PRF_HDR_NOW]).strftime("%Y-%m-%d %H-%M-%S")
+                    start_date = input_dict[const.FileFormat.PRF_HDR_NOW]
+                    report_date=datetime.datetime.fromisoformat(start_date).strftime("%Y-%m-%d %H-%M-%S")
                     label=input_dict[const.FileFormat.PRF_HDR_LABEL]
                     bulk=input_dict[const.FileFormat.PRF_HDR_BULK]
                     duration = input_dict.get(const.FileFormat.PRF_HDR_DURATION, -1)
                     if duration >= 0:
-                        # update output dir based on duration (e.g. 1 min, 5 sec, etc.)
-                        output_dir_target = os.path.join(output_dir, self._readable_duration(duration))
+                        # update output dir based on duration (e.g. 1 min, 5 sec, etc.) and date
+                        output_dir_target = os.path.join(output_dir,
+                                                         self._readable_duration(duration),
+                                                         datetime.datetime.fromisoformat(start_date).strftime("%Y-%m-%d"))
                         # create subdirectory based on duration
                         if not os.path.exists(output_dir_target):
                             os.makedirs(output_dir_target)
