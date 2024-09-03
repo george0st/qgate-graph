@@ -39,8 +39,8 @@ class GraphExecutor(GraphBase):
         :return:                List of generated files
         """
         output_list=[]
-        for file in os.listdir(input_dir):
-            for file in self.generate_from_file(os.path.join(input_dir, file), output_dir):
+        for input_file in os.listdir(input_dir):
+            for file in self.generate_from_file(os.path.join(input_dir, input_file), output_dir):
                 output_list.append(file)
         logging.info("Done")
         return output_list
