@@ -102,6 +102,9 @@ class GraphExecutor(GraphBase):
                 line = f.readline()
                 if not line:
                     break
+                line=line.strip()
+                if len(line)==0:
+                    continue
                 if line[0] == '#':
                     file_name = None
                     executors.clear()
