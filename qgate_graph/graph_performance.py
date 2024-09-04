@@ -174,6 +174,9 @@ class GraphPerformance(GraphBase):
                 line=f.readline()
                 if not line:
                     break
+                line=line.strip()
+                if len(line)==0:
+                    continue
                 if line[0]=='#':
                     if file_name and len(executors)>0:
                         if suppress_error:
