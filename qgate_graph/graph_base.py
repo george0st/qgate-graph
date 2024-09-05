@@ -100,7 +100,8 @@ class GraphBase:
     def load_json(line):
         try:
             return json.loads(line.strip())
-        finally:
-            return None
+        except Exception as ex:
+            pass
+
 
 
