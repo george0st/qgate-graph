@@ -1,10 +1,7 @@
-import os.path, os
-import matplotlib.pyplot as plt
 import matplotlib
-import qgate_graph.file_format as const
 import qgate_graph
-import json, datetime
-import logging
+import json
+
 
 class GraphBase:
     """
@@ -98,5 +95,12 @@ class GraphBase:
         if seconds > 0:
             str_duration.append(f"{seconds} sec")
         return ' '.join(str_duration)
+
+    @staticmethod
+    def load_json(line):
+        try:
+            return json.loads(line.strip())
+        finally:
+            return None
 
 
