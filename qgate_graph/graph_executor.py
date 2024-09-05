@@ -102,15 +102,14 @@ class GraphExecutor(GraphBase):
                 line = f.readline()
                 if not line:
                     break
-                line=line.strip()
-                if len(line)==0:
-                    continue
                 if line[0] == '#':
                     file_name = None
                     executors.clear()
                     executor.clear()
                     continue
-                input_dict = json.loads(line)
+                input_dict = GraphBase.load_json(line)
+                if not input_dict:
+                    continue
                 if input_dict[const.FileFormat.PRF_TYPE] == const.FileFormat.PRF_HDR_TYPE:
                     # header
                     start_date=input_dict[const.FileFormat.PRF_HDR_NOW]

@@ -174,9 +174,6 @@ class GraphPerformance(GraphBase):
                 line=f.readline()
                 if not line:
                     break
-                line=line.strip()
-                if len(line)==0:
-                    continue
                 if line[0]=='#':
                     if file_name and len(executors)>0:
                         if suppress_error:
@@ -196,7 +193,10 @@ class GraphPerformance(GraphBase):
                     avrg_time.clear()
                     std_deviation.clear()
                     continue
-                input_dict=json.loads(line)
+                input_dict = GraphBase.load_json(line)
+                if not input_dict:
+                    continue
+                # input_dict=json.loads(line)
                 if input_dict[const.FileFormat.PRF_TYPE]==const.FileFormat.PRF_HDR_TYPE:
                     # header
                     start_date = input_dict[const.FileFormat.PRF_HDR_NOW]
