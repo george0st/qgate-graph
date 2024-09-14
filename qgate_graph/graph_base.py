@@ -1,5 +1,5 @@
-import matplotlib
-import qgate_graph
+from qgate_graph import __version__ as version
+from matplotlib import get_backend, use
 import json
 
 
@@ -26,8 +26,8 @@ class GraphBase:
         self.dpi=dpi
 
         # use 'Agg' as non-interactive backend for matplotlib
-        if matplotlib.get_backend().lower()!="agg":
-            matplotlib.use('Agg', force = True)
+        if get_backend().lower()!="agg":
+            use('Agg', force = True)
 
     def _next_marker(self):
         current=self._marker_point
@@ -51,7 +51,7 @@ class GraphBase:
         :param plt:
         :param ax:
         """
-        watermark=f'qgate_graph (v{qgate_graph.__version__})'
+        watermark=f'qgate_graph (v{version})'
         plt.text(1.0, 0, watermark,
                  horizontalalignment='right',
                  verticalalignment='bottom',

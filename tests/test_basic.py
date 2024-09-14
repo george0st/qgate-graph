@@ -25,9 +25,9 @@ class TestCaseBasic(unittest.TestCase):
         prefix = "."
         if not os.path.isfile(path.join(prefix, TestCaseBasic.INPUT_FILE)):
             prefix=".."
-        TestCaseBasic.OUTPUT_ADR=path.join(prefix,TestCaseBasic.OUTPUT_ADR)
-        TestCaseBasic.INPUT_FILE=path.join(prefix, TestCaseBasic.INPUT_FILE)
-        TestCaseBasic.INPUT_ADR=path.join(prefix, TestCaseBasic.INPUT_ADR)
+        TestCaseBasic.OUTPUT_ADR = path.join(prefix,TestCaseBasic.OUTPUT_ADR)
+        TestCaseBasic.INPUT_FILE = path.join(prefix, TestCaseBasic.INPUT_FILE)
+        TestCaseBasic.INPUT_ADR = path.join(prefix, TestCaseBasic.INPUT_ADR)
 
         # clean directory
         shutil.rmtree(TestCaseBasic.OUTPUT_ADR, True)
@@ -39,37 +39,37 @@ class TestCaseBasic(unittest.TestCase):
     def test_perf_file(self):
         """Performance graphs"""
         graph = GraphPerformance()
-        output=graph.generate_from_file(TestCaseBasic.INPUT_FILE, self.OUTPUT_ADR)
+        output = graph.generate_from_file(TestCaseBasic.INPUT_FILE, self.OUTPUT_ADR)
 
-        self.assertTrue(len(output)==2)
+        self.assertTrue(len(output) == 2)
 
     def test_perf_file2(self):
         """Performance graphs with suppress error"""
         graph = GraphPerformance()
-        output=graph.generate_from_file(TestCaseBasic.INPUT_FILE, self.OUTPUT_ADR, suppress_error = True)
+        output = graph.generate_from_file(TestCaseBasic.INPUT_FILE, self.OUTPUT_ADR, suppress_error = True)
 
-        self.assertTrue(len(output)==2)
+        self.assertTrue(len(output) == 2)
 
     def test_exec_file(self):
         """Execution graphs"""
         graph = GraphExecutor()
-        output=graph.generate_from_file(TestCaseBasic.INPUT_FILE, self.OUTPUT_ADR)
+        output = graph.generate_from_file(TestCaseBasic.INPUT_FILE, self.OUTPUT_ADR)
 
-        self.assertTrue(len(output)==11)
+        self.assertTrue(len(output) == 11)
 
     def test_exec_file2(self):
         """Execution graphs with suppress error"""
         graph = GraphExecutor()
-        output=graph.generate_from_file(TestCaseBasic.INPUT_FILE, self.OUTPUT_ADR, suppress_error = True)
+        output = graph.generate_from_file(TestCaseBasic.INPUT_FILE, self.OUTPUT_ADR, suppress_error = True)
 
-        self.assertTrue(len(output)==11)
+        self.assertTrue(len(output) == 11)
 
     def test_perf_dir(self):
         """Performance graphs for dir"""
         graph = GraphPerformance()
-        output=graph.generate_from_dir(TestCaseBasic.INPUT_ADR, self.OUTPUT_ADR)
+        output = graph.generate_from_dir(TestCaseBasic.INPUT_ADR, self.OUTPUT_ADR)
 
-        self.assertTrue(len(output)==5)
+        self.assertTrue(len(output) == 5)
 
     def test_exec_dir(self):
         """Execution graphs for dir"""
@@ -82,28 +82,28 @@ class TestCaseBasic(unittest.TestCase):
         """Check, dir with duration and date"""
         graph = GraphPerformance()
         output_dir = os.path.join(self.OUTPUT_ADR, "path_stability")
-        output=graph.generate_from_dir(TestCaseBasic.INPUT_ADR, output_dir)
-        self.assertTrue(output_dir==os.path.join(self.OUTPUT_ADR, "path_stability"))
+        output = graph.generate_from_dir(TestCaseBasic.INPUT_ADR, output_dir)
+        self.assertTrue(output_dir == os.path.join(self.OUTPUT_ADR, "path_stability"))
 
         graph = GraphExecutor()
         output_dir = os.path.join(self.OUTPUT_ADR, "path_stability")
-        output=graph.generate_from_dir(TestCaseBasic.INPUT_ADR, output_dir)
-        self.assertTrue(output_dir==os.path.join(self.OUTPUT_ADR, "path_stability"))
+        output = graph.generate_from_dir(TestCaseBasic.INPUT_ADR, output_dir)
+        self.assertTrue(output_dir == os.path.join(self.OUTPUT_ADR, "path_stability"))
 
     def test_check_path_perf(self):
         """Check, dir with duration and date for perf"""
         graph = GraphPerformance()
         output_dir = os.path.join(self.OUTPUT_ADR, "path_stability")
-        output=graph.generate_from_dir(TestCaseBasic.INPUT_ADR, output_dir)
+        output = graph.generate_from_dir(TestCaseBasic.INPUT_ADR, output_dir)
 
-        file=glob.glob(path.join(output_dir, "1 min", "2024-08-29", f"PRF-Cassandra-write-min-*-bulk-200x10.png"))
-        self.assertTrue(len(file)==1)
+        file = glob.glob(path.join(output_dir, "1 min", "2024-08-29", f"PRF-Cassandra-write-min-*-bulk-200x10.png"))
+        self.assertTrue(len(file) == 1)
 
     def test_check_path_exec(self):
         """Check, dir with duration and date for exec"""
         graph = GraphExecutor()
         output_dir = os.path.join(self.OUTPUT_ADR, "path_stability")
-        output=graph.generate_from_dir(TestCaseBasic.INPUT_ADR, output_dir)
+        output = graph.generate_from_dir(TestCaseBasic.INPUT_ADR, output_dir)
 
-        file=glob.glob(path.join(output_dir, "1 min", "2024-08-29", f"EXE-Cassandra-write-min-*-bulk-200x10-plan-8x1.png"))
-        self.assertTrue(len(file)==1)
+        file = glob.glob(path.join(output_dir, "1 min", "2024-08-29", f"EXE-Cassandra-write-min-*-bulk-200x10-plan-8x1.png"))
+        self.assertTrue(len(file) == 1)
