@@ -1,9 +1,10 @@
-import os.path, os
-import matplotlib.pyplot as plt
-import qgate_graph.file_format as const
+from matplotlib import pyplot as plt
+from qgate_graph import file_format as const
 from qgate_graph.graph_base import GraphBase
-import json, datetime
+import os.path, os
+import datetime
 import logging
+
 
 class GraphExecutor(GraphBase):
     """
@@ -95,7 +96,7 @@ class GraphExecutor(GraphBase):
 
         # create output dir if not exist
         if not os.path.exists(output_dir_target):
-            os.makedirs(output_dir_target)
+            os.makedirs(output_dir_target, mode=0o777)
 
         with open(input_file, "r") as f:
             while True:
@@ -125,7 +126,7 @@ class GraphExecutor(GraphBase):
                                                          datetime.datetime.fromisoformat(start_date).strftime("%Y-%m-%d"))
                         # create subdirectory based on duration
                         if not os.path.exists(output_dir_target):
-                            os.makedirs(output_dir_target)
+                            os.makedirs(output_dir_target, mode=0o777)
                     bulk_name=f"{bulk[0]}/{bulk[1]}"
                     file_name = self._unique_file_name("EXE", label, report_date, bulk)
                     title = f"'{label}', {report_date}, bulk {bulk[0]}/{bulk[1]}, duration '{self._readable_duration(duration)}'"

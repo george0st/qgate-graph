@@ -1,11 +1,12 @@
-import os.path, os
-import matplotlib.axes
-import matplotlib.pyplot as plt
-import qgate_graph.file_format as const
-import json, datetime
-import logging
-import numpy
+from matplotlib import axes
+from matplotlib import pyplot as plt
+from qgate_graph import file_format as const
+from numpy import average
 from qgate_graph.graph_base import GraphBase
+import os.path, os
+import datetime
+import logging
+
 
 class GraphPerformance(GraphBase):
     """
@@ -47,7 +48,7 @@ class GraphPerformance(GraphBase):
 
     def _expected_round(self,avrg_time):
 
-        avrg=numpy.average(avrg_time)
+        avrg = average(avrg_time)
         zero_count=1    #   minimal number of zeros
 
         split=str(avrg).split('.')
@@ -63,7 +64,7 @@ class GraphPerformance(GraphBase):
     def _show_graph(self, executors, total_performance, avrg_time, std_deviation, title, file_name, output_dir) -> str:
         plt.style.use("bmh") #"ggplot" "seaborn-v0_8-poster"
         fig, ax = plt.subplots(2, 1, sharex='none', squeeze=False, figsize=(15, 6))
-        ax_main: matplotlib.axes.Axes = ax[0][0]
+        ax_main: axes.Axes = ax[0][0]
 
         # view total performance
         self._watermark(plt, ax_main)
@@ -167,7 +168,7 @@ class GraphPerformance(GraphBase):
 
         # create output dir, if not exist
         if not os.path.exists(output_dir_target):
-            os.makedirs(output_dir_target)
+            os.makedirs(output_dir_target, mode=0o777)
 
         with open(input_file, "r") as f:
             while True:
@@ -196,7 +197,6 @@ class GraphPerformance(GraphBase):
                 input_dict = GraphBase.load_json(line)
                 if not input_dict:
                     continue
-                # input_dict=json.loads(line)
                 if input_dict[const.FileFormat.PRF_TYPE]==const.FileFormat.PRF_HDR_TYPE:
                     # header
                     start_date = input_dict[const.FileFormat.PRF_HDR_NOW]
@@ -211,7 +211,7 @@ class GraphPerformance(GraphBase):
                                                          datetime.datetime.fromisoformat(start_date).strftime("%Y-%m-%d"))
                         # create subdirectory based on duration
                         if not os.path.exists(output_dir_target):
-                            os.makedirs(output_dir_target)
+                            os.makedirs(output_dir_target, mode=0o777)
                     file_name=self._unique_file_name("PRF", label, report_date, bulk)
                     title=f"'{label}', {report_date}, bulk {bulk[0]}/{bulk[1]}, duration '{self._readable_duration(duration)}'"
 
