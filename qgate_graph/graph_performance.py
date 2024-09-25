@@ -53,10 +53,10 @@ class GraphPerformance(GraphBase):
 
     def _expected_round(self, avrg_time):
         """Calculation amount of precisions for description"""
-        deviation = std(avrg_time)
+        deviation = round(std(avrg_time),self._max_precision)
         zero_count = self._min_precision
 
-        split = str(deviation).split('.')
+        split = str(f"{deviation:f}").split('.')
         if len(split) > 1:
             # calculation amount of zeros
             for c in split[1]:
@@ -65,7 +65,7 @@ class GraphPerformance(GraphBase):
                 else:
                     zero_count += 1
                     if zero_count >= self._max_precision:
-                        zero_count = self._min_precision
+                        #zero_count = self._min_precision
                         break
 
         return zero_count
