@@ -218,9 +218,9 @@ class GraphExecutor(GraphBase):
 
         for key in executors.keys():
             plt.step(new_array2,new_array_count,where='post',
-                  color=self._next_color(), linestyle="-", marker=self._next_marker(), label=f"{key}")
+                  color = self._next_color(), linestyle="-", marker=self._next_marker(), label=f"{key}")
 
-        output_file=os.path.join(output_dir,file_name+".png")
+        output_file=os.path.join(output_dir, file_name+".png")
         plt.savefig(output_file, dpi=self.dpi)
         logging.info(f"  ... {output_file}")
         plt.close()

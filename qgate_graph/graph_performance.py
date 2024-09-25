@@ -120,12 +120,12 @@ class GraphPerformance(GraphBase):
                              weight='normal')           # previous code weight='bold'
 
             ax.set_xlabel('Executors')
-            if key_count+1==key_view:
+            if key_count+1 == key_view:
                 ax.set_ylabel('Response [sec]')
             ax.set_xticks(self._get_executor_list(collection=executors[key]))
-            ax.grid(visible=True)
+            ax.grid(visible = True)
 
-        output_file=os.path.join(output_dir,file_name+".png")
+        output_file = os.path.join(output_dir, file_name+".png")
         plt.savefig(output_file, dpi=self.dpi)
         logging.info(f"  ... {output_file}")
         plt.close()
