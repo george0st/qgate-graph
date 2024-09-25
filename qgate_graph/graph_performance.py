@@ -1,7 +1,7 @@
 from matplotlib import axes
 from matplotlib import pyplot as plt
 from qgate_graph import file_format as const
-from numpy import average
+from numpy import std
 from qgate_graph.graph_base import GraphBase
 import os.path, os
 import datetime
@@ -9,6 +9,9 @@ import logging
 
 
 class GraphPerformance(GraphBase):
+    MIN_PRECISION = 1
+    MAX_PRECISION = 4
+
     """
     Generate graph based on input data
 
@@ -23,8 +26,10 @@ class GraphPerformance(GraphBase):
             graph=grp.GraphPerformance()
             graph.generate_from_dir("input_adr", "output_adr")
     """
-    def __init__(self, dpi=100):
+    def __init__(self, dpi=100, min_precision = -1, max_precision = -1):
         super().__init__(dpi)
+        self._min_precision = min_precision if min_precision >= 0 else GraphPerformance.MIN_PRECISION
+        self._max_precision = max_precision if max_precision >= 0 else GraphPerformance.MAX_PRECISION
 
     def _get_executor_list(self, collections=None, collection=None):
         """
@@ -46,19 +51,23 @@ class GraphPerformance(GraphBase):
                         list.append(executor)
         return list
 
-    def _expected_round(self,avrg_time):
+    def _expected_round(self, avrg_time):
+        """Calculation amount of precisions for description"""
+        deviation = std(avrg_time)
+        zero_count = self._min_precision
 
-        avrg = average(avrg_time)
-        zero_count=1    #   minimal number of zeros
-
-        split=str(avrg).split('.')
-        if len(split)>1:
+        split = str(deviation).split('.')
+        if len(split) > 1:
             # calculation amount of zeros
             for c in split[1]:
-                if c!='0':
+                if c != '0':
                     break
                 else:
-                    zero_count=zero_count+1
+                    zero_count += 1
+                    if zero_count >= self._max_precision:
+                        zero_count = self._min_precision
+                        break
+
         return zero_count
 
     def _show_graph(self, executors, total_performance, avrg_time, std_deviation, title, file_name, output_dir) -> str:
@@ -99,7 +108,8 @@ class GraphPerformance(GraphBase):
             ax.errorbar(executors[key], avrg_time[key], std_deviation[key], alpha=0.5,color=self._next_color(), ls='none', marker=self._next_marker(), linewidth=2, capsize=6)
             self._watermark(plt, ax)
 
-            expected_round=self._expected_round(avrg_time[key])
+            # print response time value with relevant precision
+            expected_round = self._expected_round(avrg_time[key])
             for x, y in zip(executors[key], avrg_time[key]):
                 ax.annotate(round(y,expected_round),   # previous code plt.annotate(round(y,1),
                              (x,y),
@@ -110,12 +120,12 @@ class GraphPerformance(GraphBase):
                              weight='normal')           # previous code weight='bold'
 
             ax.set_xlabel('Executors')
-            if key_count+1==key_view:
+            if key_count+1 == key_view:
                 ax.set_ylabel('Response [sec]')
             ax.set_xticks(self._get_executor_list(collection=executors[key]))
-            ax.grid(visible=True)
+            ax.grid(visible = True)
 
-        output_file=os.path.join(output_dir,file_name+".png")
+        output_file = os.path.join(output_dir, file_name+".png")
         plt.savefig(output_file, dpi=self.dpi)
         logging.info(f"  ... {output_file}")
         plt.close()
