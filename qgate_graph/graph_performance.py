@@ -51,7 +51,7 @@ class GraphPerformance(GraphBase):
                         list.append(executor)
         return list
 
-    def _expected_round(self, avrg_time):
+    def expected_round(self, avrg_time):
         """Calculation amount of precisions for description"""
         deviation = round(std(avrg_time),self._max_precision)
         zero_count = self._min_precision
@@ -109,7 +109,7 @@ class GraphPerformance(GraphBase):
             self._watermark(plt, ax)
 
             # print response time value with relevant precision
-            expected_round = self._expected_round(avrg_time[key])
+            expected_round = self.expected_round(avrg_time[key])
             for x, y in zip(executors[key], avrg_time[key]):
                 ax.annotate(round(y,expected_round),   # previous code plt.annotate(round(y,1),
                              (x,y),
