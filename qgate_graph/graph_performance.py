@@ -59,32 +59,33 @@ class GraphPerformance(GraphBase):
 
     def expected_round(self, avrg_time):
         """Calculation amount of precisions for description"""
+
+        # calc max by number precision
+        max_by_precision = 0
         for a in avrg_time:
-            b= a - int(a)
             split = str(f"{a:f}").split('.')
 
             if len(split)>1:
-                print(a,": ",len(split[1].rstrip('0')))
-        # max precision based on
+                size = len(split[1].rstrip('0'))
+                if size > max_by_precision:
+                    max_by_precision = size
 
-
-
+        # max by standard deviation
         deviation = round(std(avrg_time),self._max_precision)
-        zero_count = 0
+        max_by_stddev = 0
 
         split = str(f"{deviation:f}").split('.')
         if len(split) > 1:
             # calculation amount of zeros
             for c in split[1]:
-                zero_count += 1
+                max_by_stddev += 1
                 if c != '0':
                     break
                 else:
-                    if zero_count >= self._max_precision:
-                        #zero_count = self._min_precision
+                    if max_by_stddev >= self._max_precision:
                         break
 
-        return zero_count if zero_count >= self._min_precision else self._min_precision
+        return max_by_stddev if max_by_stddev >= self._min_precision else self._min_precision
 
 
     def _show_graph(self, executors, total_performance, avrg_time, std_deviation, title, file_name, output_dir) -> str:
