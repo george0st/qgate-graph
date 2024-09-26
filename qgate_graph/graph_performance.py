@@ -51,24 +51,41 @@ class GraphPerformance(GraphBase):
                         list.append(executor)
         return list
 
+    def _exp_size(self, i):
+        return int("{:.5e}".format(i).split("e")[1]) + 1  # e.g. `1e10` -> `10` + 1 -> 11
+
+    def mod_size(self, i):
+        return len("%i" % i)  # Uses string modulo instead of str(i)
+
     def expected_round(self, avrg_time):
         """Calculation amount of precisions for description"""
+        for a in avrg_time:
+            b= a - int(a)
+            split = str(f"{a:f}").split('.')
+
+            if len(split)>1:
+                print(a,": ",len(split[1].rstrip('0')))
+        # max precision based on
+
+
+
         deviation = round(std(avrg_time),self._max_precision)
-        zero_count = self._min_precision
+        zero_count = 0
 
         split = str(f"{deviation:f}").split('.')
         if len(split) > 1:
             # calculation amount of zeros
             for c in split[1]:
+                zero_count += 1
                 if c != '0':
                     break
                 else:
-                    zero_count += 1
                     if zero_count >= self._max_precision:
                         #zero_count = self._min_precision
                         break
 
-        return zero_count
+        return zero_count if zero_count >= self._min_precision else self._min_precision
+
 
     def _show_graph(self, executors, total_performance, avrg_time, std_deviation, title, file_name, output_dir) -> str:
         plt.style.use("bmh") #"ggplot" "seaborn-v0_8-poster"
