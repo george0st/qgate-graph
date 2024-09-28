@@ -1,7 +1,7 @@
 from matplotlib import axes
 from matplotlib import pyplot as plt
 from qgate_graph import file_format as const
-from numpy import std
+from numpy import std, average
 from qgate_graph.graph_base import GraphBase
 import os.path, os
 import datetime
@@ -9,8 +9,9 @@ import logging
 
 
 class GraphPerformance(GraphBase):
-    MIN_PRECISION = 1
+    MIN_PRECISION = 0
     MAX_PRECISION = 4
+    MAX_PRECISION_FORMAT = "{num:.4f}"
 
     """
     Generate graph based on input data
@@ -51,24 +52,64 @@ class GraphPerformance(GraphBase):
                         list.append(executor)
         return list
 
-    def _expected_round(self, avrg_time):
-        """Calculation amount of precisions for description"""
-        deviation = round(std(avrg_time),self._max_precision)
-        zero_count = self._min_precision
+    def _exp_size(self, i):
+        return int("{:.5e}".format(i).split("e")[1]) + 1  # e.g. `1e10` -> `10` + 1 -> 11
 
-        split = str(f"{deviation:f}").split('.')
-        if len(split) > 1:
-            # calculation amount of zeros
-            for c in split[1]:
-                if c != '0':
-                    break
-                else:
-                    zero_count += 1
-                    if zero_count >= self._max_precision:
-                        #zero_count = self._min_precision
+    def mod_size(self, i):
+        return len("%i" % i)  # Uses string modulo instead of str(i)
+
+    def expected_round(self, avrg_time):
+        """Calculation amount of precisions for number presentation"""
+
+        # calc max by number precision
+        max_len = 0
+        min_zero = self.MAX_PRECISION
+        max_zero = self.MIN_PRECISION
+        for a in avrg_time:
+            split = self.MAX_PRECISION_FORMAT.format(num=a).split('.')
+
+            if len(split)>1:
+                decimal_item = split[1].rstrip('0')
+                size = len(decimal_item)
+                if size > max_len:
+                    max_len = size
+
+                zero_prefix = 0
+                skip = True
+                for c in decimal_item:
+                    zero_prefix += 1
+                    if c != '0':
+                        skip = False
                         break
 
-        return zero_count
+                if not skip:
+                    min_zero = min(zero_prefix, min_zero)
+                    max_zero = max(zero_prefix, max_zero)
+        if max_len==0:
+            return self._min_precision
+
+        # max by standard deviation
+        deviation = std(avrg_time)
+        if deviation > 1:
+            return int(average([min_zero,max_zero]))
+        else:
+            max_stddev = 0
+            limit = False
+            split = self.MAX_PRECISION_FORMAT.format(num=deviation).split('.')
+            if len(split) > 1:
+                # calculation amount of zeros
+                for c in split[1]:
+                    max_stddev += 1
+                    if c != '0':
+                        limit = True
+                        break
+
+            if max_stddev>max_len:
+                max_stddev=max_len
+
+            if limit:
+                return max_stddev if max_stddev > max_zero else max_zero
+            return max_len
 
     def _show_graph(self, executors, total_performance, avrg_time, std_deviation, title, file_name, output_dir) -> str:
         plt.style.use("bmh") #"ggplot" "seaborn-v0_8-poster"
@@ -109,7 +150,7 @@ class GraphPerformance(GraphBase):
             self._watermark(plt, ax)
 
             # print response time value with relevant precision
-            expected_round = self._expected_round(avrg_time[key])
+            expected_round = self.expected_round(avrg_time[key])
             for x, y in zip(executors[key], avrg_time[key]):
                 ax.annotate(round(y,expected_round),   # previous code plt.annotate(round(y,1),
                              (x,y),
