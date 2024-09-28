@@ -124,8 +124,12 @@ class GraphPerformance(GraphBase):
         self._reset_marker()
         self._reset_color()
 
+        # plot main graph 'Performance [calls/second]' (plus amount of executors)
         for key in executors.keys():
-            ax_main.plot(executors[key], total_performance[key], color=self._next_color(), linestyle="-", marker=self._next_marker(), label=f"{key} [{round(max(total_performance[key]), 2)}]")
+            ax_main.plot(executors[key], total_performance[key],
+                         color=self._next_color(), linestyle="-",
+                         marker=self._next_marker(),
+                         label=f"{key} [{round(max(total_performance[key]), 2)}]")
 
         if len(executors)>0:
             ax_main.legend()
@@ -137,7 +141,7 @@ class GraphPerformance(GraphBase):
         # remove duplicit axis (because matplotlib>=3.8)
         ax[1][0].remove()
 
-        # draw detail graphs
+        # draw detail graphs 'Response time [seconds]'
         key_count=len(executors.keys())
         key_view=key_count
         self._reset_marker()
@@ -146,7 +150,10 @@ class GraphPerformance(GraphBase):
             # view response time
             key_view+=1
             ax=plt.subplot(2, key_count, key_view)
-            ax.errorbar(executors[key], avrg_time[key], std_deviation[key], alpha=0.5,color=self._next_color(), ls='none', marker=self._next_marker(), linewidth=2, capsize=6)
+            ax.errorbar(executors[key], avrg_time[key], std_deviation[key],
+                        alpha = 0.5, color = self._next_color(),
+                        ls = 'none', marker = self._next_marker(),
+                        linewidth = 2, capsize = 6)
             self._watermark(plt, ax)
 
             # print response time value with relevant precision
@@ -231,14 +238,14 @@ class GraphPerformance(GraphBase):
                         if suppress_error:
                             try:
                                 output_list.append(
-                                    self._show_graph(executors, total_performance, avrg_time, std_deviation,title,
-                                                     file_name,output_dir_target))
+                                    self._show_graph(executors, total_performance, avrg_time, std_deviation,
+                                                     title, file_name, output_dir_target))
                             except Exception as ex:
                                 logging.info(f"  ... Error in '{file_name}', '{type(ex)}'")
                         else:
                             output_list.append(
-                                self._show_graph(executors, total_performance, avrg_time, std_deviation, title,
-                                                 file_name, output_dir_target))
+                                self._show_graph(executors, total_performance, avrg_time, std_deviation,
+                                                 title, file_name, output_dir_target))
                     file_name=None
                     executors.clear()
                     total_performance.clear()
