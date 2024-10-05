@@ -27,10 +27,11 @@ class GraphPerformance(GraphBase):
             graph=grp.GraphPerformance()
             graph.generate_from_dir("input_adr", "output_adr")
     """
-    def __init__(self, dpi=100, min_precision = -1, max_precision = -1):
+    def __init__(self, dpi = 100, min_precision = -1, max_precision = -1):
         super().__init__(dpi)
         self._min_precision = min_precision if min_precision >= 0 else GraphPerformance.MIN_PRECISION
         self._max_precision = max_precision if max_precision >= 0 else GraphPerformance.MAX_PRECISION
+        self._max_precision_format ="{num:." + str(self._max_precision) +"f}"
 
     def _get_executor_list(self, collections=None, collection=None):
         """
@@ -63,10 +64,10 @@ class GraphPerformance(GraphBase):
 
         # calc max by number precision
         max_len = 0
-        min_zero = self.MAX_PRECISION
-        max_zero = self.MIN_PRECISION
+        min_zero = self._max_precision
+        max_zero = self._min_precision
         for a in avrg_time:
-            split = self.MAX_PRECISION_FORMAT.format(num=a).split('.')
+            split = self._max_precision_format.format(num=a).split('.')
 
             if len(split)>1:
                 decimal_item = split[1].rstrip('0')
@@ -95,7 +96,7 @@ class GraphPerformance(GraphBase):
         else:
             max_stddev = 0
             limit = False
-            split = self.MAX_PRECISION_FORMAT.format(num=deviation).split('.')
+            split = self._max_precision_format.format(num=deviation).split('.')
             if len(split) > 1:
                 # calculation amount of zeros
                 for c in split[1]:
