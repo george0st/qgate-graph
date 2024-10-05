@@ -1,6 +1,7 @@
 from matplotlib import axes
 from matplotlib import pyplot as plt
-from qgate_graph import file_format as const
+#from qgate_graph import file_format as const
+from qgate_graph.file_format import FileFormat as const
 from numpy import std, average
 from qgate_graph.graph_base import GraphBase
 import os.path, os
@@ -27,10 +28,12 @@ class GraphPerformance(GraphBase):
             graph=grp.GraphPerformance()
             graph.generate_from_dir("input_adr", "output_adr")
     """
-    def __init__(self, dpi=100, min_precision = -1, max_precision = -1):
+    def __init__(self, dpi = 100, min_precision = -1, max_precision = -1, raw_format = False):
         super().__init__(dpi)
         self._min_precision = min_precision if min_precision >= 0 else GraphPerformance.MIN_PRECISION
         self._max_precision = max_precision if max_precision >= 0 else GraphPerformance.MAX_PRECISION
+        self._max_precision_format = "{num:." + str(self._max_precision) + "f}"
+        self._performance = const.PRF_CORE_TOTAL_CALL_PER_SEC_RAW if raw_format else const.PRF_CORE_TOTAL_CALL_PER_SEC
 
     def _get_executor_list(self, collections=None, collection=None):
         """
@@ -63,10 +66,10 @@ class GraphPerformance(GraphBase):
 
         # calc max by number precision
         max_len = 0
-        min_zero = self.MAX_PRECISION
-        max_zero = self.MIN_PRECISION
+        min_zero = self._max_precision
+        max_zero = self._min_precision
         for a in avrg_time:
-            split = self.MAX_PRECISION_FORMAT.format(num=a).split('.')
+            split = self._max_precision_format.format(num=a).split('.')
 
             if len(split)>1:
                 decimal_item = split[1].rstrip('0')
@@ -85,7 +88,7 @@ class GraphPerformance(GraphBase):
                 if not skip:
                     min_zero = min(zero_prefix, min_zero)
                     max_zero = max(zero_prefix, max_zero)
-        if max_len==0:
+        if max_len == 0:
             return self._min_precision
 
         # max by standard deviation
@@ -95,7 +98,7 @@ class GraphPerformance(GraphBase):
         else:
             max_stddev = 0
             limit = False
-            split = self.MAX_PRECISION_FORMAT.format(num=deviation).split('.')
+            split = self._max_precision_format.format(num=deviation).split('.')
             if len(split) > 1:
                 # calculation amount of zeros
                 for c in split[1]:
@@ -124,8 +127,12 @@ class GraphPerformance(GraphBase):
         self._reset_marker()
         self._reset_color()
 
+        # plot main graph 'Performance [calls/second]' (plus amount of executors)
         for key in executors.keys():
-            ax_main.plot(executors[key], total_performance[key], color=self._next_color(), linestyle="-", marker=self._next_marker(), label=f"{key} [{round(max(total_performance[key]), 2)}]")
+            ax_main.plot(executors[key], total_performance[key],
+                         color=self._next_color(), linestyle="-",
+                         marker=self._next_marker(),
+                         label=f"{key} [{round(max(total_performance[key]), 2)}]")
 
         if len(executors)>0:
             ax_main.legend()
@@ -137,7 +144,7 @@ class GraphPerformance(GraphBase):
         # remove duplicit axis (because matplotlib>=3.8)
         ax[1][0].remove()
 
-        # draw detail graphs
+        # draw detail graphs 'Response time [seconds]'
         key_count=len(executors.keys())
         key_view=key_count
         self._reset_marker()
@@ -146,7 +153,10 @@ class GraphPerformance(GraphBase):
             # view response time
             key_view+=1
             ax=plt.subplot(2, key_count, key_view)
-            ax.errorbar(executors[key], avrg_time[key], std_deviation[key], alpha=0.5,color=self._next_color(), ls='none', marker=self._next_marker(), linewidth=2, capsize=6)
+            ax.errorbar(executors[key], avrg_time[key], std_deviation[key],
+                        alpha = 0.5, color = self._next_color(),
+                        ls = 'none', marker = self._next_marker(),
+                        linewidth = 2, capsize = 6)
             self._watermark(plt, ax)
 
             # print response time value with relevant precision
@@ -231,14 +241,14 @@ class GraphPerformance(GraphBase):
                         if suppress_error:
                             try:
                                 output_list.append(
-                                    self._show_graph(executors, total_performance, avrg_time, std_deviation,title,
-                                                     file_name,output_dir_target))
+                                    self._show_graph(executors, total_performance, avrg_time, std_deviation,
+                                                     title, file_name, output_dir_target))
                             except Exception as ex:
                                 logging.info(f"  ... Error in '{file_name}', '{type(ex)}'")
                         else:
                             output_list.append(
-                                self._show_graph(executors, total_performance, avrg_time, std_deviation, title,
-                                                 file_name, output_dir_target))
+                                self._show_graph(executors, total_performance, avrg_time, std_deviation,
+                                                 title, file_name, output_dir_target))
                     file_name=None
                     executors.clear()
                     total_performance.clear()
@@ -248,13 +258,13 @@ class GraphPerformance(GraphBase):
                 input_dict = GraphBase.load_json(line)
                 if not input_dict:
                     continue
-                if input_dict[const.FileFormat.PRF_TYPE]==const.FileFormat.PRF_HDR_TYPE:
+                if input_dict[const.PRF_TYPE]==const.PRF_HDR_TYPE:
                     # header
-                    start_date = input_dict[const.FileFormat.PRF_HDR_NOW]
+                    start_date = input_dict[const.PRF_HDR_NOW]
                     report_date=datetime.datetime.fromisoformat(start_date).strftime("%Y-%m-%d %H-%M-%S")
-                    label=input_dict[const.FileFormat.PRF_HDR_LABEL]
-                    bulk=input_dict[const.FileFormat.PRF_HDR_BULK]
-                    duration = input_dict.get(const.FileFormat.PRF_HDR_DURATION, -1)
+                    label=input_dict[const.PRF_HDR_LABEL]
+                    bulk=input_dict[const.PRF_HDR_BULK]
+                    duration = input_dict.get(const.PRF_HDR_DURATION, -1)
                     if duration >= 0:
                         # update output dir based on duration (e.g. 1 min, 5 sec, etc.) and date
                         output_dir_target = os.path.join(output_dir,
@@ -266,16 +276,16 @@ class GraphPerformance(GraphBase):
                     file_name=self._unique_file_name("PRF", label, report_date, bulk)
                     title=f"'{label}', {report_date}, bulk {bulk[0]}/{bulk[1]}, duration '{self._readable_duration(duration)}'"
 
-                elif input_dict[const.FileFormat.PRF_TYPE]==const.FileFormat.PRF_CORE_TYPE:
+                elif input_dict[const.PRF_TYPE]==const.PRF_CORE_TYPE:
                     # core
-                    if input_dict[const.FileFormat.PRF_CORE_GROUP] in executors:
-                        executors[input_dict[const.FileFormat.PRF_CORE_GROUP]].append(input_dict[const.FileFormat.PRF_CORE_REAL_EXECUTOR])
-                        total_performance[input_dict[const.FileFormat.PRF_CORE_GROUP]].append(input_dict[const.FileFormat.PRF_CORE_TOTAL_CALL_PER_SEC])
-                        avrg_time[input_dict[const.FileFormat.PRF_CORE_GROUP]].append(input_dict[const.FileFormat.PRF_CORE_AVRG_TIME])
-                        std_deviation[input_dict[const.FileFormat.PRF_CORE_GROUP]].append(input_dict[const.FileFormat.PRF_CORE_STD_DEVIATION])
+                    if input_dict[const.PRF_CORE_GROUP] in executors:
+                        executors[input_dict[const.PRF_CORE_GROUP]].append(input_dict[const.PRF_CORE_REAL_EXECUTOR])
+                        total_performance[input_dict[const.PRF_CORE_GROUP]].append(input_dict[self._performance])
+                        avrg_time[input_dict[const.PRF_CORE_GROUP]].append(input_dict[const.PRF_CORE_AVRG_TIME])
+                        std_deviation[input_dict[const.PRF_CORE_GROUP]].append(input_dict[const.PRF_CORE_STD_DEVIATION])
                     else:
-                        executors[input_dict[const.FileFormat.PRF_CORE_GROUP]] = [input_dict[const.FileFormat.PRF_CORE_REAL_EXECUTOR]]
-                        total_performance[input_dict[const.FileFormat.PRF_CORE_GROUP]] = [input_dict[const.FileFormat.PRF_CORE_TOTAL_CALL_PER_SEC]]
-                        avrg_time[input_dict[const.FileFormat.PRF_CORE_GROUP]] = [input_dict[const.FileFormat.PRF_CORE_AVRG_TIME]]
-                        std_deviation[input_dict[const.FileFormat.PRF_CORE_GROUP]]=[input_dict[const.FileFormat.PRF_CORE_STD_DEVIATION]]
+                        executors[input_dict[const.PRF_CORE_GROUP]] = [input_dict[const.PRF_CORE_REAL_EXECUTOR]]
+                        total_performance[input_dict[const.PRF_CORE_GROUP]] = [input_dict[self._performance]]
+                        avrg_time[input_dict[const.PRF_CORE_GROUP]] = [input_dict[const.PRF_CORE_AVRG_TIME]]
+                        std_deviation[input_dict[const.PRF_CORE_GROUP]]=[input_dict[const.PRF_CORE_STD_DEVIATION]]
         return output_list
