@@ -31,7 +31,7 @@ class GraphPerformance(GraphBase):
         super().__init__(dpi)
         self._min_precision = min_precision if min_precision >= 0 else GraphPerformance.MIN_PRECISION
         self._max_precision = max_precision if max_precision >= 0 else GraphPerformance.MAX_PRECISION
-        self._max_precision_format ="{num:." + str(self._max_precision) +"f}"
+        self._max_precision_format = "{num:." + str(self._max_precision) + "f}"
 
     def _get_executor_list(self, collections=None, collection=None):
         """
