@@ -33,7 +33,7 @@ class GraphPerformance(GraphBase):
         self._min_precision = min_precision if min_precision >= 0 else GraphPerformance.MIN_PRECISION
         self._max_precision = max_precision if max_precision >= 0 else GraphPerformance.MAX_PRECISION
         self._max_precision_format = "{num:." + str(self._max_precision) + "f}"
-        self._performance_label = const.PRF_CORE_TOTAL_CALL_PER_SEC_RAW if raw_format else const.PRF_CORE_TOTAL_CALL_PER_SEC
+        self._performance = const.PRF_CORE_TOTAL_CALL_PER_SEC_RAW if raw_format else const.PRF_CORE_TOTAL_CALL_PER_SEC
 
     def _get_executor_list(self, collections=None, collection=None):
         """
@@ -280,12 +280,12 @@ class GraphPerformance(GraphBase):
                     # core
                     if input_dict[const.PRF_CORE_GROUP] in executors:
                         executors[input_dict[const.PRF_CORE_GROUP]].append(input_dict[const.PRF_CORE_REAL_EXECUTOR])
-                        total_performance[input_dict[const.PRF_CORE_GROUP]].append(input_dict[const.PRF_CORE_TOTAL_CALL_PER_SEC])
+                        total_performance[input_dict[const.PRF_CORE_GROUP]].append(input_dict[self._performance])
                         avrg_time[input_dict[const.PRF_CORE_GROUP]].append(input_dict[const.PRF_CORE_AVRG_TIME])
                         std_deviation[input_dict[const.PRF_CORE_GROUP]].append(input_dict[const.PRF_CORE_STD_DEVIATION])
                     else:
                         executors[input_dict[const.PRF_CORE_GROUP]] = [input_dict[const.PRF_CORE_REAL_EXECUTOR]]
-                        total_performance[input_dict[const.PRF_CORE_GROUP]] = [input_dict[const.PRF_CORE_TOTAL_CALL_PER_SEC]]
+                        total_performance[input_dict[const.PRF_CORE_GROUP]] = [input_dict[self._performance]]
                         avrg_time[input_dict[const.PRF_CORE_GROUP]] = [input_dict[const.PRF_CORE_AVRG_TIME]]
                         std_deviation[input_dict[const.PRF_CORE_GROUP]]=[input_dict[const.PRF_CORE_STD_DEVIATION]]
         return output_list
