@@ -1,5 +1,5 @@
 from matplotlib import pyplot as plt
-from qgate_graph import file_format as const
+from qgate_graph.file_format import FileFormat as const
 from qgate_graph.graph_base import GraphBase
 import os.path, os
 import datetime
@@ -111,14 +111,14 @@ class GraphExecutor(GraphBase):
                 input_dict = GraphBase.load_json(line)
                 if not input_dict:
                     continue
-                if input_dict[const.FileFormat.PRF_TYPE] == const.FileFormat.PRF_HDR_TYPE:
+                if input_dict[const.PRF_TYPE] == const.PRF_HDR_TYPE:
                     # header
-                    start_date=input_dict[const.FileFormat.PRF_HDR_NOW]
+                    start_date=input_dict[const.PRF_HDR_NOW]
                     report_date = datetime.datetime.fromisoformat(start_date).strftime(
                         "%Y-%m-%d %H-%M-%S")
-                    label = input_dict[const.FileFormat.PRF_HDR_LABEL]
-                    bulk = input_dict[const.FileFormat.PRF_HDR_BULK]
-                    duration = input_dict.get(const.FileFormat.PRF_HDR_DURATION, -1)
+                    label = input_dict[const.PRF_HDR_LABEL]
+                    bulk = input_dict[const.PRF_HDR_BULK]
+                    duration = input_dict.get(const.PRF_HDR_DURATION, -1)
                     if duration >= 0:
                         # update output dir based on duration (e.g. 1 min, 5 sec, etc.) and date
                         output_dir_target = os.path.join(output_dir,
@@ -131,17 +131,17 @@ class GraphExecutor(GraphBase):
                     file_name = self._unique_file_name("EXE", label, report_date, bulk)
                     title = f"'{label}', {report_date}, bulk {bulk[0]}/{bulk[1]}, duration '{self._readable_duration(duration)}'"
 
-                elif input_dict[const.FileFormat.PRF_TYPE] == const.FileFormat.PRF_CORE_TYPE:
+                elif input_dict[const.PRF_TYPE] == const.PRF_CORE_TYPE:
                     # core
-                    # executors[input_dict[const.FileFormat.PRF_CORE_PLAN_EXECUTOR]].append(
-                    #     input_dict[const.FileFormat.PRF_CORE_TIME_END])
+                    # executors[input_dict[const.PRF_CORE_PLAN_EXECUTOR]].append(
+                    #     input_dict[const.PRF_CORE_TIME_END])
 
                     if executor:
-                        plan=f"{input_dict[const.FileFormat.PRF_CORE_PLAN_EXECUTOR][0]:03d}x{input_dict[const.FileFormat.PRF_CORE_PLAN_EXECUTOR][1]:02d}"
+                        plan=f"{input_dict[const.PRF_CORE_PLAN_EXECUTOR][0]:03d}x{input_dict[const.PRF_CORE_PLAN_EXECUTOR][1]:02d}"
                         executors[plan]=executor
 
-                        if input_dict.get(const.FileFormat.PRF_CORE_TIME_END):
-                            end_date=input_dict[const.FileFormat.PRF_CORE_TIME_END]
+                        if input_dict.get(const.PRF_CORE_TIME_END):
+                            end_date=input_dict[const.PRF_CORE_TIME_END]
 
                         #file_name=f"{file_name}-plan-{plan}"
                         if suppress_error:
@@ -158,13 +158,13 @@ class GraphExecutor(GraphBase):
 
                         executors.clear()
                         executor.clear()
-                elif input_dict[const.FileFormat.PRF_TYPE] == const.FileFormat.PRF_DETAIL_TYPE:
+                elif input_dict[const.PRF_TYPE] == const.PRF_DETAIL_TYPE:
                     # detail
-                    if not input_dict.get(const.FileFormat.PRF_DETAIL_ERR):
+                    if not input_dict.get(const.PRF_DETAIL_ERR):
                         executor.append([
-                            input_dict[const.FileFormat.PRF_DETAIL_TIME_INIT],
-                            input_dict[const.FileFormat.PRF_DETAIL_TIME_START],
-                            input_dict[const.FileFormat.PRF_DETAIL_TIME_END]])
+                            input_dict[const.PRF_DETAIL_TIME_INIT],
+                            input_dict[const.PRF_DETAIL_TIME_START],
+                            input_dict[const.PRF_DETAIL_TIME_END]])
         return output_list
 
     def _show_graph(self, start_date, executors, end_date, title, file_name, output_dir) -> str :
