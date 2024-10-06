@@ -58,7 +58,7 @@ class GraphBase:
                  transform = ax.transAxes,
                  alpha=0.4, fontsize=8)
 
-    def _unique_file_name(self, prefix, label, report_date, bulk):
+    def _unique_file_name(self, prefix, label, report_date, bulk, raw_format = False):
         """
         Generate unique name based on key information
 
@@ -68,7 +68,7 @@ class GraphBase:
         :param bulk:        Bulk (rows, columns) size
         :return:            Return relevant name
         """
-        file_name=f"{prefix}-{label}-{report_date}-bulk-{bulk[0]}x{bulk[1]}"
+        file_name=f"{prefix}-{label}{'-RAW' if raw_format else ''}-{report_date}-bulk-{bulk[0]}x{bulk[1]}"
         remove_item=" ,&?"
         for itm in remove_item:
             file_name=file_name.replace(itm,"_")
