@@ -216,12 +216,12 @@ class GraphPerformance(GraphBase):
         :param suppress_error:  Ability to suppress error (default is False)
         :return:                List of generated files
         """
-        file_name=None
-        total_performance={}
-        avrg_time={}
-        std_deviation={}
-        executors={}
-        output_list=[]
+        file_name = None
+        total_performance = {}
+        avrg_time = {}
+        std_deviation = {}
+        executors = {}
+        output_list = []
 
         logging.info(f"Processing '{input_file}' ...")
 
@@ -230,15 +230,15 @@ class GraphPerformance(GraphBase):
 
         # create output dir, if not exist
         if not os.path.exists(output_dir_target):
-            os.makedirs(output_dir_target, mode=0o777)
+            os.makedirs(output_dir_target, mode = 0o777)
 
         with open(input_file, "r") as f:
             while True:
-                line=f.readline()
+                line = f.readline()
                 if not line:
                     break
-                if line[0]=='#':
-                    if file_name and len(executors)>0:
+                if line[0] == '#':
+                    if file_name and len(executors) > 0:
                         if suppress_error:
                             try:
                                 output_list.append(
@@ -250,7 +250,7 @@ class GraphPerformance(GraphBase):
                             output_list.append(
                                 self._show_graph(executors, total_performance, avrg_time, std_deviation,
                                                  title, file_name, output_dir_target))
-                    file_name=None
+                    file_name = None
                     executors.clear()
                     total_performance.clear()
                     avrg_time.clear()
@@ -259,12 +259,12 @@ class GraphPerformance(GraphBase):
                 input_dict = GraphBase.load_json(line)
                 if not input_dict:
                     continue
-                if input_dict[const.PRF_TYPE]==const.PRF_HDR_TYPE:
+                if input_dict[const.PRF_TYPE] == const.PRF_HDR_TYPE:
                     # header
                     start_date = input_dict[const.PRF_HDR_NOW]
-                    report_date=datetime.datetime.fromisoformat(start_date).strftime("%Y-%m-%d %H-%M-%S")
-                    label=input_dict[const.PRF_HDR_LABEL]
-                    bulk=input_dict[const.PRF_HDR_BULK]
+                    report_date = datetime.datetime.fromisoformat(start_date).strftime("%Y-%m-%d %H-%M-%S")
+                    label = input_dict[const.PRF_HDR_LABEL]
+                    bulk = input_dict[const.PRF_HDR_BULK]
                     duration = input_dict.get(const.PRF_HDR_DURATION, -1)
                     if duration >= 0:
                         # update output dir based on duration (e.g. 1 min, 5 sec, etc.) and date
@@ -274,19 +274,31 @@ class GraphPerformance(GraphBase):
                         # create subdirectory based on duration
                         if not os.path.exists(output_dir_target):
                             os.makedirs(output_dir_target, mode=0o777)
-                    file_name=self._unique_file_name("PRF", label, report_date, bulk, self._raw_format)
-                    title=f"'{label}', {report_date}, bulk {bulk[0]}/{bulk[1]}, duration '{self._readable_duration(duration)}'"
+                    file_name = self._unique_file_name("PRF", label, report_date, bulk, self._raw_format)
+                    title = f"'{label}', {report_date}, bulk {bulk[0]}/{bulk[1]}, duration '{self._readable_duration(duration)}'"
 
-                elif input_dict[const.PRF_TYPE]==const.PRF_CORE_TYPE:
+                elif input_dict[const.PRF_TYPE] == const.PRF_CORE_TYPE:
                     # core
                     if input_dict[const.PRF_CORE_GROUP] in executors:
                         executors[input_dict[const.PRF_CORE_GROUP]].append(input_dict[const.PRF_CORE_REAL_EXECUTOR])
-                        total_performance[input_dict[const.PRF_CORE_GROUP]].append(input_dict[self._performance])
+                        if self._raw_format:
+                            total_calls_sec_raw = input_dict.get(const.PRF_CORE_TOTAL_CALL_PER_SEC_RAW, None)
+                            if total_calls_sec_raw is None:
+                                continue    # if value is Non than skip generation
+                            total_performance[input_dict[const.PRF_CORE_GROUP]].append(total_calls_sec_raw)
+                        else:
+                            total_performance[input_dict[const.PRF_CORE_GROUP]].append(input_dict[const.PRF_CORE_TOTAL_CALL_PER_SEC])
                         avrg_time[input_dict[const.PRF_CORE_GROUP]].append(input_dict[const.PRF_CORE_AVRG_TIME])
                         std_deviation[input_dict[const.PRF_CORE_GROUP]].append(input_dict[const.PRF_CORE_STD_DEVIATION])
                     else:
                         executors[input_dict[const.PRF_CORE_GROUP]] = [input_dict[const.PRF_CORE_REAL_EXECUTOR]]
-                        total_performance[input_dict[const.PRF_CORE_GROUP]] = [input_dict[self._performance]]
+                        if self._raw_format:
+                            total_calls_sec_raw = input_dict.get(const.PRF_CORE_TOTAL_CALL_PER_SEC, None)
+                            if total_calls_sec_raw is None:
+                                continue        # if value is Non than skip generation
+                            total_performance[input_dict[const.PRF_CORE_GROUP]] = [total_calls_sec_raw]
+                        else:
+                            total_performance[input_dict[const.PRF_CORE_GROUP]] = [input_dict[const.PRF_CORE_TOTAL_CALL_PER_SEC]]
                         avrg_time[input_dict[const.PRF_CORE_GROUP]] = [input_dict[const.PRF_CORE_AVRG_TIME]]
-                        std_deviation[input_dict[const.PRF_CORE_GROUP]]=[input_dict[const.PRF_CORE_STD_DEVIATION]]
+                        std_deviation[input_dict[const.PRF_CORE_GROUP]] = [input_dict[const.PRF_CORE_STD_DEVIATION]]
         return output_list

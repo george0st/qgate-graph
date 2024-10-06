@@ -107,3 +107,16 @@ class TestCaseBasic(unittest.TestCase):
 
         file = glob.glob(path.join(output_dir, "1 min", "2024-08-29", f"EXE-Cassandra-write-min-*-bulk-200x10-plan-008x01.png"))
         self.assertTrue(len(file) == 1)
+
+    def test_performance_graph_with_without_raw(self):
+        graph = GraphPerformance(raw_format=False)
+        output = graph.generate_from_file(TestCaseBasic.INPUT_FILE, self.OUTPUT_ADR)
+        for file in output:
+            self.assertTrue(file.find("RAW")==-1)
+
+        graph = GraphPerformance(raw_format=True)
+        output = graph.generate_from_file(TestCaseBasic.INPUT_FILE, self.OUTPUT_ADR)
+        for file in output:
+            self.assertTrue(file.find("RAW")!=-1)
+
+

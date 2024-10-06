@@ -12,7 +12,6 @@ class TestCaseBasic(unittest.TestCase):
     def tearDownClass(cls):
         pass
 
-
     def test_point_in_graph(self):
         """Performance graphs"""
         graph = GraphPerformance(min_precision=0, max_precision=4)
@@ -39,5 +38,4 @@ class TestCaseBasic(unittest.TestCase):
 
         precision = graph.expected_round(np.array([1.1, 1.0, 1.3]))
         self.assertTrue(precision == 1)
-
 
