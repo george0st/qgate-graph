@@ -109,14 +109,14 @@ class TestCaseBasic(unittest.TestCase):
         self.assertTrue(len(file) == 1)
 
     def test_performance_graph_with_without_raw(self):
-        graph = GraphPerformance(raw_format=False)
+        graph = GraphPerformance(raw_format = False)
         output = graph.generate_from_file(TestCaseBasic.INPUT_FILE, self.OUTPUT_ADR)
         for file in output:
-            self.assertTrue(file.find("RAW")==-1)
+            self.assertTrue(file.find("RAW") == -1)
 
-        graph = GraphPerformance(raw_format=True)
+        graph = GraphPerformance(raw_format = True)
         output = graph.generate_from_file(TestCaseBasic.INPUT_FILE, self.OUTPUT_ADR)
         for file in output:
-            self.assertTrue(file.find("RAW")!=-1)
+            self.assertTrue(file.find("RAW") != -1)
 
 

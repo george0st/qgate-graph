@@ -281,7 +281,7 @@ class GraphPerformance(GraphBase):
                         if self._raw_format:
                             total_calls_sec_raw = input_dict.get(const.PRF_CORE_TOTAL_CALL_PER_SEC_RAW, None)
                             if total_calls_sec_raw is None:
-                                continue    # if value is Non than skip generation
+                                total_calls_sec_raw = input_dict[const.PRF_CORE_TOTAL_CALL_PER_SEC] / bulk[0]
                             total_performance[input_dict[const.PRF_CORE_GROUP]].append(total_calls_sec_raw)
                         else:
                             total_performance[input_dict[const.PRF_CORE_GROUP]].append(input_dict[const.PRF_CORE_TOTAL_CALL_PER_SEC])
@@ -290,9 +290,9 @@ class GraphPerformance(GraphBase):
                     else:
                         executors[input_dict[const.PRF_CORE_GROUP]] = [input_dict[const.PRF_CORE_REAL_EXECUTOR]]
                         if self._raw_format:
-                            total_calls_sec_raw = input_dict.get(const.PRF_CORE_TOTAL_CALL_PER_SEC, None)
+                            total_calls_sec_raw = input_dict.get(const.PRF_CORE_TOTAL_CALL_PER_SEC_RAW, None)
                             if total_calls_sec_raw is None:
-                                continue        # if value is Non than skip generation
+                                total_calls_sec_raw = input_dict[const.PRF_CORE_TOTAL_CALL_PER_SEC] / bulk[0]
                             total_performance[input_dict[const.PRF_CORE_GROUP]] = [total_calls_sec_raw]
                         else:
                             total_performance[input_dict[const.PRF_CORE_GROUP]] = [input_dict[const.PRF_CORE_TOTAL_CALL_PER_SEC]]
