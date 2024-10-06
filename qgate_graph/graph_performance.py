@@ -1,6 +1,5 @@
 from matplotlib import axes
 from matplotlib import pyplot as plt
-#from qgate_graph import file_format as const
 from qgate_graph.file_format import FileFormat as const
 from numpy import std, average
 from qgate_graph.graph_base import GraphBase
@@ -33,9 +32,7 @@ class GraphPerformance(GraphBase):
         self._min_precision = min_precision if min_precision >= 0 else GraphPerformance.MIN_PRECISION
         self._max_precision = max_precision if max_precision >= 0 else GraphPerformance.MAX_PRECISION
         self._max_precision_format = "{num:." + str(self._max_precision) + "f}"
-
         self._raw_format = raw_format
-        self._performance = const.PRF_CORE_TOTAL_CALL_PER_SEC_RAW if self._raw_format else const.PRF_CORE_TOTAL_CALL_PER_SEC
 
     def _get_executor_list(self, collections=None, collection=None):
         """
