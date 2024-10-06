@@ -12,6 +12,7 @@ class TestCaseBasic(unittest.TestCase):
 
     OUTPUT_ADR = "output/test/"
     INPUT_FILE = "input/prf_cassandra_02.txt"
+    INPUT_FILE2 = "input/prf_cassandra-write-min-2024-08-29.txt"
     INPUT_ADR = "input"
 
     PREFIX = "."
@@ -27,6 +28,7 @@ class TestCaseBasic(unittest.TestCase):
             prefix=".."
         TestCaseBasic.OUTPUT_ADR = path.join(prefix,TestCaseBasic.OUTPUT_ADR)
         TestCaseBasic.INPUT_FILE = path.join(prefix, TestCaseBasic.INPUT_FILE)
+        TestCaseBasic.INPUT_FILE2 = path.join(prefix, TestCaseBasic.INPUT_FILE2)
         TestCaseBasic.INPUT_ADR = path.join(prefix, TestCaseBasic.INPUT_ADR)
 
         # clean directory
@@ -119,4 +121,14 @@ class TestCaseBasic(unittest.TestCase):
         for file in output:
             self.assertTrue(file.find("RAW") != -1)
 
+    def test_performance_graph_with_without_raw2(self):
+        graph = GraphPerformance(raw_format = False)
+        output = graph.generate_from_file(TestCaseBasic.INPUT_FILE2, self.OUTPUT_ADR)
+        for file in output:
+            self.assertTrue(file.find("RAW") == -1)
+
+        graph = GraphPerformance(raw_format = True)
+        output = graph.generate_from_file(TestCaseBasic.INPUT_FILE2, self.OUTPUT_ADR)
+        for file in output:
+            self.assertTrue(file.find("RAW") != -1)
 
