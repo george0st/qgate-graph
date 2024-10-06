@@ -131,4 +131,3 @@ class TestCaseBasic(unittest.TestCase):
         output = graph.generate_from_file(TestCaseBasic.INPUT_FILE2, self.OUTPUT_ADR)
         for file in output:
             self.assertTrue(file.find("RAW") != -1)
-
