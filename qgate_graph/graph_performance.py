@@ -33,7 +33,9 @@ class GraphPerformance(GraphBase):
         self._min_precision = min_precision if min_precision >= 0 else GraphPerformance.MIN_PRECISION
         self._max_precision = max_precision if max_precision >= 0 else GraphPerformance.MAX_PRECISION
         self._max_precision_format = "{num:." + str(self._max_precision) + "f}"
-        self._performance = const.PRF_CORE_TOTAL_CALL_PER_SEC_RAW if raw_format else const.PRF_CORE_TOTAL_CALL_PER_SEC
+
+        self._raw_format = raw_format
+        self._performance = const.PRF_CORE_TOTAL_CALL_PER_SEC_RAW if self._raw_format else const.PRF_CORE_TOTAL_CALL_PER_SEC
 
     def _get_executor_list(self, collections=None, collection=None):
         """
@@ -176,12 +178,11 @@ class GraphPerformance(GraphBase):
             ax.set_xticks(self._get_executor_list(collection=executors[key]))
             ax.grid(visible = True)
 
-        output_file = os.path.join(output_dir, file_name+".png")
+        output_file = os.path.join(output_dir, file_name + ".png")
         plt.savefig(output_file, dpi=self.dpi)
         logging.info(f"  ... {output_file}")
         plt.close()
         return output_file
-
 
     def generate_from_dir(self, input_dir: str="input", output_dir: str="output") -> list[str]:
         """
@@ -273,7 +274,7 @@ class GraphPerformance(GraphBase):
                         # create subdirectory based on duration
                         if not os.path.exists(output_dir_target):
                             os.makedirs(output_dir_target, mode=0o777)
-                    file_name=self._unique_file_name("PRF", label, report_date, bulk)
+                    file_name=self._unique_file_name("PRF", label, report_date, bulk, self._raw_format)
                     title=f"'{label}', {report_date}, bulk {bulk[0]}/{bulk[1]}, duration '{self._readable_duration(duration)}'"
 
                 elif input_dict[const.PRF_TYPE]==const.PRF_CORE_TYPE:
