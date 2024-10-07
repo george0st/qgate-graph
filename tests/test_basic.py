@@ -13,6 +13,8 @@ class TestCaseBasic(unittest.TestCase):
     OUTPUT_ADR = "output/test/"
     INPUT_FILE = "input/prf_cassandra_02.txt"
     INPUT_FILE2 = "input/prf_cassandra-write-min-2024-08-29.txt"
+    INPUT_FILE3 = "input/prf_cassandra-W1-low-2024-10-07.txt"
+
     INPUT_ADR = "input"
 
     PREFIX = "."
@@ -129,5 +131,16 @@ class TestCaseBasic(unittest.TestCase):
 
         graph = GraphPerformance(raw_format = True)
         output = graph.generate_from_file(TestCaseBasic.INPUT_FILE2, self.OUTPUT_ADR)
+        for file in output:
+            self.assertTrue(file.find("RAW") != -1)
+
+    def test_performance_graph_with_without_raw3(self):
+        graph = GraphPerformance(raw_format = False)
+        output = graph.generate_from_file(TestCaseBasic.INPUT_FILE3, self.OUTPUT_ADR)
+        for file in output:
+            self.assertTrue(file.find("RAW") == -1)
+
+        graph = GraphPerformance(raw_format = True)
+        output = graph.generate_from_file(TestCaseBasic.INPUT_FILE3, self.OUTPUT_ADR)
         for file in output:
             self.assertTrue(file.find("RAW") != -1)
