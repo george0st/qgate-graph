@@ -13,6 +13,8 @@ class TestCaseBasic(unittest.TestCase):
     OUTPUT_ADR = "output/test/"
     INPUT_FILE = "input/prf_cassandra_02.txt"
     INPUT_FILE2 = "input/prf_cassandra-write-min-2024-08-29.txt"
+    INPUT_FILE3 = "input/prf_cassandra-W1-low-2024-10-07.txt"
+
     INPUT_ADR = "input"
 
     PREFIX = "."
@@ -29,6 +31,7 @@ class TestCaseBasic(unittest.TestCase):
         TestCaseBasic.OUTPUT_ADR = path.join(prefix,TestCaseBasic.OUTPUT_ADR)
         TestCaseBasic.INPUT_FILE = path.join(prefix, TestCaseBasic.INPUT_FILE)
         TestCaseBasic.INPUT_FILE2 = path.join(prefix, TestCaseBasic.INPUT_FILE2)
+        TestCaseBasic.INPUT_FILE3 = path.join(prefix, TestCaseBasic.INPUT_FILE3)
         TestCaseBasic.INPUT_ADR = path.join(prefix, TestCaseBasic.INPUT_ADR)
 
         # clean directory
@@ -71,14 +74,14 @@ class TestCaseBasic(unittest.TestCase):
         graph = GraphPerformance()
         output = graph.generate_from_dir(TestCaseBasic.INPUT_ADR, self.OUTPUT_ADR)
 
-        self.assertTrue(len(output) == 7)
+        self.assertTrue(len(output) == 8)
 
     def test_exec_dir(self):
         """Execution graphs for dir"""
         graph = GraphExecutor()
         output=graph.generate_from_dir(TestCaseBasic.INPUT_ADR, self.OUTPUT_ADR)
 
-        self.assertTrue(len(output)==38)
+        self.assertTrue(len(output)==47)
 
     def test_check_path(self):
         """Check, dir with duration and date"""
@@ -129,5 +132,16 @@ class TestCaseBasic(unittest.TestCase):
 
         graph = GraphPerformance(raw_format = True)
         output = graph.generate_from_file(TestCaseBasic.INPUT_FILE2, self.OUTPUT_ADR)
+        for file in output:
+            self.assertTrue(file.find("RAW") != -1)
+
+    def test_performance_graph_with_without_raw3(self):
+        graph = GraphPerformance(raw_format = False)
+        output = graph.generate_from_file(TestCaseBasic.INPUT_FILE3, self.OUTPUT_ADR)
+        for file in output:
+            self.assertTrue(file.find("RAW") == -1)
+
+        graph = GraphPerformance(raw_format = True)
+        output = graph.generate_from_file(TestCaseBasic.INPUT_FILE3, self.OUTPUT_ADR)
         for file in output:
             self.assertTrue(file.find("RAW") != -1)
