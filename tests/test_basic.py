@@ -147,3 +147,10 @@ class TestCaseBasic(unittest.TestCase):
         output = graph.generate_from_file(TestCaseBasic.INPUT_FILE3, self.OUTPUT_ADR)
         for file in output:
             self.assertTrue(file.find("RAW") != -1)
+
+    def test_performance_graph_with_percentile1(self):
+        graph = GraphPerformance()
+        output = graph.generate_from_file(TestCaseBasic.INPUT_FILE4, self.OUTPUT_ADR)
+        for file in output:
+            self.assertTrue(file.find("RAW") == -1)
+
