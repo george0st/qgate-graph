@@ -14,6 +14,7 @@ class TestCaseBasic(unittest.TestCase):
     INPUT_FILE = "input/prf_cassandra_02.txt"
     INPUT_FILE2 = "input/prf_cassandra-write-min-2024-08-29.txt"
     INPUT_FILE3 = "input/prf_cassandra-W1-low-2024-10-07.txt"
+    INPUT_FILE4 = "input/prf_cassandra-W1-low-percentile.txt"
 
     INPUT_ADR = "input"
 
@@ -32,6 +33,7 @@ class TestCaseBasic(unittest.TestCase):
         TestCaseBasic.INPUT_FILE = path.join(prefix, TestCaseBasic.INPUT_FILE)
         TestCaseBasic.INPUT_FILE2 = path.join(prefix, TestCaseBasic.INPUT_FILE2)
         TestCaseBasic.INPUT_FILE3 = path.join(prefix, TestCaseBasic.INPUT_FILE3)
+        TestCaseBasic.INPUT_FILE4 = path.join(prefix, TestCaseBasic.INPUT_FILE4)
         TestCaseBasic.INPUT_ADR = path.join(prefix, TestCaseBasic.INPUT_ADR)
 
         # clean directory
