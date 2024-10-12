@@ -20,8 +20,6 @@ class GraphBase:
             graph.generate_from_dir("input_adr", "output_adr")
     """
     def __init__(self, dpi=100):
-        # self.markers = CircleQueue(['o','x', '*', '^','X', 'D', 'p', 'H'])
-        # self.colors = CircleQueue(['c', 'm', 'r', 'b', 'g', 'y', 'k'])
         self.dpi=dpi
 
         # use 'Agg' as non-interactive backend for matplotlib

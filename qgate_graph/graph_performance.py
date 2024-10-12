@@ -147,12 +147,6 @@ class GraphPerformance(GraphBase):
             alpha.next()
             line_style.next()
 
-        #"linear", "log", "symlog", "logit",
-        #['asinh', 'function', 'functionlog', 'linear', 'log', 'logit', 'mercator', 'symlog']
-        #ax.set_yscale('log', base=2)
-        #ax.set_yscale('symlog', linthresh=100)
-        #ax_main.set_xscale('log', base = 2)
-
         if executors_amount > 0:
             ax_main.legend()
 
@@ -169,26 +163,19 @@ class GraphPerformance(GraphBase):
         marker.reset()
         color.reset()
         alpha.reset()
-        percentile=percentiles[1]
         for key in percentiles[1].executors.keys():
             # view response time
             key_view+=1
             ax=plt.subplot(2, key_count, key_view)
-
-            # font_size = 8
-            # text_position = 4
 
             for percentile in percentiles.values():
                 ax.errorbar(percentile.executors[key], percentile.avrg_time[key], percentile.std_deviation[key],
                             alpha = alpha.next(),
                             color = color.item(),
                             linestyle = 'none',
-                            #linestyle='-',
                             marker = '_' if (len(percentiles) > 1 and percentile.percentile != 1) or (len(percentiles) == 1) else 'none',
-                            #marker = 'none', if percentile.percentile == 1 else "_", #marker.item(),
                             linewidth = 2,
                             capsize = 6)
-
                 self._watermark(plt, ax)
 
                 # add table
@@ -217,23 +204,21 @@ class GraphPerformance(GraphBase):
                 if (len(percentiles) > 1 and percentile.percentile != 1) or (len(percentiles) == 1):
                     expected_round = self.expected_round(percentile.avrg_time[key])
                     for x, y in zip(percentile.executors[key], percentile.avrg_time[key]):
-                        ax.annotate(round(y,expected_round),   # previous code plt.annotate(round(y,1),
-                                     (x,y),
-                                    #xycoords ='subfigure fraction',
-                                     textcoords = "offset fontsize", #"offset points",
-                                     xytext = (0,0),# positionY.next()),
-                                     ha = 'center',
-                                    va = 'center', #'top',#'bottom',
-                                     size = 9,
-                                     weight = 'normal')           # previous code weight='bold'
+                        ax.annotate(round(y,expected_round),
+                                    (x,y),
+                                    textcoords = "offset fontsize",
+                                    xytext = (0,0),
+                                    ha = 'center',
+                                    va = 'center',
+                                    size = 9,
+                                    weight = 'normal')           # previous code weight='bold'
 
                 ax.set_xlabel('Executors')
                 if key_count+1 == key_view:
                     ax.set_ylabel('Response [sec]')
                 ax.set_xticks(self._get_executor_list(collection=percentile.executors[key]))
                 ax.grid(visible = True)
-
-            color.next()  # self._next_color()
+            color.next()
             marker.next()
 
         output_file = os.path.join(output_dir, file_name + ".png")
