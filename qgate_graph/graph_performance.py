@@ -3,6 +3,8 @@ from matplotlib import pyplot as plt
 from qgate_graph.file_format import FileFormat as const
 from numpy import std, average
 from qgate_graph.graph_base import GraphBase
+from qgate_graph.percentile_item import PercentileItem
+from qgate_graph.circle_queue import CircleQueue, ColorQueue, MarkerQueue
 import os.path, os
 import datetime
 import logging
@@ -113,67 +115,126 @@ class GraphPerformance(GraphBase):
                 return max_stddev if max_stddev > max_zero else max_zero
             return max_len
 
-    def _show_graph(self, executors, total_performance, avrg_time, std_deviation, title, file_name, output_dir) -> str:
+    def _show_graph(self, percentiles: {PercentileItem}, title, file_name,output_dir) -> str:
+        alpha = CircleQueue([0.4, 0.8] if len(percentiles) > 1 else [0.8])
+        line_style = CircleQueue(['--','-'] if len(percentiles) > 1 else ['-'])
+        color = ColorQueue()
+        marker = MarkerQueue()
         plt.style.use("bmh") #"ggplot" "seaborn-v0_8-poster"
         fig, ax = plt.subplots(2, 1, sharex='none', squeeze=False, figsize=(15, 6))
         ax_main: axes.Axes = ax[0][0]
+        executors_amount = len(percentiles[1].executors)
 
         # view total performance
         self._watermark(plt, ax_main)
 
         plt.suptitle("Performance & Response time",weight='bold', fontsize=18, ha="center", va="top")
         ax_main.set_title(title, fontsize=14, ha="center", va="top")
-        self._reset_marker()
-        self._reset_color()
 
         # plot main graph 'Performance [calls/second]' (plus amount of executors)
-        for key in executors.keys():
-            ax_main.plot(executors[key], total_performance[key],
-                         color=self._next_color(), linestyle="-",
-                         marker=self._next_marker(),
-                         label=f"{key} [{round(max(total_performance[key]), 2)}]")
+        for percentile in percentiles.values():
+            for key in percentile.executors.keys():
+                ax_main.plot(percentile.executors[key], percentile.total_performance[key],
+                             color = color.next(),
+                             linestyle = line_style.item(),
+                             marker = marker.next(),
+                             alpha = alpha.item(),
+                             label = f"{key} "
+                                     f"{'_'+str(int(percentile.percentile*100)) if percentile.percentile != 1 else ''}"
+                                     f"[{round(max(percentile.total_performance[key]), 2)}]")
+            marker.reset()
+            color.reset()
+            alpha.next()
+            line_style.next()
 
-        if len(executors)>0:
+        #"linear", "log", "symlog", "logit",
+        #['asinh', 'function', 'functionlog', 'linear', 'log', 'logit', 'mercator', 'symlog']
+        #ax.set_yscale('log', base=2)
+        #ax.set_yscale('symlog', linthresh=100)
+        #ax_main.set_xscale('log', base = 2)
+
+        if executors_amount > 0:
             ax_main.legend()
 
         #ax_main.set_xlabel('Executors')
         ax_main.set_ylabel('Performance [calls/sec]')
-        ax_main.set_xticks(self._get_executor_list(collections=executors))
+        ax_main.set_xticks(self._get_executor_list(collections=percentiles[1].executors))
 
         # remove duplicit axis (because matplotlib>=3.8)
         ax[1][0].remove()
 
         # draw detail graphs 'Response time [seconds]'
-        key_count=len(executors.keys())
-        key_view=key_count
-        self._reset_marker()
-        self._reset_color()
-        for key in executors.keys():
+        key_count = executors_amount# len(executors.keys())
+        key_view = key_count
+        marker.reset()
+        color.reset()
+        alpha.reset()
+        percentile=percentiles[1]
+        for key in percentiles[1].executors.keys():
             # view response time
             key_view+=1
             ax=plt.subplot(2, key_count, key_view)
-            ax.errorbar(executors[key], avrg_time[key], std_deviation[key],
-                        alpha = 0.5, color = self._next_color(),
-                        ls = 'none', marker = self._next_marker(),
-                        linewidth = 2, capsize = 6)
-            self._watermark(plt, ax)
 
-            # print response time value with relevant precision
-            expected_round = self.expected_round(avrg_time[key])
-            for x, y in zip(executors[key], avrg_time[key]):
-                ax.annotate(round(y,expected_round),   # previous code plt.annotate(round(y,1),
-                             (x,y),
-                             textcoords="offset points",
-                             xytext=(0,-2),
-                             ha='center',
-                             size=8,
-                             weight='normal')           # previous code weight='bold'
+            # font_size = 8
+            # text_position = 4
 
-            ax.set_xlabel('Executors')
-            if key_count+1 == key_view:
-                ax.set_ylabel('Response [sec]')
-            ax.set_xticks(self._get_executor_list(collection=executors[key]))
-            ax.grid(visible = True)
+            for percentile in percentiles.values():
+                ax.errorbar(percentile.executors[key], percentile.avrg_time[key], percentile.std_deviation[key],
+                            alpha = alpha.next(),
+                            color = color.item(),
+                            linestyle = 'none',
+                            #linestyle='-',
+                            marker = '_' if (len(percentiles) > 1 and percentile.percentile != 1) or (len(percentiles) == 1) else 'none',
+                            #marker = 'none', if percentile.percentile == 1 else "_", #marker.item(),
+                            linewidth = 2,
+                            capsize = 6)
+
+                self._watermark(plt, ax)
+
+                # add table
+                # val1 = ["{:X}".format(i) for i in range(10)]
+                # val2 = ["{:02X}".format(10 * i) for i in range(10)]
+                # val3 = [["" for c in range(10)] for r in range(10)]
+                # table = ax.table(
+                #     cellText=val3,
+                #     rowLabels=val2,
+                #     colLabels=val1,
+                #     rowColours=["palegreen"] * 10,
+                #     colColours=["palegreen"] * 10,
+                #     cellLoc='center',
+                #     loc='upper left')
+
+                # add Y-lines
+                # if percentile.percentile != 1:
+                #     lim = ax.get_ylim()
+                #     ax.set_yticks(list(ax.get_yticks()) + percentile.avrg_time[key])
+                #     ax.set_ylim(lim)
+
+                # get size of Y-axes
+                #print(ax.get_yticks())
+
+                # print response time value with relevant precision
+                if (len(percentiles) > 1 and percentile.percentile != 1) or (len(percentiles) == 1):
+                    expected_round = self.expected_round(percentile.avrg_time[key])
+                    for x, y in zip(percentile.executors[key], percentile.avrg_time[key]):
+                        ax.annotate(round(y,expected_round),   # previous code plt.annotate(round(y,1),
+                                     (x,y),
+                                    #xycoords ='subfigure fraction',
+                                     textcoords = "offset fontsize", #"offset points",
+                                     xytext = (0,0),# positionY.next()),
+                                     ha = 'center',
+                                    va = 'center', #'top',#'bottom',
+                                     size = 9,
+                                     weight = 'normal')           # previous code weight='bold'
+
+                ax.set_xlabel('Executors')
+                if key_count+1 == key_view:
+                    ax.set_ylabel('Response [sec]')
+                ax.set_xticks(self._get_executor_list(collection=percentile.executors[key]))
+                ax.grid(visible = True)
+
+            color.next()  # self._next_color()
+            marker.next()
 
         output_file = os.path.join(output_dir, file_name + ".png")
         plt.savefig(output_file, dpi=self.dpi)
@@ -219,6 +280,9 @@ class GraphPerformance(GraphBase):
         std_deviation = {}
         executors = {}
         output_list = []
+        percentile_list = []
+        percentiles = {}
+        percentiles[1] = PercentileItem(1)
 
         logging.info(f"Processing '{input_file}' ...")
 
@@ -235,18 +299,18 @@ class GraphPerformance(GraphBase):
                 if not line:
                     break
                 if line[0] == '#':
-                    if file_name and len(executors) > 0:
+                    if file_name and len(percentiles[1].executors) > 0:
                         if suppress_error:
                             try:
-                                output_list.append(
-                                    self._show_graph(executors, total_performance, avrg_time, std_deviation,
-                                                     title, file_name, output_dir_target))
+                                output_list.append(self._show_graph(percentiles, title, file_name, output_dir_target))
+                                    # self._show_graph(executors, total_performance, avrg_time, std_deviation,
+                                    #                  title, file_name, output_dir_target))
                             except Exception as ex:
                                 logging.info(f"  ... Error in '{file_name}', '{type(ex)}'")
                         else:
-                            output_list.append(
-                                self._show_graph(executors, total_performance, avrg_time, std_deviation,
-                                                 title, file_name, output_dir_target))
+                            output_list.append(self._show_graph(percentiles, title, file_name, output_dir_target))
+                                # self._show_graph(executors, total_performance, avrg_time, std_deviation,
+                                #                  title, file_name, output_dir_target))
                     file_name = None
                     executors.clear()
                     total_performance.clear()
@@ -257,7 +321,7 @@ class GraphPerformance(GraphBase):
                 if not input_dict:
                     continue
                 if input_dict[const.PRF_TYPE] == const.PRF_HDR_TYPE:
-                    # header
+                    # header items
                     start_date = input_dict[const.PRF_HDR_NOW]
                     report_date = datetime.datetime.fromisoformat(start_date).strftime("%Y-%m-%d %H-%M-%S")
                     label = input_dict[const.PRF_HDR_LABEL]
@@ -271,31 +335,44 @@ class GraphPerformance(GraphBase):
                         # create subdirectory based on duration
                         if not os.path.exists(output_dir_target):
                             os.makedirs(output_dir_target, mode=0o777)
+                    # add percentile
+#                    percentiles[1] = PercentileItem()
+                    #percentile_list.append(1)
+                    if input_dict.get(const.PRF_HDR_PERCENTILE, 1) < 1:
+                        percentiles[input_dict[const.PRF_HDR_PERCENTILE]] = PercentileItem(input_dict[const.PRF_HDR_PERCENTILE])
+                        #percentile_list.append(input_dict[const.PRF_HDR_PERCENTILE])
                     file_name = self._unique_file_name("PRF", label, report_date, bulk, self._raw_format)
                     title = f"'{label}', {report_date}, bulk {bulk[0]}/{bulk[1]}, duration '{self._readable_duration(duration)}'"
 
                 elif input_dict[const.PRF_TYPE] == const.PRF_CORE_TYPE:
-                    # core
-                    if input_dict[const.PRF_CORE_GROUP] in executors:
-                        executors[input_dict[const.PRF_CORE_GROUP]].append(input_dict[const.PRF_CORE_REAL_EXECUTOR])
-                        if self._raw_format:
-                            total_calls_sec_raw = input_dict.get(const.PRF_CORE_TOTAL_CALL_PER_SEC_RAW, None)
-                            if total_calls_sec_raw is None:
-                                total_calls_sec_raw = input_dict[const.PRF_CORE_TOTAL_CALL_PER_SEC] / bulk[0]
-                            total_performance[input_dict[const.PRF_CORE_GROUP]].append(total_calls_sec_raw)
+
+                    for percentile_key in percentiles.keys():
+                        suffix = f"_{int(percentile_key * 100)}" if percentile_key < 1 else ""
+                        group = input_dict[const.PRF_CORE_GROUP]# if percentile == 1 else f"{input_dict[const.PRF_CORE_GROUP]}, {int(percentile * 100)}ph"
+                        percentile = percentiles[percentile_key]
+
+
+                        # core items
+                        if group in percentile.executors:
+                            percentile.executors[group].append(input_dict[const.PRF_CORE_REAL_EXECUTOR])
+                            if self._raw_format:
+                                total_calls_sec_raw = input_dict.get(const.PRF_CORE_TOTAL_CALL_PER_SEC_RAW + suffix, None)
+                                if total_calls_sec_raw is None:
+                                    total_calls_sec_raw = input_dict[const.PRF_CORE_TOTAL_CALL_PER_SEC + suffix] / bulk[0]
+                                percentile.total_performance[group].append(total_calls_sec_raw)
+                            else:
+                                percentile.total_performance[group].append(input_dict[const.PRF_CORE_TOTAL_CALL_PER_SEC + suffix])
+                            percentile.avrg_time[group].append(input_dict[const.PRF_CORE_AVRG_TIME + suffix])
+                            percentile.std_deviation[group].append(input_dict[const.PRF_CORE_STD_DEVIATION + suffix])
                         else:
-                            total_performance[input_dict[const.PRF_CORE_GROUP]].append(input_dict[const.PRF_CORE_TOTAL_CALL_PER_SEC])
-                        avrg_time[input_dict[const.PRF_CORE_GROUP]].append(input_dict[const.PRF_CORE_AVRG_TIME])
-                        std_deviation[input_dict[const.PRF_CORE_GROUP]].append(input_dict[const.PRF_CORE_STD_DEVIATION])
-                    else:
-                        executors[input_dict[const.PRF_CORE_GROUP]] = [input_dict[const.PRF_CORE_REAL_EXECUTOR]]
-                        if self._raw_format:
-                            total_calls_sec_raw = input_dict.get(const.PRF_CORE_TOTAL_CALL_PER_SEC_RAW, None)
-                            if total_calls_sec_raw is None:
-                                total_calls_sec_raw = input_dict[const.PRF_CORE_TOTAL_CALL_PER_SEC] / bulk[0]
-                            total_performance[input_dict[const.PRF_CORE_GROUP]] = [total_calls_sec_raw]
-                        else:
-                            total_performance[input_dict[const.PRF_CORE_GROUP]] = [input_dict[const.PRF_CORE_TOTAL_CALL_PER_SEC]]
-                        avrg_time[input_dict[const.PRF_CORE_GROUP]] = [input_dict[const.PRF_CORE_AVRG_TIME]]
-                        std_deviation[input_dict[const.PRF_CORE_GROUP]] = [input_dict[const.PRF_CORE_STD_DEVIATION]]
+                            percentile.executors[group] = [input_dict[const.PRF_CORE_REAL_EXECUTOR]]
+                            if self._raw_format:
+                                total_calls_sec_raw = input_dict.get(const.PRF_CORE_TOTAL_CALL_PER_SEC_RAW + suffix, None)
+                                if total_calls_sec_raw is None:
+                                    total_calls_sec_raw = input_dict[const.PRF_CORE_TOTAL_CALL_PER_SEC + suffix] / bulk[0]
+                                percentile.total_performance[group] = [total_calls_sec_raw]
+                            else:
+                                percentile.total_performance[group] = [input_dict[const.PRF_CORE_TOTAL_CALL_PER_SEC + suffix]]
+                            percentile.avrg_time[group] = [input_dict[const.PRF_CORE_AVRG_TIME + suffix]]
+                            percentile.std_deviation[group] = [input_dict[const.PRF_CORE_STD_DEVIATION + suffix]]
         return output_list

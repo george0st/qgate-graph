@@ -1,6 +1,7 @@
 from matplotlib import pyplot as plt
 from qgate_graph.file_format import FileFormat as const
 from qgate_graph.graph_base import GraphBase
+from qgate_graph.circle_queue import ColorQueue, MarkerQueue
 import os.path, os
 import datetime
 import logging
@@ -171,6 +172,8 @@ class GraphExecutor(GraphBase):
         plt.style.use("bmh") #"ggplot" "seaborn-v0_8-poster"
         ax=plt.figure(figsize=(15, 6))
         plt.grid()
+        color = ColorQueue()
+        marker = MarkerQueue()
 
         # osa X = end_date - start_date
         # osa Y = current executions
@@ -181,8 +184,8 @@ class GraphExecutor(GraphBase):
 
         plt.suptitle("Executors in time",weight='bold', fontsize=18, ha="center", va="top")
         plt.title(title, fontsize=14,ha="center", va="top")
-        self._reset_marker()
-        self._reset_color(6)
+        #self._reset_marker()
+        color.reset(6) #self._reset_color(6)
 
         new_array=[]
         new_array_count=[]
@@ -218,7 +221,10 @@ class GraphExecutor(GraphBase):
 
         for key in executors.keys():
             plt.step(new_array2,new_array_count,where='post',
-                  color = self._next_color(), linestyle="-", marker=self._next_marker(), label=f"{key}")
+                     color = color.next(), #self._next_color(),
+                     linestyle="-",
+                     marker=marker.next(), #self._next_marker(),
+                     label=f"{key}")
 
         output_file=os.path.join(output_dir, file_name+".png")
         plt.savefig(output_file, dpi=self.dpi)
