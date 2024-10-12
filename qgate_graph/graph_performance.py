@@ -265,7 +265,6 @@ class GraphPerformance(GraphBase):
         std_deviation = {}
         executors = {}
         output_list = []
-        percentile_list = []
         percentiles = {}
         percentiles[1] = PercentileItem(1)
 
@@ -288,19 +287,17 @@ class GraphPerformance(GraphBase):
                         if suppress_error:
                             try:
                                 output_list.append(self._show_graph(percentiles, title, file_name, output_dir_target))
-                                    # self._show_graph(executors, total_performance, avrg_time, std_deviation,
-                                    #                  title, file_name, output_dir_target))
                             except Exception as ex:
                                 logging.info(f"  ... Error in '{file_name}', '{type(ex)}'")
                         else:
                             output_list.append(self._show_graph(percentiles, title, file_name, output_dir_target))
-                                # self._show_graph(executors, total_performance, avrg_time, std_deviation,
-                                #                  title, file_name, output_dir_target))
                     file_name = None
                     executors.clear()
                     total_performance.clear()
                     avrg_time.clear()
                     std_deviation.clear()
+                    percentiles.clear()
+                    percentiles[1] = PercentileItem(1)
                     continue
                 input_dict = GraphBase.load_json(line)
                 if not input_dict:
