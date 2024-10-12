@@ -14,7 +14,7 @@ class TestCaseBasic(unittest.TestCase):
     INPUT_FILE = "input/prf_cassandra_02.txt"
     INPUT_FILE2 = "input/prf_cassandra-write-min-2024-08-29.txt"
     INPUT_FILE3 = "input/prf_cassandra-W1-low-2024-10-07.txt"
-    INPUT_FILE4 = "input/prf_cassandra-W1-low-percentile.txt"
+    INPUT_FILE4 = "input/prf_cassandra-W1-low-percentile-three-lines.txt"
 
     INPUT_ADR = "input"
 
