@@ -1,5 +1,6 @@
 from qgate_graph import __version__ as version
 from matplotlib import get_backend, use
+from qgate_graph.circle_queue import CircleQueue
 import json
 
 
@@ -19,31 +20,11 @@ class GraphBase:
             graph.generate_from_dir("input_adr", "output_adr")
     """
     def __init__(self, dpi=100):
-        self._markers = ['o','x', '*', '^','X', 'D', 'p', 'H']
-        self._reset_marker()
-        self._colors=['c', 'm', 'r', 'b', 'g', 'y', 'k']
-        self._reset_color()
         self.dpi=dpi
 
         # use 'Agg' as non-interactive backend for matplotlib
         if get_backend().lower()!="agg":
             use('Agg', force = True)
-
-    def _next_marker(self):
-        current=self._marker_point
-        self._marker_point = self._marker_point+1 if (self._marker_point+1) < len(self._markers) else 0
-        return self._markers[current]
-
-    def _reset_marker(self):
-        self._marker_point=0
-
-    def _next_color(self):
-        current=self._color_point
-        self._color_point = self._color_point+1 if (self._color_point+1) < len(self._colors) else 0
-        return self._colors[current]
-
-    def _reset_color(self, color_point=0):
-        self._color_point=color_point
 
     def _watermark(self, plt, ax):
         """
