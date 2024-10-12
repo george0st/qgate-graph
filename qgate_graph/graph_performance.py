@@ -150,7 +150,6 @@ class GraphPerformance(GraphBase):
         if executors_amount > 0:
             ax_main.legend()
 
-        #ax_main.set_xlabel('Executors')
         ax_main.set_ylabel('Performance [calls/sec]')
         ax_main.set_xticks(self._get_executor_list(collections=percentiles[1].executors))
 
@@ -260,10 +259,6 @@ class GraphPerformance(GraphBase):
         :return:                List of generated files
         """
         file_name = None
-        # total_performance = {}
-        # avrg_time = {}
-        # std_deviation = {}
-        # executors = {}
         output_list = []
         percentiles = {}
         percentiles[1] = PercentileItem(1)
@@ -292,10 +287,6 @@ class GraphPerformance(GraphBase):
                         else:
                             output_list.append(self._show_graph(percentiles, title, file_name, output_dir_target))
                     file_name = None
-                    # executors.clear()
-                    # total_performance.clear()
-                    # avrg_time.clear()
-                    # std_deviation.clear()
                     percentiles.clear()
                     percentiles[1] = PercentileItem(1)
                     continue
@@ -318,11 +309,8 @@ class GraphPerformance(GraphBase):
                         if not os.path.exists(output_dir_target):
                             os.makedirs(output_dir_target, mode=0o777)
                     # add percentile
-#                    percentiles[1] = PercentileItem()
-                    #percentile_list.append(1)
                     if input_dict.get(const.PRF_HDR_PERCENTILE, 1) < 1:
                         percentiles[input_dict[const.PRF_HDR_PERCENTILE]] = PercentileItem(input_dict[const.PRF_HDR_PERCENTILE])
-                        #percentile_list.append(input_dict[const.PRF_HDR_PERCENTILE])
                     file_name = self._unique_file_name("PRF", label, report_date, bulk, self._raw_format)
                     title = f"'{label}', {report_date}, bulk {bulk[0]}/{bulk[1]}, duration '{self._readable_duration(duration)}'"
 
