@@ -15,6 +15,7 @@ class TestCaseBasic(unittest.TestCase):
     INPUT_FILE2 = "input/prf_cassandra-write-min-2024-08-29.txt"
     INPUT_FILE3 = "input/prf_cassandra-W1-low-2024-10-07.txt"
     INPUT_FILE4 = "input/prf_cassandra-W1-low-percentile-three-lines.txt"
+    INPUT_FILE5 = "input/prf_cassandra-W2-med-percentile-one-line.txt"
 
     INPUT_ADR = "input"
 
@@ -34,6 +35,7 @@ class TestCaseBasic(unittest.TestCase):
         TestCaseBasic.INPUT_FILE2 = path.join(prefix, TestCaseBasic.INPUT_FILE2)
         TestCaseBasic.INPUT_FILE3 = path.join(prefix, TestCaseBasic.INPUT_FILE3)
         TestCaseBasic.INPUT_FILE4 = path.join(prefix, TestCaseBasic.INPUT_FILE4)
+        TestCaseBasic.INPUT_FILE5 = path.join(prefix, TestCaseBasic.INPUT_FILE5)
         TestCaseBasic.INPUT_ADR = path.join(prefix, TestCaseBasic.INPUT_ADR)
 
         # clean directory
@@ -154,3 +156,8 @@ class TestCaseBasic(unittest.TestCase):
         for file in output:
             self.assertTrue(file.find("RAW") == -1)
 
+    def test_performance_graph_with_percentile2(self):
+        graph = GraphPerformance()
+        output = graph.generate_from_file(TestCaseBasic.INPUT_FILE5, self.OUTPUT_ADR)
+        for file in output:
+            self.assertTrue(file.find("RAW") == -1)
