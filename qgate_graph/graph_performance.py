@@ -260,10 +260,10 @@ class GraphPerformance(GraphBase):
         :return:                List of generated files
         """
         file_name = None
-        total_performance = {}
-        avrg_time = {}
-        std_deviation = {}
-        executors = {}
+        # total_performance = {}
+        # avrg_time = {}
+        # std_deviation = {}
+        # executors = {}
         output_list = []
         percentiles = {}
         percentiles[1] = PercentileItem(1)
@@ -292,10 +292,10 @@ class GraphPerformance(GraphBase):
                         else:
                             output_list.append(self._show_graph(percentiles, title, file_name, output_dir_target))
                     file_name = None
-                    executors.clear()
-                    total_performance.clear()
-                    avrg_time.clear()
-                    std_deviation.clear()
+                    # executors.clear()
+                    # total_performance.clear()
+                    # avrg_time.clear()
+                    # std_deviation.clear()
                     percentiles.clear()
                     percentiles[1] = PercentileItem(1)
                     continue
@@ -332,7 +332,6 @@ class GraphPerformance(GraphBase):
                         suffix = f"_{int(percentile_key * 100)}" if percentile_key < 1 else ""
                         group = input_dict[const.PRF_CORE_GROUP]# if percentile == 1 else f"{input_dict[const.PRF_CORE_GROUP]}, {int(percentile * 100)}ph"
                         percentile = percentiles[percentile_key]
-
 
                         # core items
                         if group in percentile.executors:
