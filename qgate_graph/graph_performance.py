@@ -140,7 +140,7 @@ class GraphPerformance(GraphBase):
                              marker = marker.next(),
                              alpha = alpha.item(),
                              label = f"{key} "
-                                     f"{'_'+str(int(percentile.percentile*100)) if percentile.percentile != 1 else ''}"
+                                     f"{str(int(percentile.percentile*100))+'ph ' if percentile.percentile != 1 else ''}"
                                      f"[{round(max(percentile.total_performance[key]), 2)}]")
             marker.reset()
             color.reset()
@@ -150,7 +150,6 @@ class GraphPerformance(GraphBase):
         if executors_amount > 0:
             ax_main.legend()
 
-        #ax_main.set_xlabel('Executors')
         ax_main.set_ylabel('Performance [calls/sec]')
         ax_main.set_xticks(self._get_executor_list(collections=percentiles[1].executors))
 
@@ -260,12 +259,7 @@ class GraphPerformance(GraphBase):
         :return:                List of generated files
         """
         file_name = None
-        total_performance = {}
-        avrg_time = {}
-        std_deviation = {}
-        executors = {}
         output_list = []
-        percentile_list = []
         percentiles = {}
         percentiles[1] = PercentileItem(1)
 
@@ -288,19 +282,13 @@ class GraphPerformance(GraphBase):
                         if suppress_error:
                             try:
                                 output_list.append(self._show_graph(percentiles, title, file_name, output_dir_target))
-                                    # self._show_graph(executors, total_performance, avrg_time, std_deviation,
-                                    #                  title, file_name, output_dir_target))
                             except Exception as ex:
                                 logging.info(f"  ... Error in '{file_name}', '{type(ex)}'")
                         else:
                             output_list.append(self._show_graph(percentiles, title, file_name, output_dir_target))
-                                # self._show_graph(executors, total_performance, avrg_time, std_deviation,
-                                #                  title, file_name, output_dir_target))
                     file_name = None
-                    executors.clear()
-                    total_performance.clear()
-                    avrg_time.clear()
-                    std_deviation.clear()
+                    percentiles.clear()
+                    percentiles[1] = PercentileItem(1)
                     continue
                 input_dict = GraphBase.load_json(line)
                 if not input_dict:
@@ -321,11 +309,8 @@ class GraphPerformance(GraphBase):
                         if not os.path.exists(output_dir_target):
                             os.makedirs(output_dir_target, mode=0o777)
                     # add percentile
-#                    percentiles[1] = PercentileItem()
-                    #percentile_list.append(1)
                     if input_dict.get(const.PRF_HDR_PERCENTILE, 1) < 1:
                         percentiles[input_dict[const.PRF_HDR_PERCENTILE]] = PercentileItem(input_dict[const.PRF_HDR_PERCENTILE])
-                        #percentile_list.append(input_dict[const.PRF_HDR_PERCENTILE])
                     file_name = self._unique_file_name("PRF", label, report_date, bulk, self._raw_format)
                     title = f"'{label}', {report_date}, bulk {bulk[0]}/{bulk[1]}, duration '{self._readable_duration(duration)}'"
 
@@ -335,7 +320,6 @@ class GraphPerformance(GraphBase):
                         suffix = f"_{int(percentile_key * 100)}" if percentile_key < 1 else ""
                         group = input_dict[const.PRF_CORE_GROUP]# if percentile == 1 else f"{input_dict[const.PRF_CORE_GROUP]}, {int(percentile * 100)}ph"
                         percentile = percentiles[percentile_key]
-
 
                         # core items
                         if group in percentile.executors:
