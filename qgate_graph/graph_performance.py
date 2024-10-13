@@ -141,7 +141,8 @@ class GraphPerformance(GraphBase):
                              alpha = alpha.item(),
                              label = f"{key} "
                                      f"{str(int(percentile.percentile*100))+'ph ' if percentile.percentile != 1 else ''}"
-                                     f"[{round(max(percentile.total_performance[key]), 2)}]")
+                                     f"[{round(max(percentile.total_performance[key]), 2):,}]".replace(',',' '))
+
             marker.reset()
             color.reset()
             alpha.next()
@@ -176,6 +177,7 @@ class GraphPerformance(GraphBase):
                             linewidth = 2,
                             capsize = 6)
                 self._watermark(plt, ax)
+                ax.legend(['std', f"std {str(int(percentile.percentile*100))+'ph ' if percentile.percentile != 1 else ''}"])
 
                 # add table
                 # val1 = ["{:X}".format(i) for i in range(10)]
