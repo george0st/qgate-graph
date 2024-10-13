@@ -1,5 +1,6 @@
 from matplotlib import axes
 from matplotlib import pyplot as plt
+from matplotlib.ticker import FuncFormatter
 from qgate_graph.file_format import FileFormat as const
 from numpy import std, average
 from qgate_graph.graph_base import GraphBase
@@ -140,7 +141,7 @@ class GraphPerformance(GraphBase):
                              alpha = alpha.item(),
                              label = f"{key} "
                                      f"{str(int(percentile.percentile*100))+'ph ' if percentile.percentile != 1 else ''}"
-                                     f"[{round(max(percentile.total_performance[key]), 2):,}]".replace(',',' '))
+                                     f"[{round(max(percentile.total_performance[key]), 2):,}]")
 
             marker.reset()
             color.reset()
