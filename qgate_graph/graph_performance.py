@@ -140,7 +140,7 @@ class GraphPerformance(GraphBase):
                              alpha = alpha.item(),
                              label = f"{key} "
                                      f"{str(int(percentile.percentile*100))+'ph ' if percentile.percentile != 1 else ''}"
-                                     f"[{round(max(percentile.total_performance[key]), 2):,}]".replace(',',' '))
+                                     f"[{round(max(percentile.total_performance[key]), 2):,}]")
 
             marker.reset()
             color.reset()

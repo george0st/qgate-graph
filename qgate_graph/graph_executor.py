@@ -170,13 +170,10 @@ class GraphExecutor(GraphBase):
 
     def _show_graph(self, start_date, executors, end_date, title, file_name, output_dir) -> str :
         plt.style.use("bmh") #"ggplot" "seaborn-v0_8-poster"
-        ax=plt.figure(figsize=(15, 6))
+        ax=plt.figure(figsize = (15, 6))
         plt.grid()
-        color = ColorQueue()
+        color = ColorQueue(init = 6)
         marker = MarkerQueue()
-
-        # osa X = end_date - start_date
-        # osa Y = current executions
 
         # view total performance
         ax=plt.subplot(1,1,1)
@@ -184,8 +181,6 @@ class GraphExecutor(GraphBase):
 
         plt.suptitle("Executors in time",weight='bold', fontsize=18, ha="center", va="top")
         plt.title(title, fontsize=14,ha="center", va="top")
-        #self._reset_marker()
-        color.reset(6) #self._reset_color(6)
 
         new_array=[]
         new_array_count=[]
