@@ -1,6 +1,5 @@
 from matplotlib import axes
 from matplotlib import pyplot as plt
-from matplotlib.ticker import FuncFormatter
 from qgate_graph.file_format import FileFormat as const
 from numpy import std, average
 from qgate_graph.graph_base import GraphBase

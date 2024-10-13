@@ -1,6 +1,5 @@
 from qgate_graph import __version__ as version
 from matplotlib import get_backend, use
-from qgate_graph.circle_queue import CircleQueue
 import json
 
 
