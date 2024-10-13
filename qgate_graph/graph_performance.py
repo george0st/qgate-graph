@@ -172,7 +172,7 @@ class GraphPerformance(GraphBase):
                 ax.errorbar(percentile.executors[key], percentile.avrg_time[key], percentile.std_deviation[key],
                             alpha = alpha.next(),
                             color = color.item(),
-                            linestyle = 'none',
+                            linestyle = 'none', #'-' if (len(percentiles) > 1 and percentile.percentile != 1) or (len(percentiles) == 1) else 'none',
                             marker = '_' if (len(percentiles) > 1 and percentile.percentile != 1) or (len(percentiles) == 1) else 'none',
                             linewidth = 2,
                             capsize = 6)
@@ -209,10 +209,11 @@ class GraphPerformance(GraphBase):
                                     (x,y),
                                     textcoords = "offset fontsize",
                                     xytext = (0,0),
-                                    ha = 'center',
-                                    va = 'center',
+                                    ha = 'center', #'center',
+                                    va = 'center', #'center',
                                     size = 9,
-                                    weight = 'normal')           # previous code weight='bold'
+                                    weight = 'normal')
+                                    #annotation_clip = True)           # previous code weight='bold'
 
                 ax.set_xlabel('Executors')
                 if key_count+1 == key_view:
