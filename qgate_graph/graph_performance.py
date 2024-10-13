@@ -123,7 +123,6 @@ class GraphPerformance(GraphBase):
         plt.style.use("bmh") #"ggplot" "seaborn-v0_8-poster"
         fig, ax = plt.subplots(2, 1, sharex='none', squeeze=False, figsize=(15, 6))
         ax_main: axes.Axes = ax[0][0]
-        executors_amount = len(percentiles[1].executors)
 
         # view total performance
         self._watermark(plt, ax_main)
@@ -141,13 +140,14 @@ class GraphPerformance(GraphBase):
                              alpha = alpha.item(),
                              label = f"{key} "
                                      f"{str(int(percentile.percentile*100))+'ph ' if percentile.percentile != 1 else ''}"
-                                     f"[{round(max(percentile.total_performance[key]), 2)}]")
+                                     f"[{round(max(percentile.total_performance[key]), 2):,}]".replace(',',' '))
+
             marker.reset()
             color.reset()
             alpha.next()
             line_style.next()
 
-        if executors_amount > 0:
+        if len(percentiles[1].executors) > 0:
             ax_main.legend()
 
         ax_main.set_ylabel('Performance [calls/sec]')
@@ -157,25 +157,26 @@ class GraphPerformance(GraphBase):
         ax[1][0].remove()
 
         # draw detail graphs 'Response time [seconds]'
-        key_count = executors_amount# len(executors.keys())
+        key_count = len(percentiles[1].executors)
         key_view = key_count
         marker.reset()
         color.reset()
         alpha.reset()
         for key in percentiles[1].executors.keys():
             # view response time
-            key_view+=1
+            key_view += 1
             ax=plt.subplot(2, key_count, key_view)
 
             for percentile in percentiles.values():
                 ax.errorbar(percentile.executors[key], percentile.avrg_time[key], percentile.std_deviation[key],
                             alpha = alpha.next(),
                             color = color.item(),
-                            linestyle = 'none',
+                            linestyle = 'none', #'-' if (len(percentiles) > 1 and percentile.percentile != 1) or (len(percentiles) == 1) else 'none',
                             marker = '_' if (len(percentiles) > 1 and percentile.percentile != 1) or (len(percentiles) == 1) else 'none',
-                            linewidth = 2,
-                            capsize = 6)
+                            linewidth = 2 if (len(percentiles) > 1 and percentile.percentile != 1) or (len(percentiles) == 1) else 1,
+                            capsize = 6 if (len(percentiles) > 1 and percentile.percentile != 1) or (len(percentiles) == 1) else 6)
                 self._watermark(plt, ax)
+                ax.legend(['avrg ± std', f"avrg ± std {str(int(percentile.percentile*100))+'ph ' if percentile.percentile != 1 else ''}"])
 
                 # add table
                 # val1 = ["{:X}".format(i) for i in range(10)]
@@ -207,10 +208,11 @@ class GraphPerformance(GraphBase):
                                     (x,y),
                                     textcoords = "offset fontsize",
                                     xytext = (0,0),
-                                    ha = 'center',
-                                    va = 'center',
+                                    ha = 'center', #'center',
+                                    va = 'center', #'center',
                                     size = 9,
-                                    weight = 'normal')           # previous code weight='bold'
+                                    weight = 'normal')
+                                    #annotation_clip = True)           # previous code weight='bold'
 
                 ax.set_xlabel('Executors')
                 if key_count+1 == key_view:
