@@ -116,7 +116,7 @@ class GraphPerformance(GraphBase):
             return max_len
 
     def _show_graph(self, percentiles: {PercentileItem}, title, file_name,output_dir) -> str:
-        alpha = CircleQueue([0.4, 0.8] if len(percentiles) > 1 else [0.8])
+        alpha = CircleQueue([0.4, 0.9] if len(percentiles) > 1 else [0.8])
         line_style = CircleQueue(['--','-'] if len(percentiles) > 1 else ['-'])
         color = ColorQueue()
         marker = MarkerQueue()
@@ -174,8 +174,8 @@ class GraphPerformance(GraphBase):
                             color = color.item(),
                             linestyle = 'none', #'-' if (len(percentiles) > 1 and percentile.percentile != 1) or (len(percentiles) == 1) else 'none',
                             marker = '_' if (len(percentiles) > 1 and percentile.percentile != 1) or (len(percentiles) == 1) else 'none',
-                            linewidth = 2,
-                            capsize = 6)
+                            linewidth = 2 if (len(percentiles) > 1 and percentile.percentile != 1) or (len(percentiles) == 1) else 1,
+                            capsize = 6 if (len(percentiles) > 1 and percentile.percentile != 1) or (len(percentiles) == 1) else 6)
                 self._watermark(plt, ax)
                 ax.legend(['avrg & std', f"avrg & std {str(int(percentile.percentile*100))+'ph ' if percentile.percentile != 1 else ''}"])
 
