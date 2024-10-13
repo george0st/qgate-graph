@@ -177,7 +177,7 @@ class GraphPerformance(GraphBase):
                             linewidth = 2,
                             capsize = 6)
                 self._watermark(plt, ax)
-                ax.legend(['std', f"std {str(int(percentile.percentile*100))+'ph ' if percentile.percentile != 1 else ''}"])
+                ax.legend(['avrg & std', f"avrg & std {str(int(percentile.percentile*100))+'ph ' if percentile.percentile != 1 else ''}"])
 
                 # add table
                 # val1 = ["{:X}".format(i) for i in range(10)]
