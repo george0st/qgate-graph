@@ -1,9 +1,9 @@
 
 class CircleQueue:
 
-    def __init__(self, items: []):
+    def __init__(self, items: [], init = 0):
         self._items = items
-        self._pointer = 0
+        self._pointer = init
 
     def next(self):
         current = self._pointer
@@ -18,11 +18,11 @@ class CircleQueue:
 
 class MarkerQueue(CircleQueue):
 
-    def __init__(self, items: [] = ['o','x', '*', '^','X', 'D', 'p', 'H']):
-        super().__init__(items)
+    def __init__(self, items: [] = ['o','x', '*', '^','X', 'D', 'p', 'H'], init = 0):
+        super().__init__(items, init)
 
 
 class ColorQueue(CircleQueue):
 
-    def __init__(self, items: [] = ['c', 'm', 'r', 'b', 'g', 'y', 'k']):
-        super().__init__(items)
+    def __init__(self, items: [] = ['c', 'm', 'r', 'b', 'g', 'y', 'k'], init = 0):
+        super().__init__(items, init)
