@@ -377,5 +377,10 @@ class GraphPerformance(GraphBase):
         summary_table.align = "r"
         summary_table.align["Executors"] = "c"
         summary_table.align["Label"] = "l"
-        with open(os.path.join(output_dir, file_name + ".txt"), 'w') as file:
+
+        with open(os.path.join(output_dir, f"TXT-{file_name}.txt"), 'w') as file:
             file.write(str(summary_table))
+
+        with open(os.path.join(output_dir, f"CSV-{file_name}.csv"), 'w', newline='') as file:
+            file.write(summary_table.get_csv_string(delimiter=','))
+
