@@ -228,9 +228,6 @@ class GraphPerformance(GraphBase):
         plt.close()
         return output_file
 
-    def _create_table(self, percentiles: {PercentileItem}, title, file_name, output_dir) -> str:
-        pass
-
     def generate_from_dir(self, input_dir: str="input", output_dir: str="output") -> list[str]:
         """
         Generate graphs based on input directory
@@ -351,3 +348,52 @@ class GraphPerformance(GraphBase):
                             percentile.std_deviation[group] = [input_dict[const.PRF_CORE_STD_DEVIATION + suffix]]
         return output_list
 
+    def _create_table(self, percentiles: {PercentileItem}, title, file_name, output_dir) -> str:
+        table = PrettyTable()
+
+        table.border = False
+        table.header = True
+        table.padding_width = 1
+
+        table.field_names = ["State", "Gossip", "IP", "Location", "Ver", "Synch", "Root"]
+        table.align = "l"
+        table.align["Root"] = "c"
+
+        # use short schema version
+        shorter_schema = self._build_shorter_schema_version(status)
+
+        # create output
+        for ip in status.keys():
+            node = status[ip]
+            color_prefix = ""
+            color_peer_prefix = ""
+            color_status_prefix = ""
+            color_status_suffix = ""
+            color_suffix = ""
+            color_peer_suffix = ""
+
+            if node['root'] == "x":
+                color_prefix = Fore.CYAN
+                color_suffix = Style.RESET_ALL
+
+            if node['status'] == "DOWN":
+                color_status_prefix = Fore.LIGHTRED_EX
+                color_status_suffix = Style.RESET_ALL
+            elif node['status'] == "?":
+                color_status_prefix = Fore.CYAN
+                color_status_suffix = Style.RESET_ALL
+
+            if node['peer_status'] == "DOWN":
+                color_peer_prefix = Fore.CYAN
+                color_peer_suffix = Style.RESET_ALL
+
+            row = [f"{color_status_prefix}{node['status']}{color_status_suffix}",
+                   f"{color_peer_prefix}{node['peer_status']}{color_peer_suffix}",
+                   f"{ip}",
+                   node['location'],
+                   f"{node['release_version']}",
+                   f"{color_prefix}{shorter_schema[node['schema_version']]}{color_suffix}",
+                   f"{color_prefix}{node['root']}{color_suffix}"]
+            table.add_row(row)
+        table.sortby = "Location"
+        print(table)
