@@ -4,7 +4,7 @@ from prettytable import PrettyTable
 import os.path, os
 
 
-class GraphTxt(GraphPerformance):
+class GraphCsv(GraphPerformance):
 
     def __init__(self, min_precision=-1, max_precision=-1, raw_format=False):
         super().__init__(0, min_precision, max_precision, raw_format)
@@ -42,5 +42,5 @@ class GraphTxt(GraphPerformance):
         summary_table.align["Executors"] = "c"
         summary_table.align["Label"] = "l"
 
-        with open(os.path.join(output_dir, f"TXT-{file_name}.txt"), 'w') as file:
-            file.write(str(summary_table))
+        with open(os.path.join(output_dir, f"CSV-{file_name}.csv"), 'w', newline='') as file:
+            file.write(summary_table.get_csv_string(delimiter=','))
