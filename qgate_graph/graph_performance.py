@@ -377,7 +377,5 @@ class GraphPerformance(GraphBase):
         summary_table.align = "r"
         summary_table.align["Executors"] = "c"
         summary_table.align["Label"] = "l"
-
-        print(summary_table)
         return summary_table
 
