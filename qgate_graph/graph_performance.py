@@ -348,52 +348,36 @@ class GraphPerformance(GraphBase):
                             percentile.std_deviation[group] = [input_dict[const.PRF_CORE_STD_DEVIATION + suffix]]
         return output_list
 
-    def _create_table(self, percentiles: {PercentileItem}, title, file_name, output_dir) -> str:
-        table = PrettyTable()
+    def _create_table(self, percentiles: {PercentileItem}, title, file_name, output_dir) -> PrettyTable:
+        summary_table = PrettyTable()
 
-        table.border = False
-        table.header = True
-        table.padding_width = 1
+        percentiles_sort = sorted(list(percentiles.keys()))
+        for label in percentiles[1].executors.keys():
+            table = PrettyTable()
+            table.add_column("Executors", percentiles[1].executors[label])
+            table.add_column("Label", [label]*len(percentiles[1].executors[label]))
+            for percentile in percentiles_sort:
+                suffix = f" {int(percentile * 100)}ph" if percentile < 1 else ""
+                table.add_column(f"Performance{suffix}", percentiles[percentile].total_performance[label])
+            for percentile in percentiles_sort:
+                suffix = f" {int(percentile * 100)}ph" if percentile < 1 else ""
+                table.add_column(f"Avrg{suffix}", percentiles[percentile].avrg_time[label])
+            for percentile in percentiles_sort:
+                suffix = f" {int(percentile * 100)}ph" if percentile < 1 else ""
+                table.add_column(f"Std{suffix}", percentiles[percentile].std_deviation[label])
 
-        table.field_names = ["State", "Gossip", "IP", "Location", "Ver", "Synch", "Root"]
-        table.align = "l"
-        table.align["Root"] = "c"
+            if len(summary_table.rows) == 0:
+                summary_table = table
+            else:
+                summary_table.add_rows(table.rows)
 
-        # use short schema version
-        shorter_schema = self._build_shorter_schema_version(status)
+        summary_table.border = True
+        summary_table.header = True
+        summary_table.padding_width = 1
+        summary_table.align = "r"
+        summary_table.align["Executors"] = "c"
+        summary_table.align["Label"] = "l"
 
-        # create output
-        for ip in status.keys():
-            node = status[ip]
-            color_prefix = ""
-            color_peer_prefix = ""
-            color_status_prefix = ""
-            color_status_suffix = ""
-            color_suffix = ""
-            color_peer_suffix = ""
+        print(summary_table)
+        return summary_table
 
-            if node['root'] == "x":
-                color_prefix = Fore.CYAN
-                color_suffix = Style.RESET_ALL
-
-            if node['status'] == "DOWN":
-                color_status_prefix = Fore.LIGHTRED_EX
-                color_status_suffix = Style.RESET_ALL
-            elif node['status'] == "?":
-                color_status_prefix = Fore.CYAN
-                color_status_suffix = Style.RESET_ALL
-
-            if node['peer_status'] == "DOWN":
-                color_peer_prefix = Fore.CYAN
-                color_peer_suffix = Style.RESET_ALL
-
-            row = [f"{color_status_prefix}{node['status']}{color_status_suffix}",
-                   f"{color_peer_prefix}{node['peer_status']}{color_peer_suffix}",
-                   f"{ip}",
-                   node['location'],
-                   f"{node['release_version']}",
-                   f"{color_prefix}{shorter_schema[node['schema_version']]}{color_suffix}",
-                   f"{color_prefix}{node['root']}{color_suffix}"]
-            table.add_row(row)
-        table.sortby = "Location"
-        print(table)
