@@ -4,3 +4,5 @@ matplotlib>=3.5.0,<=3.9.2
 
 # numpy higher version need python==3.9 need max numpy 2.0.1
 numpy>=1.24.3,<=2.1.1
+
+prettytable==3.11.0
