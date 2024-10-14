@@ -5,7 +5,6 @@ from numpy import std, average
 from qgate_graph.graph_base import GraphBase
 from qgate_graph.percentile_item import PercentileItem
 from qgate_graph.circle_queue import CircleQueue, ColorQueue, MarkerQueue
-from prettytable import PrettyTable
 import os.path, os
 import datetime
 import logging
@@ -111,7 +110,6 @@ class GraphPerformance(GraphBase):
             return max_len
 
     def _create_output(self, percentiles: {PercentileItem}, title, file_name, output_dir) -> str:
-        self._create_table(percentiles, title, file_name, output_dir)
         return self._create_graph(percentiles, title, file_name, output_dir)
 
     def _create_graph(self, percentiles: {PercentileItem}, title, file_name, output_dir) -> str:
@@ -348,34 +346,4 @@ class GraphPerformance(GraphBase):
                             percentile.std_deviation[group] = [input_dict[const.PRF_CORE_STD_DEVIATION + suffix]]
         return output_list
 
-    def _create_table(self, percentiles: {PercentileItem}, title, file_name, output_dir) -> PrettyTable:
-        summary_table = PrettyTable()
-
-        percentiles_sort = sorted(list(percentiles.keys()))
-        for label in percentiles[1].executors.keys():
-            table = PrettyTable()
-            table.add_column("Executors", percentiles[1].executors[label])
-            table.add_column("Label", [label]*len(percentiles[1].executors[label]))
-            for percentile in percentiles_sort:
-                suffix = f" {int(percentile * 100)}ph" if percentile < 1 else ""
-                table.add_column(f"Performance{suffix}", percentiles[percentile].total_performance[label])
-            for percentile in percentiles_sort:
-                suffix = f" {int(percentile * 100)}ph" if percentile < 1 else ""
-                table.add_column(f"Avrg{suffix}", percentiles[percentile].avrg_time[label])
-            for percentile in percentiles_sort:
-                suffix = f" {int(percentile * 100)}ph" if percentile < 1 else ""
-                table.add_column(f"Std{suffix}", percentiles[percentile].std_deviation[label])
-
-            if len(summary_table.rows) == 0:
-                summary_table = table
-            else:
-                summary_table.add_rows(table.rows)
-
-        summary_table.border = True
-        summary_table.header = True
-        summary_table.padding_width = 1
-        summary_table.align = "r"
-        summary_table.align["Executors"] = "c"
-        summary_table.align["Label"] = "l"
-        return summary_table
 
