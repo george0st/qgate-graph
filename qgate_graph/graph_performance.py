@@ -56,13 +56,7 @@ class GraphPerformance(GraphBase):
                         list.append(executor)
         return list
 
-    def _exp_size(self, i):
-        return int("{:.5e}".format(i).split("e")[1]) + 1  # e.g. `1e10` -> `10` + 1 -> 11
-
-    def mod_size(self, i):
-        return len("%i" % i)  # Uses string modulo instead of str(i)
-
-    def expected_round(self, avrg_time):
+    def _expected_round(self, avrg_time):
         """Calculation amount of precisions for number presentation"""
 
         # calc max by number precision
@@ -203,7 +197,7 @@ class GraphPerformance(GraphBase):
 
                 # print response time value with relevant precision
                 if (len(percentiles) > 1 and percentile.percentile != 1) or (len(percentiles) == 1):
-                    expected_round = self.expected_round(percentile.avrg_time[key])
+                    expected_round = self._expected_round(percentile.avrg_time[key])
                     for x, y in zip(percentile.executors[key], percentile.avrg_time[key]):
                         ax.annotate(round(y,expected_round),
                                     (x,y),

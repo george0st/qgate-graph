@@ -16,26 +16,26 @@ class TestCaseBasic(unittest.TestCase):
         """Performance graphs"""
         graph = GraphPerformance(min_precision=0, max_precision=4)
 
-        precision = graph.expected_round(np.array([1, 5, 10]))
+        precision = graph._expected_round(np.array([1, 5, 10]))
         self.assertTrue(precision == 0)
 
-        precision = graph.expected_round(np.array([169488.92444,0.00169488924, 0.000169488924]))
+        precision = graph._expected_round(np.array([169488.92444, 0.00169488924, 0.000169488924]))
         self.assertTrue(precision == 2)
-        precision = graph.expected_round(np.array([1.6948892444e+5,1.6948892444e-3, 1.6948892444e-4]))
+        precision = graph._expected_round(np.array([1.6948892444e+5, 1.6948892444e-3, 1.6948892444e-4]))
         self.assertTrue(precision == 2)
 
-        precision = graph.expected_round(np.array([0.001302153310812064, 0.00327365633422423, 0.0092585296234321431]))
+        precision = graph._expected_round(np.array([0.001302153310812064, 0.00327365633422423, 0.0092585296234321431]))
         self.assertTrue(precision == 3)
 
-        precision = graph.expected_round(np.array([1.552, 1.545, 1.547]))
+        precision = graph._expected_round(np.array([1.552, 1.545, 1.547]))
         self.assertTrue(precision == 3)
 
-        precision = graph.expected_round(np.array([0.001302153310812064, 0.00127365633422423, 0.0012585296234321431]))
+        precision = graph._expected_round(np.array([0.001302153310812064, 0.00127365633422423, 0.0012585296234321431]))
         self.assertTrue(precision == 4)
 
-        precision = graph.expected_round(np.array([1.552, 1.54599, 1.547]))
+        precision = graph._expected_round(np.array([1.552, 1.54599, 1.547]))
         self.assertTrue(precision >= 3)
 
-        precision = graph.expected_round(np.array([1.1, 1.0, 1.3]))
+        precision = graph._expected_round(np.array([1.1, 1.0, 1.3]))
         self.assertTrue(precision == 1)
 
