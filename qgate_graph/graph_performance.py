@@ -5,6 +5,7 @@ from numpy import std, average
 from qgate_graph.graph_base import GraphBase
 from qgate_graph.percentile_item import PercentileItem
 from qgate_graph.circle_queue import CircleQueue, ColorQueue, MarkerQueue
+from prettytable import PrettyTable
 import os.path, os
 import datetime
 import logging
@@ -109,7 +110,11 @@ class GraphPerformance(GraphBase):
                 return max_stddev if max_stddev > max_zero else max_zero
             return max_len
 
-    def _show_graph(self, percentiles: {PercentileItem}, title, file_name,output_dir) -> str:
+    def _create_output(self, percentiles: {PercentileItem}, title, file_name, output_dir) -> str:
+        self._create_table(percentiles, title, file_name, output_dir)
+        return self._create_graph(percentiles, title, file_name, output_dir)
+
+    def _create_graph(self, percentiles: {PercentileItem}, title, file_name, output_dir) -> str:
         alpha = CircleQueue([0.4, 0.8] if len(percentiles) > 1 else [0.8])
         line_style = CircleQueue(['--','-'] if len(percentiles) > 1 else ['-'])
         color = ColorQueue()
@@ -223,6 +228,9 @@ class GraphPerformance(GraphBase):
         plt.close()
         return output_file
 
+    def _create_table(self, percentiles: {PercentileItem}, title, file_name, output_dir) -> str:
+        pass
+
     def generate_from_dir(self, input_dir: str="input", output_dir: str="output") -> list[str]:
         """
         Generate graphs based on input directory
@@ -278,11 +286,11 @@ class GraphPerformance(GraphBase):
                     if file_name and len(percentiles[1].executors) > 0:
                         if suppress_error:
                             try:
-                                output_list.append(self._show_graph(percentiles, title, file_name, output_dir_target))
+                                output_list.append(self._create_output(percentiles, title, file_name, output_dir_target))
                             except Exception as ex:
                                 logging.info(f"  ... Error in '{file_name}', '{type(ex)}'")
                         else:
-                            output_list.append(self._show_graph(percentiles, title, file_name, output_dir_target))
+                            output_list.append(self._create_output(percentiles, title, file_name, output_dir_target))
                     file_name = None
                     percentiles.clear()
                     percentiles[1] = PercentileItem(1)
@@ -342,3 +350,4 @@ class GraphPerformance(GraphBase):
                             percentile.avrg_time[group] = [input_dict[const.PRF_CORE_AVRG_TIME + suffix]]
                             percentile.std_deviation[group] = [input_dict[const.PRF_CORE_STD_DEVIATION + suffix]]
         return output_list
+
