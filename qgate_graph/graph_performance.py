@@ -348,7 +348,7 @@ class GraphPerformance(GraphBase):
                             percentile.std_deviation[group] = [input_dict[const.PRF_CORE_STD_DEVIATION + suffix]]
         return output_list
 
-    def _create_table(self, percentiles: {PercentileItem}, title, file_name, output_dir) -> PrettyTable:
+    def _create_table(self, percentiles: {PercentileItem}, title, file_name, output_dir):
         summary_table = PrettyTable()
 
         percentiles_sort = sorted(list(percentiles.keys()))
@@ -377,5 +377,5 @@ class GraphPerformance(GraphBase):
         summary_table.align = "r"
         summary_table.align["Executors"] = "c"
         summary_table.align["Label"] = "l"
-        return summary_table
-
+        with open(os.path.join(output_dir, file_name + ".txt"), 'w') as file:
+            file.write(str(summary_table))
