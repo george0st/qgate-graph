@@ -148,7 +148,7 @@ class GraphPerformance(GraphBase):
             line_style.next()
 
         if len(percentiles[1].executors) > 0:
-            ax_main.legend()
+            ax_main.legend(fontsize = 'small')
 
         ax_main.set_ylabel('Performance [calls/sec]')
         ax_main.set_xticks(self._get_executor_list(collections=percentiles[1].executors))
@@ -176,7 +176,8 @@ class GraphPerformance(GraphBase):
                             linewidth = 2 if (len(percentiles) > 1 and percentile.percentile != 1) or (len(percentiles) == 1) else 1,
                             capsize = 6 if (len(percentiles) > 1 and percentile.percentile != 1) or (len(percentiles) == 1) else 6)
                 self._watermark(plt, ax)
-                ax.legend(['avrg ± std', f"avrg ± std {str(int(percentile.percentile*100))+'ph ' if percentile.percentile != 1 else ''}"])
+                ax.legend(['avrg ± std', f"avrg ± std {str(int(percentile.percentile*100))+'ph ' if percentile.percentile != 1 else ''}"],
+                          fontsize = 'small')
 
                 # add table
                 # val1 = ["{:X}".format(i) for i in range(10)]
