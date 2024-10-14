@@ -7,7 +7,8 @@ import shutil
 import glob
 from qgate_graph.graph_performance_txt import GraphPerformanceTxt
 
-class TestCaseBasic(unittest.TestCase):
+
+class TestCasePerformanceTxt(unittest.TestCase):
 
     OUTPUT_ADR = "output/test/"
     INPUT_FILE = "input/prf_cassandra_02.txt"
@@ -21,14 +22,14 @@ class TestCaseBasic(unittest.TestCase):
 
         # setup relevant path
         prefix = "."
-        if not os.path.isfile(path.join(prefix, TestCaseBasic.INPUT_FILE)):
+        if not os.path.isfile(path.join(prefix, TestCasePerformanceTxt.INPUT_FILE)):
             prefix=".."
-        TestCaseBasic.OUTPUT_ADR = path.join(prefix,TestCaseBasic.OUTPUT_ADR)
-        TestCaseBasic.INPUT_FILE = path.join(prefix, TestCaseBasic.INPUT_FILE)
-        TestCaseBasic.INPUT_ADR = path.join(prefix, TestCaseBasic.INPUT_ADR)
+        TestCasePerformanceTxt.OUTPUT_ADR = path.join(prefix,TestCasePerformanceTxt.OUTPUT_ADR)
+        TestCasePerformanceTxt.INPUT_FILE = path.join(prefix, TestCasePerformanceTxt.INPUT_FILE)
+        TestCasePerformanceTxt.INPUT_ADR = path.join(prefix, TestCasePerformanceTxt.INPUT_ADR)
 
         # clean directory
-        shutil.rmtree(TestCaseBasic.OUTPUT_ADR, True)
+        shutil.rmtree(TestCasePerformanceTxt.OUTPUT_ADR, True)
 
     @classmethod
     def tearDownClass(cls):
@@ -37,6 +38,6 @@ class TestCaseBasic(unittest.TestCase):
     def test_txt1(self):
         """Performance graphs"""
         graph = GraphPerformanceTxt()
-        output = graph.generate_from_file(TestCaseBasic.INPUT_FILE, self.OUTPUT_ADR)
+        output = graph.generate_from_file(TestCasePerformanceTxt.INPUT_FILE, self.OUTPUT_ADR)
 
         self.assertTrue(len(output) == 2)
