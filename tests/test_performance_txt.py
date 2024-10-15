@@ -1,11 +1,9 @@
-import os
+from qgate_graph.graph_performance_txt import GraphPerformanceTxt
+from os import path
 import unittest
 import logging
-import time
-from os import path
 import shutil
-import glob
-from qgate_graph.graph_performance_txt import GraphPerformanceTxt
+import os
 
 
 class TestCasePerformanceTxt(unittest.TestCase):

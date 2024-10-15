@@ -1,6 +1,7 @@
 from qgate_graph.graph_performance import GraphPerformance
 from qgate_graph.percentile_item import PercentileItem
 import os.path, os
+import logging
 
 
 class GraphPerformanceCsv(GraphPerformance):
@@ -12,4 +13,5 @@ class GraphPerformanceCsv(GraphPerformance):
         output_file = os.path.join(output_dir, f"CSV-{file_name}.csv")
         with open(output_file, 'w', newline='') as file:
             file.write(super()._create_table(percentiles).get_csv_string(delimiter=','))
+            logging.info(f"  ... {output_file}")
         return output_file
