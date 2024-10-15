@@ -36,8 +36,19 @@ class TestCasePerformanceCsv(unittest.TestCase):
         pass
 
     def test_csv1(self):
-        """Performance graphs"""
+        """Performance graphs csv"""
         graph = GraphPerformanceCsv()
         output = graph.generate_from_file(TestCasePerformanceCsv.INPUT_FILE, self.OUTPUT_ADR)
 
         self.assertTrue(len(output) == 2)
+        for file in output:
+            self.assertTrue(file.find("RAW") == -1)
+
+    def test_csv_raw(self):
+        """Performance graphs csv with RAW format"""
+        graph = GraphPerformanceCsv(raw_format = True)
+        output = graph.generate_from_file(TestCasePerformanceCsv.INPUT_FILE, self.OUTPUT_ADR)
+
+        self.assertTrue(len(output) == 2)
+        for file in output:
+            self.assertTrue(file.find("RAW") != -1)

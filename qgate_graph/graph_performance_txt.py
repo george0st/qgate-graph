@@ -1,6 +1,7 @@
 from qgate_graph.graph_performance import GraphPerformance
 from qgate_graph.percentile_item import PercentileItem
 import os.path, os
+import logging
 
 
 class GraphPerformanceTxt(GraphPerformance):
@@ -9,5 +10,8 @@ class GraphPerformanceTxt(GraphPerformance):
         super().__init__(0, min_precision, max_precision, raw_format)
 
     def _create_output(self, percentiles: {PercentileItem}, title, file_name, output_dir) -> str:
-        with open(os.path.join(output_dir, f"TXT-{file_name}.txt"), 'w') as file:
+        output_file = os.path.join(output_dir, f"TXT-{file_name}.txt")
+        with open(output_file, 'w') as file:
             file.write(str(super()._create_table(percentiles)))
+            logging.info(f"  ... {output_file}")
+        return output_file
