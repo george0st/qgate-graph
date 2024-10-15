@@ -67,4 +67,4 @@ class TestCasePerformanceTxt(unittest.TestCase):
 
         self.assertTrue(len(output) == 10)
         for file in output:
-            self.assertTrue(file.find("RAW") != -1)
+            self.assertTrue(file.find("RAW") == -1)
