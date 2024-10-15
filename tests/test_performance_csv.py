@@ -58,6 +58,6 @@ class TestCasePerformanceCsv(unittest.TestCase):
         graph = GraphPerformanceCsv(raw_format=True)
         output = graph.generate_from_dir(TestCasePerformanceCsv.INPUT_ADR, self.OUTPUT_ADR)
 
-        self.assertTrue(len(output) == 2)
+        self.assertTrue(len(output) == 10)
         for file in output:
             self.assertTrue(file.find("RAW") != -1)
