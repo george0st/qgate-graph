@@ -10,9 +10,11 @@ The QGate graph generates graphical outputs based on performance tests (QGate Pe
  - provide graphs about Performance/Throughput and Response time (on typically client side)
  - provide graphs about Executors in time
 
-These graphs only visualize outputs from performance tests, it is not replacement of
+It is a quick way, how you can identify expected performance for your python solution.
+
+These graphs only visualize outputs from performance tests (QGate Perf), it is not replacement of
 detail views from Grafana, Prometheus, etc. in detail of CPU, GPU, RAM, I/O etc. on 
-side of testing system.
+side of testing system. 
 
 ## Usage
 
