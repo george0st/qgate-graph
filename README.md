@@ -30,7 +30,7 @@ detail views from Grafana, Prometheus, etc. in detail of CPU, GPU, RAM, I/O etc.
     graph=GraphPerformance()
     graph.generate_from_dir()
     
-    # generate excutors in time graphs
+    # generate executors in time graphs
     graph=GraphExecutor()
     graph.generate_from_dir()
 
@@ -39,7 +39,7 @@ detail views from Grafana, Prometheus, etc. in detail of CPU, GPU, RAM, I/O etc.
     graph.generate_from_dir()
 
     # generate performance/throughput graphs in CSV form
-    graph=GraphPerformanceTxt()
+    graph=GraphPerformanceCsv()
     graph.generate_from_dir()
 
 ```
