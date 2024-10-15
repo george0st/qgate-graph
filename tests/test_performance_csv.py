@@ -53,11 +53,20 @@ class TestCasePerformanceCsv(unittest.TestCase):
         for file in output:
             self.assertTrue(file.find("RAW") != -1)
 
-    def test_csv_from_dir(self):
-        """Performance graphs txt with RAW format"""
+    def test_csv_from_dir_with_raw(self):
+        """Performance graphs csv with RAW format"""
         graph = GraphPerformanceCsv(raw_format=True)
         output = graph.generate_from_dir(TestCasePerformanceCsv.INPUT_ADR, self.OUTPUT_ADR)
 
         self.assertTrue(len(output) == 10)
         for file in output:
             self.assertTrue(file.find("RAW") != -1)
+
+    def test_csv_from_dir(self):
+        """Performance graphs csv"""
+        graph = GraphPerformanceCsv()
+        output = graph.generate_from_dir(TestCasePerformanceCsv.INPUT_ADR, self.OUTPUT_ADR)
+
+        self.assertTrue(len(output) == 10)
+        for file in output:
+            self.assertTrue(file.find("RAW") == -1)
