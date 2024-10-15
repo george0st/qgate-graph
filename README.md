@@ -19,32 +19,31 @@ side of testing system.
 ## Usage
 
 ```python
-    from qgate_graph.graph_performance_txt import GraphPerformanceTxt
-    from qgate_graph.graph_performance_csv import GraphPerformanceCsv
-    from qgate_graph.graph_performance import GraphPerformance
-    from qgate_graph.graph_executor import GraphExecutor
-    import logging
+from qgate_graph.graph_performance_txt import GraphPerformanceTxt
+from qgate_graph.graph_performance_csv import GraphPerformanceCsv
+from qgate_graph.graph_performance import GraphPerformance
+from qgate_graph.graph_executor import GraphExecutor
+import logging
 
-    # setup login level
-    logging.basicConfig()
-    logging.getLogger().setLevel(logging.INFO)
+# setup login level
+logging.basicConfig()
+logging.getLogger().setLevel(logging.INFO)
 
-    # generate performance/throughput graphs
-    graph=GraphPerformance()
-    graph.generate_from_dir()
-    
-    # generate executors in time graphs
-    graph=GraphExecutor()
-    graph.generate_from_dir()
+# generate performance/throughput graphs
+graph=GraphPerformance()
+graph.generate_from_dir()
 
-    # generate performance/throughput graphs in TXT form
-    graph=GraphPerformanceTxt()
-    graph.generate_from_dir()
+# generate executors in time graphs
+graph=GraphExecutor()
+graph.generate_from_dir()
 
-    # generate performance/throughput graphs in CSV form
-    graph=GraphPerformanceCsv()
-    graph.generate_from_dir()
+# generate performance/throughput graphs in TXT form
+graph=GraphPerformanceTxt()
+graph.generate_from_dir()
 
+# generate performance/throughput graphs in CSV form
+graph=GraphPerformanceCsv()
+graph.generate_from_dir()
 ```
 
 ## Sample of outputs
