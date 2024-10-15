@@ -50,6 +50,7 @@ class TestCasePerformanceTxt(unittest.TestCase):
         self.assertTrue(len(output) == 2)
         for file in output:
             self.assertTrue(file.find("RAW") != -1)
+            self.assertTrue(file.find("TXT-PRF-") == -1)
 
     def test_txt_from_dir_with_raw(self):
         """Performance graphs txt with RAW format"""
@@ -59,6 +60,7 @@ class TestCasePerformanceTxt(unittest.TestCase):
         self.assertTrue(len(output) == 10)
         for file in output:
             self.assertTrue(file.find("RAW") != -1)
+            self.assertTrue(file.find("TXT-PRF-") == -1)
 
     def test_txt_from_dir(self):
         """Performance graphs txt"""
@@ -68,3 +70,4 @@ class TestCasePerformanceTxt(unittest.TestCase):
         self.assertTrue(len(output) == 10)
         for file in output:
             self.assertTrue(file.find("RAW") == -1)
+            self.assertTrue(file.find("TXT-PRF-") == -1)

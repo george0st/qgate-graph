@@ -52,6 +52,7 @@ class TestCasePerformanceCsv(unittest.TestCase):
         self.assertTrue(len(output) == 2)
         for file in output:
             self.assertTrue(file.find("RAW") != -1)
+            self.assertTrue(file.find("CSV-PRF-") == -1)
 
     def test_csv_from_dir_with_raw(self):
         """Performance graphs csv with RAW format"""
@@ -61,6 +62,7 @@ class TestCasePerformanceCsv(unittest.TestCase):
         self.assertTrue(len(output) == 10)
         for file in output:
             self.assertTrue(file.find("RAW") != -1)
+            self.assertTrue(file.find("CSV-PRF-") == -1)
 
     def test_csv_from_dir(self):
         """Performance graphs csv"""
@@ -70,3 +72,4 @@ class TestCasePerformanceCsv(unittest.TestCase):
         self.assertTrue(len(output) == 10)
         for file in output:
             self.assertTrue(file.find("RAW") == -1)
+            self.assertTrue(file.find("CSV-PRF-") == -1)

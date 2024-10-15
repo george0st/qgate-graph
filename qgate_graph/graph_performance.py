@@ -110,7 +110,7 @@ class GraphPerformance(GraphBase):
             return max_len
 
     def _create_output(self, percentiles: {PercentileItem}, title, file_name, output_dir) -> str:
-        return self._create_graph(percentiles, title, file_name, output_dir)
+        return self._create_graph(percentiles, title, f"PRF{file_name}.png", output_dir)
 
     def _create_graph(self, percentiles: {PercentileItem}, title, file_name, output_dir) -> str:
         alpha = CircleQueue([0.4, 0.8] if len(percentiles) > 1 else [0.8])
@@ -220,7 +220,7 @@ class GraphPerformance(GraphBase):
             color.next()
             marker.next()
 
-        output_file = os.path.join(output_dir, file_name + ".png")
+        output_file = os.path.join(output_dir, file_name)
         plt.savefig(output_file, dpi=self.dpi)
         logging.info(f"  ... {output_file}")
         plt.close()
@@ -311,7 +311,7 @@ class GraphPerformance(GraphBase):
                     # add percentile
                     if input_dict.get(const.PRF_HDR_PERCENTILE, 1) < 1:
                         percentiles[input_dict[const.PRF_HDR_PERCENTILE]] = PercentileItem(input_dict[const.PRF_HDR_PERCENTILE])
-                    file_name = self._unique_file_name("PRF", label, report_date, bulk, self._raw_format)
+                    file_name = self._unique_file_name("", label, report_date, bulk, self._raw_format)
                     title = f"'{label}', {report_date}, bulk {bulk[0]}/{bulk[1]}, duration '{self._readable_duration(duration)}'"
 
                 elif input_dict[const.PRF_TYPE] == const.PRF_CORE_TYPE:
