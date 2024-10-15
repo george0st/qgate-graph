@@ -61,7 +61,7 @@ class TestCasePerformanceTxt(unittest.TestCase):
             self.assertTrue(file.find("RAW") != -1)
 
     def test_txt_from_dir(self):
-        """Performance graphs txt with RAW format"""
+        """Performance graphs txt"""
         graph = GraphPerformanceTxt()
         output = graph.generate_from_dir(TestCasePerformanceTxt.INPUT_ADR, self.OUTPUT_ADR)
 

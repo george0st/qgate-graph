@@ -63,7 +63,7 @@ class TestCasePerformanceCsv(unittest.TestCase):
             self.assertTrue(file.find("RAW") != -1)
 
     def test_csv_from_dir(self):
-        """Performance graphs txt with RAW format"""
+        """Performance graphs txt"""
         graph = GraphPerformanceCsv()
         output = graph.generate_from_dir(TestCasePerformanceCsv.INPUT_ADR, self.OUTPUT_ADR)
 
