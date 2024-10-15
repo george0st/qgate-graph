@@ -11,7 +11,8 @@ The QGate graph generates graphical outputs based on performance tests (QGate Pe
  - provide graphs about Executors in time
 
 These graphs only visualize outputs from performance tests, it is not replacement of
-detail views from Grafana, Prometheus, etc. in detail of CPU, GPU, RAM, I/O etc. on side of testing system.
+detail views from Grafana, Prometheus, etc. in detail of CPU, GPU, RAM, I/O etc. on 
+side of testing system.
 
 ## Usage
 
