@@ -10,8 +10,11 @@ The QGate graph generates graphical outputs based on performance tests (QGate Pe
  - provide graphs about Performance/Throughput and Response time (on typically client side)
  - provide graphs about Executors in time
 
-These graphs only visualize outputs from performance tests, it is not replacement of
-detail views from Grafana, Prometheus, etc. in detail of CPU, GPU, RAM, I/O etc. on side of testing system.
+It is a quick way, how you can identify expected performance for your python solution.
+
+These graphs only visualize outputs from performance tests (QGate Perf), it is not replacement of
+detail views from Grafana, Prometheus, etc. in detail of CPU, GPU, RAM, I/O etc. on 
+side of testing system. 
 
 ## Usage
 
@@ -54,7 +57,9 @@ detail views from Grafana, Prometheus, etc. in detail of CPU, GPU, RAM, I/O etc.
 ![graph](https://github.com/george0st/qgate-graph/blob/main/assets/EXE-NoSQL-2023-05-04_19-33-30-bulk-1x50-plan-8x2.png?raw=true)
 
 #### Performance/Throughput & Response time in TXT form
-![TXT](https://github.com/george0st/qgate-graph/blob/main/assets/TXT-PRF-cassandra-163551-W1-low-RAW-2024-10-11_14-36-07-bulk-200x10.txt?raw=true)
+[!Performance in TXT](https://github.com/george0st/qgate-graph/blob/main/assets/TXT-PRF-cassandra-163551-W1-low-RAW-2024-10-11_14-36-07-bulk-200x10.png?raw=true)
+[Performance in TXT](https://github.com/george0st/qgate-graph/blob/main/assets/TXT-PRF-cassandra-163551-W1-low-RAW-2024-10-11_14-36-07-bulk-200x10.txt?raw=true)
 
 #### Performance/Throughput & Response time in CSV form
-![CSV](https://github.com/george0st/qgate-graph/blob/main/assets/CSV-PRF-cassandra-235115-W2-med-RAW-2024-10-11_22-14-47-bulk-200x20.csv?raw=true)
+[!Performance in CSV](https://github.com/george0st/qgate-graph/blob/main/assets/CSV-PRF-cassandra-235115-W2-med-RAW-2024-10-11_22-14-47-bulk-200x20.png?raw=true)
+[Performance in CSV](https://github.com/george0st/qgate-graph/blob/main/assets/CSV-PRF-cassandra-235115-W2-med-RAW-2024-10-11_22-14-47-bulk-200x20.csv?raw=true)
