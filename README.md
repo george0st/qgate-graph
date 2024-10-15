@@ -16,6 +16,8 @@ detail views from Grafana, Prometheus, etc. in detail of CPU, GPU, RAM, I/O etc.
 ## Usage
 
 ```python
+    from qgate_graph.graph_performance_txt import GraphPerformanceTxt
+    from qgate_graph.graph_performance_csv import GraphPerformanceCsv
     from qgate_graph.graph_performance import GraphPerformance
     from qgate_graph.graph_executor import GraphExecutor
     import logging
@@ -28,12 +30,21 @@ detail views from Grafana, Prometheus, etc. in detail of CPU, GPU, RAM, I/O etc.
     graph=GraphPerformance()
     graph.generate_from_dir()
     
-    # generate excutors in time graphs
+    # generate executors in time graphs
     graph=GraphExecutor()
     graph.generate_from_dir()
+
+    # generate performance/throughput graphs in TXT form
+    graph=GraphPerformanceTxt()
+    graph.generate_from_dir()
+
+    # generate performance/throughput graphs in CSV form
+    graph=GraphPerformanceCsv()
+    graph.generate_from_dir()
+
 ```
 
-## Outputs
+## Sample of outputs
 #### Performance/Throughput & Response time
 ![graph](https://github.com/george0st/qgate-graph/blob/main/assets/PRF-Calc-2023-05-06_18-22-19-bulk-1x10.png?raw=true)
 ![graph](https://github.com/george0st/qgate-graph/blob/main/assets/PRF-NoSQL_igz_nonprod-2023-04-23_14-41-18-bulk-100x50.png?raw=true)
@@ -41,3 +52,9 @@ detail views from Grafana, Prometheus, etc. in detail of CPU, GPU, RAM, I/O etc.
 #### Executors in time
 ![graph](https://github.com/george0st/qgate-graph/blob/main/assets/EXE-Calc-2023-05-06_18-22-19-bulk-1x10-plan-128x4.png?raw=true)
 ![graph](https://github.com/george0st/qgate-graph/blob/main/assets/EXE-NoSQL-2023-05-04_19-33-30-bulk-1x50-plan-8x2.png?raw=true)
+
+#### Performance/Throughput & Response time in TXT form
+![TXT](https://github.com/george0st/qgate-graph/blob/main/assets/TXT-PRF-cassandra-163551-W1-low-RAW-2024-10-11_14-36-07-bulk-200x10.txt?raw=true)
+
+#### Performance/Throughput & Response time in CSV form
+![CSV](https://github.com/george0st/qgate-graph/blob/main/assets/CSV-PRF-cassandra-235115-W2-med-RAW-2024-10-11_22-14-47-bulk-200x20.csv?raw=true)
