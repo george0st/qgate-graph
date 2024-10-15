@@ -41,10 +41,14 @@ class TestCasePerformanceCsv(unittest.TestCase):
         output = graph.generate_from_file(TestCasePerformanceCsv.INPUT_FILE, self.OUTPUT_ADR)
 
         self.assertTrue(len(output) == 2)
+        for file in output:
+            self.assertTrue(file.find("RAW") == -1)
 
     def test_csv_raw(self):
         """Performance graphs"""
         graph = GraphPerformanceCsv(raw_format = True)
         output = graph.generate_from_file(TestCasePerformanceCsv.INPUT_FILE, self.OUTPUT_ADR)
+
+        self.assertTrue(len(output) == 2)
         for file in output:
             self.assertTrue(file.find("RAW") != -1)

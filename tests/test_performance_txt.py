@@ -39,10 +39,14 @@ class TestCasePerformanceTxt(unittest.TestCase):
         output = graph.generate_from_file(TestCasePerformanceTxt.INPUT_FILE, self.OUTPUT_ADR)
 
         self.assertTrue(len(output) == 2)
-
+        for file in output:
+            self.assertTrue(file.find("RAW") == -1)
+            
     def test_txt_raw(self):
         """Performance graphs"""
         graph = GraphPerformanceTxt(raw_format = True)
         output = graph.generate_from_file(TestCasePerformanceTxt.INPUT_FILE, self.OUTPUT_ADR)
+
+        self.assertTrue(len(output) == 2)
         for file in output:
             self.assertTrue(file.find("RAW") != -1)
