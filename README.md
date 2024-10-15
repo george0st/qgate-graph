@@ -44,7 +44,7 @@ detail views from Grafana, Prometheus, etc. in detail of CPU, GPU, RAM, I/O etc.
 
 ```
 
-## Outputs
+## Sample of outputs
 #### Performance/Throughput & Response time
 ![graph](https://github.com/george0st/qgate-graph/blob/main/assets/PRF-Calc-2023-05-06_18-22-19-bulk-1x10.png?raw=true)
 ![graph](https://github.com/george0st/qgate-graph/blob/main/assets/PRF-NoSQL_igz_nonprod-2023-04-23_14-41-18-bulk-100x50.png?raw=true)
