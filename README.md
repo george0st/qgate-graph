@@ -54,5 +54,7 @@ detail views from Grafana, Prometheus, etc. in detail of CPU, GPU, RAM, I/O etc.
 ![graph](https://github.com/george0st/qgate-graph/blob/main/assets/EXE-NoSQL-2023-05-04_19-33-30-bulk-1x50-plan-8x2.png?raw=true)
 
 #### Performance/Throughput & Response time in TXT form
+![TXT](https://github.com/george0st/qgate-graph/blob/main/assets/TXT-PRF-cassandra-163551-W1-low-RAW-2024-10-11_14-36-07-bulk-200x10.txt?raw=true)
 
 #### Performance/Throughput & Response time in CSV form
+![CSV](https://github.com/george0st/qgate-graph/blob/main/assets/CSV-PRF-cassandra-235115-W2-med-RAW-2024-10-11_22-14-47-bulk-200x20.csv?raw=true)
