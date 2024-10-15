@@ -16,6 +16,8 @@ detail views from Grafana, Prometheus, etc. in detail of CPU, GPU, RAM, I/O etc.
 ## Usage
 
 ```python
+    from qgate_graph.graph_performance_txt import GraphPerformanceTxt
+    from qgate_graph.graph_performance_csv import GraphPerformanceCsv
     from qgate_graph.graph_performance import GraphPerformance
     from qgate_graph.graph_executor import GraphExecutor
     import logging
@@ -31,6 +33,15 @@ detail views from Grafana, Prometheus, etc. in detail of CPU, GPU, RAM, I/O etc.
     # generate excutors in time graphs
     graph=GraphExecutor()
     graph.generate_from_dir()
+
+    # generate performance/throughput graphs in TXT form
+    graph=GraphPerformanceTxt()
+    graph.generate_from_dir()
+
+    # generate performance/throughput graphs in CSV form
+    graph=GraphPerformanceTxt()
+    graph.generate_from_dir()
+
 ```
 
 ## Outputs
@@ -41,3 +52,7 @@ detail views from Grafana, Prometheus, etc. in detail of CPU, GPU, RAM, I/O etc.
 #### Executors in time
 ![graph](https://github.com/george0st/qgate-graph/blob/main/assets/EXE-Calc-2023-05-06_18-22-19-bulk-1x10-plan-128x4.png?raw=true)
 ![graph](https://github.com/george0st/qgate-graph/blob/main/assets/EXE-NoSQL-2023-05-04_19-33-30-bulk-1x50-plan-8x2.png?raw=true)
+
+#### Performance/Throughput & Response time in TXT form
+
+#### Performance/Throughput & Response time in CSV form
