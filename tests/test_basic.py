@@ -80,14 +80,14 @@ class TestCaseBasic(unittest.TestCase):
         graph = GraphPerformance()
         output = graph.generate_from_dir(TestCaseBasic.INPUT_ADR, self.OUTPUT_ADR)
 
-        self.assertTrue(len(output) == 10)
+        self.assertTrue(len(output) == 12)
 
     def test_exec_dir(self):
         """Execution graphs for dir"""
         graph = GraphExecutor()
         output=graph.generate_from_dir(TestCaseBasic.INPUT_ADR, self.OUTPUT_ADR)
 
-        self.assertTrue(len(output)==65)
+        self.assertTrue(len(output)==67)
 
     def test_check_path(self):
         """Check, dir with duration and date"""
