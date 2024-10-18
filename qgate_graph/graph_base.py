@@ -103,6 +103,15 @@ class GraphBase:
                 suffix = f" {int(percentile * 100)}ph" if percentile < 1 else ""
                 table.add_column(f"Std{suffix}", percentiles[percentile].std_deviation[label])
 
+            for percentile in percentiles_sort:
+                if len(percentiles[percentile].min) > 0:
+                    suffix = f" {int(percentile * 100)}ph" if percentile < 1 else ""
+                    table.add_column(f"Min{suffix}", percentiles[percentile].min[label])
+            for percentile in percentiles_sort:
+                if len(percentiles[percentile].max) > 0:
+                    suffix = f" {int(percentile * 100)}ph" if percentile < 1 else ""
+                    table.add_column(f"Max{suffix}", percentiles[percentile].max[label])
+
             if len(summary_table.rows) == 0:
                 summary_table = table
             else:
