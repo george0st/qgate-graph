@@ -333,6 +333,10 @@ class GraphPerformance(GraphBase):
                                 percentile.total_performance[group].append(input_dict[const.PRF_CORE_TOTAL_CALL_PER_SEC + suffix])
                             percentile.avrg_time[group].append(input_dict[const.PRF_CORE_AVRG_TIME + suffix])
                             percentile.std_deviation[group].append(input_dict[const.PRF_CORE_STD_DEVIATION + suffix])
+                            if input_dict.get(const.PRF_CORE_MIN + suffix, None):
+                                percentile.min[group].append(input_dict[const.PRF_CORE_MIN + suffix])
+                            if input_dict.get(const.PRF_CORE_MAX + suffix, None):
+                                percentile.max[group].append(input_dict[const.PRF_CORE_MAX + suffix])
                         else:
                             percentile.executors[group] = [input_dict[const.PRF_CORE_REAL_EXECUTOR]]
                             if self._raw_format:
@@ -344,6 +348,10 @@ class GraphPerformance(GraphBase):
                                 percentile.total_performance[group] = [input_dict[const.PRF_CORE_TOTAL_CALL_PER_SEC + suffix]]
                             percentile.avrg_time[group] = [input_dict[const.PRF_CORE_AVRG_TIME + suffix]]
                             percentile.std_deviation[group] = [input_dict[const.PRF_CORE_STD_DEVIATION + suffix]]
+                            if input_dict.get(const.PRF_CORE_MIN + suffix, None):
+                                percentile.min[group] = [input_dict[const.PRF_CORE_MIN + suffix]]
+                            if input_dict.get(const.PRF_CORE_MAX + suffix, None):
+                                percentile.max[group] = [input_dict[const.PRF_CORE_MAX + suffix]]
         return output_list
 
 

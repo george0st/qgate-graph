@@ -57,7 +57,7 @@ class TestCasePerformanceTxt(unittest.TestCase):
         graph = GraphPerformanceTxt(raw_format = True)
         output = graph.generate_from_dir(TestCasePerformanceTxt.INPUT_ADR, self.OUTPUT_ADR)
 
-        self.assertTrue(len(output) == 10)
+        self.assertTrue(len(output) == 12)
         for file in output:
             self.assertTrue(file.find("RAW") != -1)
             self.assertTrue(file.find("TXT-PRF-") == -1)
@@ -67,7 +67,7 @@ class TestCasePerformanceTxt(unittest.TestCase):
         graph = GraphPerformanceTxt()
         output = graph.generate_from_dir(TestCasePerformanceTxt.INPUT_ADR, self.OUTPUT_ADR)
 
-        self.assertTrue(len(output) == 10)
+        self.assertTrue(len(output) == 12)
         for file in output:
             self.assertTrue(file.find("RAW") == -1)
             self.assertTrue(file.find("TXT-PRF-") == -1)
