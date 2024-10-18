@@ -5,7 +5,7 @@ import time
 from os import path
 import shutil
 import glob
-from qgate_graph.graph_performance import GraphPerformance
+from qgate_graph.graph_performance_csv import GraphPerformanceCsv
 from qgate_graph.graph_executor import GraphExecutor
 
 class TestCaseBasic(unittest.TestCase):
@@ -39,3 +39,19 @@ class TestCaseBasic(unittest.TestCase):
     def tearDownClass(cls):
         pass
 
+    def test_minmax_with(self):
+        graph = GraphPerformanceCsv()
+        output = graph.generate_from_file(TestCaseBasic.INPUT_FILE, self.OUTPUT_ADR)
+        for file in output:
+            with open(file,"r") as f:
+                line=f.readline()
+                self.assertTrue(line.find("Min") != -1 and line.find("Min_95") != -1
+                                and line.find("Max") != -1 and line.find("Max_95") != 1)
+
+    def test_minmax_without(self):
+        graph = GraphPerformanceCsv()
+        output = graph.generate_from_file(TestCaseBasic.INPUT_FILE2, self.OUTPUT_ADR)
+        for file in output:
+            with open(file,"r") as f:
+                line=f.readline()
+                self.assertTrue(line.find("Min") == -1 and line.find("Max") == -1)
