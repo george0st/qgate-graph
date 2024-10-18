@@ -45,8 +45,8 @@ class TestCaseBasic(unittest.TestCase):
         for file in output:
             with open(file,"r") as f:
                 line=f.readline()
-                self.assertTrue(line.find("Min") != -1 and line.find("Min_95") != -1
-                                and line.find("Max") != -1 and line.find("Max_95") != 1)
+                self.assertTrue(line.find("Min") != -1 and line.find("Min 9") != -1
+                                and line.find("Max") != -1 and line.find("Max 9") != 1)
 
     def test_minmax_without(self):
         graph = GraphPerformanceCsv()
