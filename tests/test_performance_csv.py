@@ -44,6 +44,14 @@ class TestCasePerformanceCsv(unittest.TestCase):
         for file in output:
             self.assertTrue(file.find("RAW") == -1)
 
+            # check header
+            with open(file,"r") as f:
+                line=f.readline()
+                self.assertTrue(line.find("Executors") != -1 and line.find("Group") != -1 and
+                                line.find("Performance") != -1 and line.find("Avrg") != 1 and
+                                line.find("Std") != -1)
+
+
     def test_csv_raw(self):
         """Performance graphs csv with RAW format"""
         graph = GraphPerformanceCsv(raw_format = True)
@@ -54,22 +62,43 @@ class TestCasePerformanceCsv(unittest.TestCase):
             self.assertTrue(file.find("RAW") != -1)
             self.assertTrue(file.find("CSV-PRF-") == -1)
 
+            # check header
+            with open(file,"r") as f:
+                line=f.readline()
+                self.assertTrue(line.find("Executors") != -1 and line.find("Group") != -1 and
+                                line.find("Performance") != -1 and line.find("Avrg") != 1 and
+                                line.find("Std") != -1)
+
     def test_csv_from_dir_with_raw(self):
         """Performance graphs csv with RAW format"""
         graph = GraphPerformanceCsv(raw_format=True)
         output = graph.generate_from_dir(TestCasePerformanceCsv.INPUT_ADR, self.OUTPUT_ADR)
 
-        self.assertTrue(len(output) == 10)
+        self.assertTrue(len(output) == 12)
         for file in output:
             self.assertTrue(file.find("RAW") != -1)
             self.assertTrue(file.find("CSV-PRF-") == -1)
+
+            # check header
+            with open(file,"r") as f:
+                line=f.readline()
+                self.assertTrue(line.find("Executors") != -1 and line.find("Group") != -1 and
+                                line.find("Performance") != -1 and line.find("Avrg") != 1 and
+                                line.find("Std") != -1)
 
     def test_csv_from_dir(self):
         """Performance graphs csv"""
         graph = GraphPerformanceCsv()
         output = graph.generate_from_dir(TestCasePerformanceCsv.INPUT_ADR, self.OUTPUT_ADR)
 
-        self.assertTrue(len(output) == 10)
+        self.assertTrue(len(output) == 12)
         for file in output:
             self.assertTrue(file.find("RAW") == -1)
             self.assertTrue(file.find("CSV-PRF-") == -1)
+
+            # check header
+            with open(file,"r") as f:
+                line=f.readline()
+                self.assertTrue(line.find("Executors") != -1 and line.find("Group") != -1 and
+                                line.find("Performance") != -1 and line.find("Avrg") != 1 and
+                                line.find("Std") != -1)
