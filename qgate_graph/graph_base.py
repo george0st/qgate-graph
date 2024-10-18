@@ -89,28 +89,28 @@ class GraphBase:
         summary_table = PrettyTable()
 
         percentiles_sort = sorted(list(percentiles.keys()))
-        for label in percentiles[1].executors.keys():
+        for group in percentiles[1].executors.keys():
             table = PrettyTable()
-            table.add_column("Executors", percentiles[1].executors[label])
-            table.add_column("Label", [label]*len(percentiles[1].executors[label]))
+            table.add_column("Executors", percentiles[1].executors[group])
+            table.add_column("Group", [group]*len(percentiles[1].executors[group]))
             for percentile in percentiles_sort:
                 suffix = f" {int(percentile * 100)}ph" if percentile < 1 else ""
-                table.add_column(f"Performance{suffix}", percentiles[percentile].total_performance[label])
+                table.add_column(f"Performance{suffix}", percentiles[percentile].total_performance[group])
             for percentile in percentiles_sort:
                 suffix = f" {int(percentile * 100)}ph" if percentile < 1 else ""
-                table.add_column(f"Avrg{suffix}", percentiles[percentile].avrg_time[label])
+                table.add_column(f"Avrg{suffix}", percentiles[percentile].avrg_time[group])
             for percentile in percentiles_sort:
                 suffix = f" {int(percentile * 100)}ph" if percentile < 1 else ""
-                table.add_column(f"Std{suffix}", percentiles[percentile].std_deviation[label])
+                table.add_column(f"Std{suffix}", percentiles[percentile].std_deviation[group])
 
             for percentile in percentiles_sort:
                 if len(percentiles[percentile].min) > 0:
                     suffix = f" {int(percentile * 100)}ph" if percentile < 1 else ""
-                    table.add_column(f"Min{suffix}", percentiles[percentile].min[label])
+                    table.add_column(f"Min{suffix}", percentiles[percentile].min[group])
             for percentile in percentiles_sort:
                 if len(percentiles[percentile].max) > 0:
                     suffix = f" {int(percentile * 100)}ph" if percentile < 1 else ""
-                    table.add_column(f"Max{suffix}", percentiles[percentile].max[label])
+                    table.add_column(f"Max{suffix}", percentiles[percentile].max[group])
 
             if len(summary_table.rows) == 0:
                 summary_table = table
