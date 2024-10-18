@@ -9,4 +9,6 @@ class PercentileItem:
         self.total_performance = {}
         self.avrg_time = {}
         self.std_deviation = {}
+        self.min = {}
+        self.max = {}
 
