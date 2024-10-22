@@ -121,7 +121,6 @@ class GraphPerformance(GraphBase):
             return max_len
 
     def _create_output(self, percentiles: {PercentileItem}, title, file_name, output_dir) -> str:
-        #return self._create_graph(percentiles, title, f"PRF{file_name}.png", output_dir)
         return self._create_graph(percentiles, title, file_name, output_dir)
 
     def _create_graph(self, percentiles: {PercentileItem}, title, file_name, output_dir) -> str:

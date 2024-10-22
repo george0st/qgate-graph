@@ -16,7 +16,7 @@ class GraphPerformanceTxt(GraphPerformance):
         :param only_new:        generate only new/not existing outputs (default is False, rewrite/regenerate all)
         """
 
-        super().__init__(0, min_precision, max_precision, raw_format)
+        super().__init__(0, min_precision, max_precision, raw_format, only_new)
         self._output_file_format = ("TXT", ".txt")
 
     def _create_output(self, percentiles: {PercentileItem}, title, file_name, output_dir) -> str:

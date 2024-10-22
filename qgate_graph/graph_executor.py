@@ -31,6 +31,7 @@ class GraphExecutor(GraphBase):
         """
 
         super().__init__(dpi)
+        self._only_new = only_new
         self._output_file_format = ("EXE", ".png")
 
     def generate_from_dir(self, input_dir: str = "input", output_dir: str = "output") -> list[str]:
