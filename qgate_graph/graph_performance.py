@@ -35,6 +35,7 @@ class GraphPerformance(GraphBase):
         self._max_precision = max_precision if max_precision >= 0 else GraphPerformance.MAX_PRECISION
         self._max_precision_format = "{num:." + str(self._max_precision) + "f}"
         self._raw_format = raw_format
+        self._output_file_format = ("PRF", ".png")
 
     def _get_executor_list(self, collections=None, collection=None):
         """
@@ -311,6 +312,8 @@ class GraphPerformance(GraphBase):
                     # add percentile
                     if input_dict.get(const.PRF_HDR_PERCENTILE, 1) < 1:
                         percentiles[input_dict[const.PRF_HDR_PERCENTILE]] = PercentileItem(input_dict[const.PRF_HDR_PERCENTILE])
+
+                    # self._output_file_format
                     file_name = self._unique_file_name("", label, report_date, bulk, self._raw_format)
                     title = f"'{label}', {report_date}, bulk {bulk[0]}/{bulk[1]}, duration '{self._readable_duration(duration)}'"
 

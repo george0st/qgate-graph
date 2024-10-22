@@ -40,22 +40,30 @@ class GraphBase:
                  transform = ax.transAxes,
                  alpha=0.4, fontsize=8)
 
-    def _unique_file_name(self, prefix, label, report_date, bulk, raw_format = False):
+    def _unique_file_name(self, prefix, label, report_date, bulk, raw_format = False, extension = None):
         """
-        Generate unique name based on key information
+        Generate unique file name based on key information
 
         :param prefix:      Optional name
         :param label:       Label (typically from perf test)
         :param report_date: Report date
         :param bulk:        Bulk (rows, columns) size
-        :return:            Return relevant name
+        :raw_format:        True - for RAW
+        :extension:         File extension such as ".png", ".txt", etc. (None - without extension)
+        :return:            Return unique file name
         """
-        file_name=f"{prefix}-{label}{'-RAW' if raw_format else ''}-{report_date}-bulk-{bulk[0]}x{bulk[1]}"
-        remove_item=" ,&?"
+        file_name=(f"{prefix}"
+                   f"-{label}"
+                   f"{'-RAW' if raw_format else ''}"
+                   f"-{report_date}"
+                   f"-bulk-{bulk[0]}x{bulk[1]}"
+                   f"{extension if extension else ''}")
+
+        # unify names
+        remove_item = " ,&?"
         for itm in remove_item:
-            file_name=file_name.replace(itm,"_")
-        file_name=file_name.replace("__","_")
-        return file_name
+            file_name = file_name.replace(itm,"_")
+        return file_name.replace("__","_")
 
     def _readable_duration(self, duration_seconds):
         """Return duration in human-readable form"""

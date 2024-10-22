@@ -8,6 +8,7 @@ class GraphPerformanceTxt(GraphPerformance):
 
     def __init__(self, min_precision=-1, max_precision=-1, raw_format=False):
         super().__init__(0, min_precision, max_precision, raw_format)
+        self._output_file_format = ("TXT", ".txt")
 
     def _create_output(self, percentiles: {PercentileItem}, title, file_name, output_dir) -> str:
         output_file = os.path.join(output_dir, f"TXT{file_name}.txt")
