@@ -157,16 +157,16 @@ class GraphExecutor(GraphBase):
                         if input_dict.get(const.PRF_CORE_TIME_END):
                             end_date=input_dict[const.PRF_CORE_TIME_END]
 
-                        new_file = f"{file_name}-plan-{plan}{self._output_file_format[1]}"
+                        new_file_name = f"{file_name}-plan-{plan}{self._output_file_format[1]}"
                         if suppress_error:
                             try:
                                 output_list.append(
-                                    self._show_graph(start_date, executors, end_date, title, new_file, output_dir_target))
+                                    self._show_graph(start_date, executors, end_date, title, new_file_name, output_dir_target))
                             except Exception as ex:
                                 logging.info(f"  ... Error in '{file_name}-plan-{plan}', '{type(ex)}'")
                         else:
                             output_list.append(
-                                self._show_graph(start_date, executors, end_date, title, new_file, output_dir_target))
+                                self._show_graph(start_date, executors, end_date, title, new_file_name, output_dir_target))
 
                         executors.clear()
                         executor.clear()
