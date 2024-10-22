@@ -1,5 +1,5 @@
 from matplotlib import pyplot as plt
-from qgate_graph.file_format import FileFormat as const
+from qgate_graph.file_marker import FileMarker as const
 from qgate_graph.graph_base import GraphBase
 from qgate_graph.circle_queue import ColorQueue, MarkerQueue
 import os.path, os
@@ -9,7 +9,7 @@ import logging
 
 class GraphExecutor(GraphBase):
     """
-    Generate graph based on input data
+    Generate graphs about executors in time (it is useful view for performance test tuning)
 
         example::
 
@@ -22,8 +22,17 @@ class GraphExecutor(GraphBase):
             graph=grp.GraphExecutor()
             graph.generate_from_dir("input_adr", "output_adr")
     """
-    def __init__(self, dpi=100):
+    def __init__(self, dpi = 100, only_new = False):
+        """
+        Generate graphs about executors in time in graphical format (*.png files)
+
+        :param dpi:             quality of output file in DPI (default is 100 DPI)
+        :param only_new:        generate only new/not existing outputs (default is False, rewrite/regenerate all)
+        """
+
         super().__init__(dpi)
+        self._only_new = only_new
+        self._output_file_format = ("EXE", ".png")
 
     def generate_from_dir(self, input_dir: str = "input", output_dir: str = "output") -> list[str]:
         """
@@ -129,14 +138,16 @@ class GraphExecutor(GraphBase):
                         if not os.path.exists(output_dir_target):
                             os.makedirs(output_dir_target, mode=0o777)
                     bulk_name=f"{bulk[0]}/{bulk[1]}"
-                    file_name = self._unique_file_name("EXE", label, report_date, bulk)
+                    file_name = self._unique_file_name(self._output_file_format[0],
+                                                       label,
+                                                       report_date,
+                                                       bulk,
+                                                       False,
+                                                        None)
                     title = f"'{label}', {report_date}, bulk {bulk[0]}/{bulk[1]}, duration '{self._readable_duration(duration)}'"
 
                 elif input_dict[const.PRF_TYPE] == const.PRF_CORE_TYPE:
                     # core
-                    # executors[input_dict[const.PRF_CORE_PLAN_EXECUTOR]].append(
-                    #     input_dict[const.PRF_CORE_TIME_END])
-
                     if executor:
                         plan=f"{input_dict[const.PRF_CORE_PLAN_EXECUTOR][0]:03d}x{input_dict[const.PRF_CORE_PLAN_EXECUTOR][1]:02d}"
                         executors[plan]=executor
@@ -144,18 +155,24 @@ class GraphExecutor(GraphBase):
                         if input_dict.get(const.PRF_CORE_TIME_END):
                             end_date=input_dict[const.PRF_CORE_TIME_END]
 
-                        #file_name=f"{file_name}-plan-{plan}"
-                        if suppress_error:
-                            try:
+                        new_file_name = f"{file_name}-plan-{plan}{self._output_file_format[1]}"
+
+                        # it is necessity to generate file?
+                        if self._only_new:
+                            # in case of focusing on only_new and file exists, jump it
+                            if os.path.exists(os.path.join(output_dir_target, new_file_name)):
+                                new_file_name=None
+
+                        if new_file_name:
+                            if suppress_error:
+                                try:
+                                    output_list.append(
+                                        self._show_graph(start_date, executors, end_date, title, new_file_name, output_dir_target))
+                                except Exception as ex:
+                                    logging.info(f"  ... Error in '{new_file_name}', '{type(ex)}'")
+                            else:
                                 output_list.append(
-                                    self._show_graph(start_date, executors, end_date, title, f"{file_name}-plan-{plan}",
-                                                     output_dir_target))
-                            except Exception as ex:
-                                logging.info(f"  ... Error in '{file_name}-plan-{plan}', '{type(ex)}'")
-                        else:
-                            output_list.append(
-                                self._show_graph(start_date, executors, end_date, title, f"{file_name}-plan-{plan}",
-                                                 output_dir_target))
+                                    self._show_graph(start_date, executors, end_date, title, new_file_name, output_dir_target))
 
                         executors.clear()
                         executor.clear()
@@ -221,7 +238,7 @@ class GraphExecutor(GraphBase):
                      marker=marker.next(), #self._next_marker(),
                      label=f"{key}")
 
-        output_file=os.path.join(output_dir, file_name+".png")
+        output_file = os.path.join(output_dir, file_name)
         plt.savefig(output_file, dpi=self.dpi)
         logging.info(f"  ... {output_file}")
         plt.close()

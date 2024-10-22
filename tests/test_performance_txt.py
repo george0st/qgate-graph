@@ -71,3 +71,14 @@ class TestCasePerformanceTxt(unittest.TestCase):
         for file in output:
             self.assertTrue(file.find("RAW") == -1)
             self.assertTrue(file.find("TXT-PRF-") == -1)
+
+    def test_perf_txt_onlynew1(self):
+        """Test setting 'only_new'"""
+        graph = GraphPerformanceTxt(only_new=True)
+        output = graph.generate_from_file(TestCasePerformanceTxt.INPUT_FILE, os.path.join(self.OUTPUT_ADR,"only_new"))
+        self.assertTrue(len(output)==2)
+        for file in output:
+            self.assertTrue(file.find("RAW") == -1)
+
+        output = graph.generate_from_file(TestCasePerformanceTxt.INPUT_FILE, os.path.join(self.OUTPUT_ADR,"only_new"))
+        self.assertTrue(len(output) == 0)

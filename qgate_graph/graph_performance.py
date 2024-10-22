@@ -1,6 +1,6 @@
 from matplotlib import axes
 from matplotlib import pyplot as plt
-from qgate_graph.file_format import FileFormat as const
+from qgate_graph.file_marker import FileMarker as const
 from numpy import std, average
 from qgate_graph.graph_base import GraphBase
 from qgate_graph.percentile_item import PercentileItem
@@ -16,7 +16,7 @@ class GraphPerformance(GraphBase):
     MAX_PRECISION_FORMAT = "{num:.4f}"
 
     """
-    Generate graph based on input data
+    Generate performance graphs based on input data
 
         example::
 
@@ -29,12 +29,23 @@ class GraphPerformance(GraphBase):
             graph=grp.GraphPerformance()
             graph.generate_from_dir("input_adr", "output_adr")
     """
-    def __init__(self, dpi = 100, min_precision = -1, max_precision = -1, raw_format = False):
+    def __init__(self, dpi = 100, min_precision = -1, max_precision = -1, raw_format = False, only_new = False):
+        """
+        Generate performance outputs based on input data in graphical format (*.png files)
+
+        :param dpi:             quality of output file in DPI (default is 100 DPI)
+        :param min_precision:   minimal precision in graph (-1 is without setting)
+        :param max_precision:   maximal precision in graph (-1 is without setting)
+        :param raw_format:      use raw format (default is True)
+        :param only_new:        generate only new/not existing outputs (default is False, rewrite/regenerate all)
+        """
         super().__init__(dpi)
         self._min_precision = min_precision if min_precision >= 0 else GraphPerformance.MIN_PRECISION
         self._max_precision = max_precision if max_precision >= 0 else GraphPerformance.MAX_PRECISION
         self._max_precision_format = "{num:." + str(self._max_precision) + "f}"
         self._raw_format = raw_format
+        self._only_new = only_new
+        self._output_file_format = ("PRF", ".png")
 
     def _get_executor_list(self, collections=None, collection=None):
         """
@@ -110,7 +121,7 @@ class GraphPerformance(GraphBase):
             return max_len
 
     def _create_output(self, percentiles: {PercentileItem}, title, file_name, output_dir) -> str:
-        return self._create_graph(percentiles, title, f"PRF{file_name}.png", output_dir)
+        return self._create_graph(percentiles, title, file_name, output_dir)
 
     def _create_graph(self, percentiles: {PercentileItem}, title, file_name, output_dir) -> str:
         alpha = CircleQueue([0.4, 0.8] if len(percentiles) > 1 else [0.8])
@@ -311,10 +322,24 @@ class GraphPerformance(GraphBase):
                     # add percentile
                     if input_dict.get(const.PRF_HDR_PERCENTILE, 1) < 1:
                         percentiles[input_dict[const.PRF_HDR_PERCENTILE]] = PercentileItem(input_dict[const.PRF_HDR_PERCENTILE])
-                    file_name = self._unique_file_name("", label, report_date, bulk, self._raw_format)
-                    title = f"'{label}', {report_date}, bulk {bulk[0]}/{bulk[1]}, duration '{self._readable_duration(duration)}'"
 
-                elif input_dict[const.PRF_TYPE] == const.PRF_CORE_TYPE:
+                    # create file name and title for graph
+                    file_name = self._unique_file_name(self._output_file_format[0],
+                                                       label,
+                                                       report_date,
+                                                       bulk,
+                                                       self._raw_format,
+                                                       self._output_file_format[1])
+
+                    # it is necessity to generate file?
+                    if self._only_new:
+                        # in case of focusing on only_new and file exists, jump it
+                        if os.path.exists(os.path.join(output_dir_target, file_name)):
+                            file_name = None
+                            continue
+
+                    title = f"'{label}', {report_date}, bulk {bulk[0]}/{bulk[1]}, duration '{self._readable_duration(duration)}'"
+                elif (input_dict[const.PRF_TYPE] == const.PRF_CORE_TYPE) and file_name:
 
                     for percentile_key in percentiles.keys():
                         suffix = f"_{int(percentile_key * 100)}" if percentile_key < 1 else ""
