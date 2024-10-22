@@ -331,6 +331,7 @@ class GraphPerformance(GraphBase):
                                                        self._raw_format,
                                                        self._output_file_format[1])
 
+                    # it is necessity to generate file?
                     if self._only_new:
                         # in case of focusing on only_new and file exists, jump it
                         if os.path.exists(os.path.join(output_dir_target, file_name)):
@@ -338,8 +339,6 @@ class GraphPerformance(GraphBase):
                             continue
 
                     title = f"'{label}', {report_date}, bulk {bulk[0]}/{bulk[1]}, duration '{self._readable_duration(duration)}'"
-
-
                 elif (input_dict[const.PRF_TYPE] == const.PRF_CORE_TYPE) and file_name:
 
                     for percentile_key in percentiles.keys():

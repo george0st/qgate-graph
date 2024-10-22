@@ -1,10 +1,8 @@
 import os
 import unittest
 import logging
-import time
 from os import path
 import shutil
-import glob
 from qgate_graph.graph_performance_csv import GraphPerformanceCsv
 
 

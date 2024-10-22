@@ -148,9 +148,6 @@ class GraphExecutor(GraphBase):
 
                 elif input_dict[const.PRF_TYPE] == const.PRF_CORE_TYPE:
                     # core
-                    # executors[input_dict[const.PRF_CORE_PLAN_EXECUTOR]].append(
-                    #     input_dict[const.PRF_CORE_TIME_END])
-
                     if executor:
                         plan=f"{input_dict[const.PRF_CORE_PLAN_EXECUTOR][0]:03d}x{input_dict[const.PRF_CORE_PLAN_EXECUTOR][1]:02d}"
                         executors[plan]=executor
@@ -160,18 +157,22 @@ class GraphExecutor(GraphBase):
 
                         new_file_name = f"{file_name}-plan-{plan}{self._output_file_format[1]}"
 
-                        # TODO:
-                        # exist output_dir_target + new_file_name
-                        #    continue
-                        if suppress_error:
-                            try:
+                        # it is necessity to generate file?
+                        if self._only_new:
+                            # in case of focusing on only_new and file exists, jump it
+                            if os.path.exists(os.path.join(output_dir_target, new_file_name)):
+                                new_file_name=None
+
+                        if new_file_name:
+                            if suppress_error:
+                                try:
+                                    output_list.append(
+                                        self._show_graph(start_date, executors, end_date, title, new_file_name, output_dir_target))
+                                except Exception as ex:
+                                    logging.info(f"  ... Error in '{new_file_name}', '{type(ex)}'")
+                            else:
                                 output_list.append(
                                     self._show_graph(start_date, executors, end_date, title, new_file_name, output_dir_target))
-                            except Exception as ex:
-                                logging.info(f"  ... Error in '{file_name}-plan-{plan}', '{type(ex)}'")
-                        else:
-                            output_list.append(
-                                self._show_graph(start_date, executors, end_date, title, new_file_name, output_dir_target))
 
                         executors.clear()
                         executor.clear()
