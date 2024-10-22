@@ -16,7 +16,7 @@ class GraphPerformance(GraphBase):
     MAX_PRECISION_FORMAT = "{num:.4f}"
 
     """
-    Generate graph based on input data
+    Generate performance graphs based on input data
 
         example::
 
@@ -29,12 +29,22 @@ class GraphPerformance(GraphBase):
             graph=grp.GraphPerformance()
             graph.generate_from_dir("input_adr", "output_adr")
     """
-    def __init__(self, dpi = 100, min_precision = -1, max_precision = -1, raw_format = False):
+    def __init__(self, dpi = 100, min_precision = -1, max_precision = -1, raw_format = False, only_new = False):
+        """
+        Generate performance outputs based on input data in graphical format (*.png files)
+
+        :param dpi:             quality of output file in DPI (default is 100 DPI)
+        :param min_precision:   minimal precision in graph (-1 is without setting)
+        :param max_precision:   maximal precision in graph (-1 is without setting)
+        :param raw_format:      use raw format (default is True)
+        :param only_new:        generate only new/not existing outputs (default is False, rewrite/regenerate all)
+        """
         super().__init__(dpi)
         self._min_precision = min_precision if min_precision >= 0 else GraphPerformance.MIN_PRECISION
         self._max_precision = max_precision if max_precision >= 0 else GraphPerformance.MAX_PRECISION
         self._max_precision_format = "{num:." + str(self._max_precision) + "f}"
         self._raw_format = raw_format
+        self._only_new = only_new
         self._output_file_format = ("PRF", ".png")
 
     def _get_executor_list(self, collections=None, collection=None):
