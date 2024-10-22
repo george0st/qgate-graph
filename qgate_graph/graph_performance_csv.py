@@ -11,7 +11,8 @@ class GraphPerformanceCsv(GraphPerformance):
         self._output_file_format = ("CSV", ".csv")
 
     def _create_output(self, percentiles: {PercentileItem}, title, file_name, output_dir) -> str:
-        output_file = os.path.join(output_dir, f"CSV{file_name}.csv")
+        #output_file = os.path.join(output_dir, f"CSV{file_name}.csv")
+        output_file = os.path.join(output_dir, file_name)
         with open(output_file, 'w', newline='') as file:
             file.write(super()._create_table(percentiles).get_csv_string(delimiter=','))
             logging.info(f"  ... {output_file}")

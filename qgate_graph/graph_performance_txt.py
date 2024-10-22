@@ -11,7 +11,8 @@ class GraphPerformanceTxt(GraphPerformance):
         self._output_file_format = ("TXT", ".txt")
 
     def _create_output(self, percentiles: {PercentileItem}, title, file_name, output_dir) -> str:
-        output_file = os.path.join(output_dir, f"TXT{file_name}.txt")
+        #output_file = os.path.join(output_dir, f"TXT{file_name}.txt")
+        output_file = os.path.join(output_dir, file_name)
         with open(output_file, 'w') as file:
             file.write(str(super()._create_table(percentiles)))
             logging.info(f"  ... {output_file}")
