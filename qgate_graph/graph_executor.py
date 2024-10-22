@@ -1,5 +1,5 @@
 from matplotlib import pyplot as plt
-from qgate_graph.file_format import FileFormat as const
+from qgate_graph.file_marker import FileMarker as const
 from qgate_graph.graph_base import GraphBase
 from qgate_graph.circle_queue import ColorQueue, MarkerQueue
 import os.path, os
