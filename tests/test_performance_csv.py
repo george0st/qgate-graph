@@ -102,3 +102,14 @@ class TestCasePerformanceCsv(unittest.TestCase):
                 self.assertTrue(line.find("Executors") != -1 and line.find("Group") != -1 and
                                 line.find("Performance") != -1 and line.find("Avrg") != 1 and
                                 line.find("Std") != -1)
+
+    def test_perf_csv_onlynew1(self):
+        """Test setting 'only_new'"""
+        graph = GraphPerformanceCsv(only_new=True)
+        output = graph.generate_from_file(TestCasePerformanceCsv.INPUT_FILE, self.OUTPUT_ADR)
+        self.assertTrue(len(output)==2)
+        for file in output:
+            self.assertTrue(file.find("RAW") == -1)
+
+        output = graph.generate_from_file(TestCasePerformanceCsv.INPUT_FILE, self.OUTPUT_ADR)
+        self.assertTrue(len(output) == 0)

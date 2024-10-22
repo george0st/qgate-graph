@@ -159,6 +159,10 @@ class GraphExecutor(GraphBase):
                             end_date=input_dict[const.PRF_CORE_TIME_END]
 
                         new_file_name = f"{file_name}-plan-{plan}{self._output_file_format[1]}"
+
+                        # TODO:
+                        # exist output_dir_target + new_file_name
+                        #    continue
                         if suppress_error:
                             try:
                                 output_list.append(
