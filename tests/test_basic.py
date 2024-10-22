@@ -173,21 +173,11 @@ class TestCaseBasic(unittest.TestCase):
     def test_perf_onlynew1(self):
         """Test setting 'only_new'"""
         graph = GraphPerformance(only_new=True)
-        output = graph.generate_from_file(TestCaseBasic.INPUT_FILE6, self.OUTPUT_ADR)
+        output = graph.generate_from_file(TestCaseBasic.INPUT_FILE6, os.path.join(self.OUTPUT_ADR,"only_new"))
         self.assertTrue(len(output)==2)
         for file in output:
             self.assertTrue(file.find("RAW") == -1)
 
-        output = graph.generate_from_file(TestCaseBasic.INPUT_FILE6, self.OUTPUT_ADR)
+        output = graph.generate_from_file(TestCaseBasic.INPUT_FILE6, os.path.join(self.OUTPUT_ADR,"only_new"))
         self.assertTrue(len(output) == 0)
 
-    def test_perf_prf_onlynew1(self):
-        """Test setting 'only_new'"""
-        graph = GraphPerformance(only_new=True)
-        output = graph.generate_from_file(TestCaseBasic.INPUT_FILE6, self.OUTPUT_ADR)
-        self.assertTrue(len(output)==2)
-        for file in output:
-            self.assertTrue(file.find("RAW") == -1)
-
-        output = graph.generate_from_file(TestCaseBasic.INPUT_FILE6, self.OUTPUT_ADR)
-        self.assertTrue(len(output) == 0)

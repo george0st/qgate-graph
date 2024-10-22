@@ -36,10 +36,10 @@ class TestCaseExecutor(unittest.TestCase):
     def test_executor_onlynew1(self):
         """Test setting 'only_new'"""
         graph = GraphExecutor(only_new=True)
-        output = graph.generate_from_file(TestCaseExecutor.INPUT_FILE, self.OUTPUT_ADR)
+        output = graph.generate_from_file(TestCaseExecutor.INPUT_FILE, os.path.join(self.OUTPUT_ADR,"only_new"))
         self.assertTrue(len(output) == 11)
         for file in output:
             self.assertTrue(file.find("RAW") == -1)
 
-        output = graph.generate_from_file(TestCaseExecutor.INPUT_FILE, self.OUTPUT_ADR)
+        output = graph.generate_from_file(TestCaseExecutor.INPUT_FILE, os.path.join(self.OUTPUT_ADR,"only_new"))
         self.assertTrue(len(output) == 0)
