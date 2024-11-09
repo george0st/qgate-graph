@@ -128,7 +128,7 @@ class GraphExecutor(GraphBase):
                         "%Y-%m-%d %H-%M-%S")
                     label = input_dict[const.PRF_HDR_LABEL]
                     bulk = input_dict[const.PRF_HDR_BULK]
-                    duration = input_dict.get(const.PRF_HDR_DURATION, -1)
+                    duration = int(input_dict.get(const.PRF_HDR_DURATION, -1))
                     if duration >= 0:
                         # update output dir based on duration (e.g. 1 min, 5 sec, etc.) and date
                         output_dir_target = os.path.join(output_dir,

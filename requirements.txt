@@ -1,5 +1,6 @@
 click~=8.1
 
+# issue witn matplotlib under python 3.13t
 matplotlib>=3.5.0,<=3.9.2
 
 # numpy higher version need python==3.9 need max numpy 2.0.1
