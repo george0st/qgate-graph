@@ -5,6 +5,7 @@ from qgate_graph.circle_queue import ColorQueue, MarkerQueue
 import os.path, os
 import datetime
 import logging
+from io import StringIO
 
 
 class GraphExecutor(GraphBase):
@@ -82,6 +83,13 @@ class GraphExecutor(GraphBase):
                     elif j==2:
                         new_array.append([new_item, -1])
 
+    def generate_from_text(self, text: str, output_dir: str = "output", suppress_error = False) -> list[str]:
+
+        logging.info(f"Processing 'text' ...")
+        with StringIO(text) as f:
+            output_list=self._generate_from_file(f,output_dir, suppress_error)
+        return output_list
+
     def generate_from_file(self, input_file: str, output_dir: str = "output", suppress_error = False) -> list[str]:
         """
         Generate graphs about executors based on input file
@@ -91,6 +99,14 @@ class GraphExecutor(GraphBase):
         :param suppress_error:  Ability to suppress error (default is False)
         :return:                List of generated files
         """
+
+        logging.info(f"Processing '{input_file}' ...")
+        with open(input_file, "r") as f:
+            output_list=self._generate_from_file(f,output_dir, suppress_error)
+        return output_list
+
+    def _generate_from_file(self, f, output_dir: str = "output", suppress_error = False) -> list[str]:
+
         file_name = None
         executors = {}
         executor = []
@@ -99,7 +115,7 @@ class GraphExecutor(GraphBase):
         start_date = None
         output_list = []
 
-        logging.info(f"Processing '{input_file}' ...")
+        #logging.info(f"Processing '{input_file}' ...")
 
         # copy dir because the path can be modificated
         output_dir_target = output_dir
@@ -108,81 +124,83 @@ class GraphExecutor(GraphBase):
         if not os.path.exists(output_dir_target):
             os.makedirs(output_dir_target, mode=0o777)
 
-        with open(input_file, "r") as f:
-            while True:
-                line = f.readline()
-                if not line:
-                    break
-                if line[0] == '#':
-                    file_name = None
-                    executors.clear()
-                    executor.clear()
-                    continue
-                input_dict = GraphBase.load_json(line)
-                if not input_dict:
-                    continue
-                if input_dict[const.PRF_TYPE] == const.PRF_HDR_TYPE:
-                    # header
-                    start_date=input_dict[const.PRF_HDR_NOW]
-                    report_date = datetime.datetime.fromisoformat(start_date).strftime(
-                        "%Y-%m-%d %H-%M-%S")
-                    label = input_dict[const.PRF_HDR_LABEL]
-                    bulk = input_dict[const.PRF_HDR_BULK]
-                    duration = int(input_dict.get(const.PRF_HDR_DURATION, -1))
-                    if duration >= 0:
-                        # update output dir based on duration (e.g. 1 min, 5 sec, etc.) and date
-                        output_dir_target = os.path.join(output_dir,
-                                                         self._readable_duration(duration),
-                                                         datetime.datetime.fromisoformat(start_date).strftime("%Y-%m-%d"))
-                        # create subdirectory based on duration
-                        if not os.path.exists(output_dir_target):
-                            os.makedirs(output_dir_target, mode=0o777)
-                    bulk_name=f"{bulk[0]}/{bulk[1]}"
-                    file_name = self._unique_file_name(self._output_file_format[0],
-                                                       label,
-                                                       report_date,
-                                                       bulk,
-                                                       False,
-                                                        None)
-                    title = f"'{label}', {report_date}, bulk {bulk[0]}/{bulk[1]}, duration '{self._readable_duration(duration)}'"
+#        with open(input_file, "r") as f:
+        while True:
+            line = f.readline()
+            if not line:
+                break
+            if line[0] == '#':
+                file_name = None
+                executors.clear()
+                executor.clear()
+                continue
+            input_dict = GraphBase.load_json(line)
+            if not input_dict:
+                continue
+            if input_dict[const.PRF_TYPE] == const.PRF_HDR_TYPE:
+                # header
+                start_date=input_dict[const.PRF_HDR_NOW]
+                report_date = datetime.datetime.fromisoformat(start_date).strftime(
+                    "%Y-%m-%d %H-%M-%S")
+                label = input_dict[const.PRF_HDR_LABEL]
+                bulk = input_dict[const.PRF_HDR_BULK]
+                duration = int(input_dict.get(const.PRF_HDR_DURATION, -1))
+                if duration >= 0:
+                    # update output dir based on duration (e.g. 1 min, 5 sec, etc.) and date
+                    output_dir_target = os.path.join(output_dir,
+                                                     self._readable_duration(duration),
+                                                     datetime.datetime.fromisoformat(start_date).strftime("%Y-%m-%d"))
+                    # create subdirectory based on duration
+                    if not os.path.exists(output_dir_target):
+                        os.makedirs(output_dir_target, mode=0o777)
+                # TODO: add     PRF_HDR_RESPONSE_UNIT
 
-                elif input_dict[const.PRF_TYPE] == const.PRF_CORE_TYPE:
-                    # core
-                    if executor:
-                        plan=f"{input_dict[const.PRF_CORE_PLAN_EXECUTOR][0]:03d}x{input_dict[const.PRF_CORE_PLAN_EXECUTOR][1]:02d}"
-                        executors[plan]=executor
+                bulk_name=f"{bulk[0]}/{bulk[1]}"
+                file_name = self._unique_file_name(self._output_file_format[0],
+                                                   label,
+                                                   report_date,
+                                                   bulk,
+                                                   False,
+                                                    None)
+                title = f"'{label}', {report_date}, bulk {bulk[0]}/{bulk[1]}, duration '{self._readable_duration(duration)}'"
 
-                        if input_dict.get(const.PRF_CORE_TIME_END):
-                            end_date=input_dict[const.PRF_CORE_TIME_END]
+            elif input_dict[const.PRF_TYPE] == const.PRF_CORE_TYPE:
+                # core
+                if executor:
+                    plan=f"{input_dict[const.PRF_CORE_PLAN_EXECUTOR][0]:03d}x{input_dict[const.PRF_CORE_PLAN_EXECUTOR][1]:02d}"
+                    executors[plan]=executor
 
-                        new_file_name = f"{file_name}-plan-{plan}{self._output_file_format[1]}"
+                    if input_dict.get(const.PRF_CORE_TIME_END):
+                        end_date=input_dict[const.PRF_CORE_TIME_END]
 
-                        # it is necessity to generate file?
-                        if self._only_new:
-                            # in case of focusing on only_new and file exists, jump it
-                            if os.path.exists(os.path.join(output_dir_target, new_file_name)):
-                                new_file_name=None
+                    new_file_name = f"{file_name}-plan-{plan}{self._output_file_format[1]}"
 
-                        if new_file_name:
-                            if suppress_error:
-                                try:
-                                    output_list.append(
-                                        self._show_graph(start_date, executors, end_date, title, new_file_name, output_dir_target))
-                                except Exception as ex:
-                                    logging.info(f"  ... Error in '{new_file_name}', '{type(ex)}'")
-                            else:
+                    # it is necessity to generate file?
+                    if self._only_new:
+                        # in case of focusing on only_new and file exists, jump it
+                        if os.path.exists(os.path.join(output_dir_target, new_file_name)):
+                            new_file_name=None
+
+                    if new_file_name:
+                        if suppress_error:
+                            try:
                                 output_list.append(
                                     self._show_graph(start_date, executors, end_date, title, new_file_name, output_dir_target))
+                            except Exception as ex:
+                                logging.info(f"  ... Error in '{new_file_name}', '{type(ex)}'")
+                        else:
+                            output_list.append(
+                                self._show_graph(start_date, executors, end_date, title, new_file_name, output_dir_target))
 
-                        executors.clear()
-                        executor.clear()
-                elif input_dict[const.PRF_TYPE] == const.PRF_DETAIL_TYPE:
-                    # detail
-                    if not input_dict.get(const.PRF_DETAIL_ERR):
-                        executor.append([
-                            input_dict[const.PRF_DETAIL_TIME_INIT],
-                            input_dict[const.PRF_DETAIL_TIME_START],
-                            input_dict[const.PRF_DETAIL_TIME_END]])
+                    executors.clear()
+                    executor.clear()
+            elif input_dict[const.PRF_TYPE] == const.PRF_DETAIL_TYPE:
+                # detail
+                if not input_dict.get(const.PRF_DETAIL_ERR):
+                    executor.append([
+                        input_dict[const.PRF_DETAIL_TIME_INIT],
+                        input_dict[const.PRF_DETAIL_TIME_START],
+                        input_dict[const.PRF_DETAIL_TIME_END]])
         return output_list
 
     def _show_graph(self, start_date, executors, end_date, title, file_name, output_dir) -> str :
