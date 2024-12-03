@@ -5,6 +5,7 @@ from numpy import std, average
 from qgate_graph.graph_base import GraphBase
 from qgate_graph.percentile_item import PercentileItem
 from qgate_graph.circle_queue import CircleQueue, ColorQueue, MarkerQueue
+from qgate_graph.graph_setup import GraphSetup
 import os.path, os
 import datetime
 import logging
@@ -342,6 +343,10 @@ class GraphPerformance(GraphBase):
                     # create subdirectory based on duration
                     if not os.path.exists(output_dir_target):
                         os.makedirs(output_dir_target, mode=0o777)
+
+                # setup response unit
+                GraphSetup().response_time_unit=input_dict.get(const.PRF_HDR_RESPONSE_UNIT, "sec")
+
                 # add percentile
                 if input_dict.get(const.PRF_HDR_PERCENTILE, 1) < 1:
                     percentiles[input_dict[const.PRF_HDR_PERCENTILE]] = PercentileItem(input_dict[const.PRF_HDR_PERCENTILE])

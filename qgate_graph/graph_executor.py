@@ -2,6 +2,7 @@ from matplotlib import pyplot as plt
 from qgate_graph.file_marker import FileMarker as const
 from qgate_graph.graph_base import GraphBase
 from qgate_graph.circle_queue import ColorQueue, MarkerQueue
+from qgate_graph.graph_setup import GraphSetup
 import os.path, os
 import datetime
 import logging
@@ -153,7 +154,9 @@ class GraphExecutor(GraphBase):
                     # create subdirectory based on duration
                     if not os.path.exists(output_dir_target):
                         os.makedirs(output_dir_target, mode=0o777)
-                # TODO: add PRF_HDR_RESPONSE_UNIT
+
+                # setup response unit
+                GraphSetup().response_time_unit=input_dict.get(const.PRF_HDR_RESPONSE_UNIT, "sec")
 
                 bulk_name=f"{bulk[0]}/{bulk[1]}"
                 file_name = self._unique_file_name(self._output_file_format[0],
