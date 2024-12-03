@@ -1,3 +1,5 @@
+import string
+
 from matplotlib import axes
 from matplotlib import pyplot as plt
 from qgate_graph.file_marker import FileMarker as const
@@ -160,7 +162,7 @@ class GraphPerformance(GraphBase):
         if len(percentiles[1].executors) > 0:
             ax_main.legend(fontsize = 'small')
 
-        ax_main.set_ylabel('Performance [calls/sec]')
+        ax_main.set_ylabel("Performance [calls/sec]")
         ax_main.set_xticks(self._get_executor_list(collections=percentiles[1].executors))
 
         # remove duplicit axis (because matplotlib>=3.8)
@@ -227,7 +229,7 @@ class GraphPerformance(GraphBase):
 
                 ax.set_xlabel('Executors')
                 if key_count+1 == key_view:
-                    ax.set_ylabel('Response [sec]')
+                    ax.set_ylabel(str.format(f"Response [{GraphSetup().response_time_unit}]"))
                 ax.set_xticks(self._get_executor_list(collection=percentile.executors[key]))
                 ax.grid(visible = True)
             color.next()
