@@ -87,7 +87,7 @@ class GraphExecutor(GraphBase):
 
         logging.info(f"Processing 'text' ...")
         with StringIO(text) as f:
-            output_list=self._generate_from_file(f,output_dir, suppress_error)
+            output_list=self._generate_from_stream(f,output_dir, suppress_error)
         return output_list
 
     def generate_from_file(self, input_file: str, output_dir: str = "output", suppress_error = False) -> list[str]:
@@ -102,10 +102,10 @@ class GraphExecutor(GraphBase):
 
         logging.info(f"Processing '{input_file}' ...")
         with open(input_file, "r") as f:
-            output_list=self._generate_from_file(f,output_dir, suppress_error)
+            output_list=self._generate_from_stream(f,output_dir, suppress_error)
         return output_list
 
-    def _generate_from_file(self, f, output_dir: str = "output", suppress_error = False) -> list[str]:
+    def _generate_from_stream(self, f, output_dir: str = "output", suppress_error = False) -> list[str]:
 
         file_name = None
         executors = {}
@@ -153,7 +153,7 @@ class GraphExecutor(GraphBase):
                     # create subdirectory based on duration
                     if not os.path.exists(output_dir_target):
                         os.makedirs(output_dir_target, mode=0o777)
-                # TODO: add     PRF_HDR_RESPONSE_UNIT
+                # TODO: add PRF_HDR_RESPONSE_UNIT
 
                 bulk_name=f"{bulk[0]}/{bulk[1]}"
                 file_name = self._unique_file_name(self._output_file_format[0],
