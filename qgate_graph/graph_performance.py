@@ -1,3 +1,5 @@
+import string
+
 from matplotlib import axes
 from matplotlib import pyplot as plt
 from qgate_graph.file_marker import FileMarker as const
@@ -5,9 +7,11 @@ from numpy import std, average
 from qgate_graph.graph_base import GraphBase
 from qgate_graph.percentile_item import PercentileItem
 from qgate_graph.circle_queue import CircleQueue, ColorQueue, MarkerQueue
+from qgate_graph.graph_setup import GraphSetup
 import os.path, os
 import datetime
 import logging
+from io import StringIO
 
 
 class GraphPerformance(GraphBase):
@@ -158,7 +162,7 @@ class GraphPerformance(GraphBase):
         if len(percentiles[1].executors) > 0:
             ax_main.legend(fontsize = 'small')
 
-        ax_main.set_ylabel('Performance [calls/sec]')
+        ax_main.set_ylabel("Performance [calls/sec]")
         ax_main.set_xticks(self._get_executor_list(collections=percentiles[1].executors))
 
         # remove duplicit axis (because matplotlib>=3.8)
@@ -225,7 +229,7 @@ class GraphPerformance(GraphBase):
 
                 ax.set_xlabel('Executors')
                 if key_count+1 == key_view:
-                    ax.set_ylabel('Response [sec]')
+                    ax.set_ylabel(str.format(f"Response [{GraphSetup().response_time_unit}]"))
                 ax.set_xticks(self._get_executor_list(collection=percentile.executors[key]))
                 ax.grid(visible = True)
             color.next()
@@ -260,7 +264,29 @@ class GraphPerformance(GraphBase):
         logging.info("Done")
         return output_list
 
-    def generate_from_file(self, input_file: str, output_dir: str="output", suppress_error = False) -> list[str]:
+    def generate_from_text(self, text: str, output_dir: str = "output", suppress_error = False) -> list[str]:
+
+        logging.info(f"Processing 'text' ...")
+        with StringIO(text) as f:
+            output_list=self._generate_from_stream(f,output_dir, suppress_error)
+        return output_list
+
+    def generate_from_file(self, input_file: str, output_dir: str = "output", suppress_error = False) -> list[str]:
+        """
+        Generate graphs about executors based on input file
+
+        :param input_file:      Input file
+        :param output_dir:      Output directory (default "output")
+        :param suppress_error:  Ability to suppress error (default is False)
+        :return:                List of generated files
+        """
+
+        logging.info(f"Processing '{input_file}' ...")
+        with open(input_file, "r") as f:
+            output_list=self._generate_from_stream(f,output_dir, suppress_error)
+        return output_list
+
+    def _generate_from_stream(self, f, output_dir: str="output", suppress_error = False) -> list[str]:
         """
         Generate graphs based on input file
 
@@ -274,7 +300,7 @@ class GraphPerformance(GraphBase):
         percentiles = {}
         percentiles[1] = PercentileItem(1)
 
-        logging.info(f"Processing '{input_file}' ...")
+        #logging.info(f"Processing '{input_file}' ...")
 
         # copy dir because the path can be modificated
         output_dir_target = output_dir
@@ -283,100 +309,104 @@ class GraphPerformance(GraphBase):
         if not os.path.exists(output_dir_target):
             os.makedirs(output_dir_target, mode = 0o777)
 
-        with open(input_file, "r") as f:
-            while True:
-                line = f.readline()
-                if not line:
-                    break
-                if line[0] == '#':
-                    if file_name and len(percentiles[1].executors) > 0:
-                        if suppress_error:
-                            try:
-                                output_list.append(self._create_output(percentiles, title, file_name, output_dir_target))
-                            except Exception as ex:
-                                logging.info(f"  ... Error in '{file_name}', '{type(ex)}'")
-                        else:
+        #with open(input_file, "r") as f:
+        while True:
+            line = f.readline()
+            if not line:
+                break
+            if line[0] == '#':
+                if file_name and len(percentiles[1].executors) > 0:
+                    if suppress_error:
+                        try:
                             output_list.append(self._create_output(percentiles, title, file_name, output_dir_target))
-                    file_name = None
-                    percentiles.clear()
-                    percentiles[1] = PercentileItem(1)
-                    continue
-                input_dict = GraphBase.load_json(line)
-                if not input_dict:
-                    continue
-                if input_dict[const.PRF_TYPE] == const.PRF_HDR_TYPE:
-                    # header items
-                    start_date = input_dict[const.PRF_HDR_NOW]
-                    report_date = datetime.datetime.fromisoformat(start_date).strftime("%Y-%m-%d %H-%M-%S")
-                    label = input_dict[const.PRF_HDR_LABEL]
-                    bulk = input_dict[const.PRF_HDR_BULK]
-                    duration = int(input_dict.get(const.PRF_HDR_DURATION, -1))
-                    if duration >= 0:
-                        # update output dir based on duration (e.g. 1 min, 5 sec, etc.) and date
-                        output_dir_target = os.path.join(output_dir,
-                                                         self._readable_duration(duration),
-                                                         datetime.datetime.fromisoformat(start_date).strftime("%Y-%m-%d"))
-                        # create subdirectory based on duration
-                        if not os.path.exists(output_dir_target):
-                            os.makedirs(output_dir_target, mode=0o777)
-                    # add percentile
-                    if input_dict.get(const.PRF_HDR_PERCENTILE, 1) < 1:
-                        percentiles[input_dict[const.PRF_HDR_PERCENTILE]] = PercentileItem(input_dict[const.PRF_HDR_PERCENTILE])
+                        except Exception as ex:
+                            logging.info(f"  ... Error in '{file_name}', '{type(ex)}'")
+                    else:
+                        output_list.append(self._create_output(percentiles, title, file_name, output_dir_target))
+                file_name = None
+                percentiles.clear()
+                percentiles[1] = PercentileItem(1)
+                continue
+            input_dict = GraphBase.load_json(line)
+            if not input_dict:
+                continue
+            if input_dict[const.PRF_TYPE] == const.PRF_HDR_TYPE:
+                # header items
+                start_date = input_dict[const.PRF_HDR_NOW]
+                report_date = datetime.datetime.fromisoformat(start_date).strftime("%Y-%m-%d %H-%M-%S")
+                label = input_dict[const.PRF_HDR_LABEL]
+                bulk = input_dict[const.PRF_HDR_BULK]
+                duration = int(input_dict.get(const.PRF_HDR_DURATION, -1))
+                if duration >= 0:
+                    # update output dir based on duration (e.g. 1 min, 5 sec, etc.) and date
+                    output_dir_target = os.path.join(output_dir,
+                                                     self._readable_duration(duration),
+                                                     datetime.datetime.fromisoformat(start_date).strftime("%Y-%m-%d"))
+                    # create subdirectory based on duration
+                    if not os.path.exists(output_dir_target):
+                        os.makedirs(output_dir_target, mode=0o777)
 
-                    # create file name and title for graph
-                    file_name = self._unique_file_name(self._output_file_format[0],
-                                                       label,
-                                                       report_date,
-                                                       bulk,
-                                                       self._raw_format,
-                                                       self._output_file_format[1])
+                # setup response unit
+                GraphSetup().response_time_unit=input_dict.get(const.PRF_HDR_RESPONSE_UNIT, "sec")
 
-                    # it is necessity to generate file?
-                    if self._only_new:
-                        # in case of focusing on only_new and file exists, jump it
-                        if os.path.exists(os.path.join(output_dir_target, file_name)):
-                            file_name = None
-                            continue
+                # add percentile
+                if input_dict.get(const.PRF_HDR_PERCENTILE, 1) < 1:
+                    percentiles[input_dict[const.PRF_HDR_PERCENTILE]] = PercentileItem(input_dict[const.PRF_HDR_PERCENTILE])
 
-                    title = f"'{label}', {report_date}, bulk {bulk[0]}/{bulk[1]}, duration '{self._readable_duration(duration)}'"
-                elif (input_dict[const.PRF_TYPE] == const.PRF_CORE_TYPE) and file_name:
+                # create file name and title for graph
+                file_name = self._unique_file_name(self._output_file_format[0],
+                                                   label,
+                                                   report_date,
+                                                   bulk,
+                                                   self._raw_format,
+                                                   self._output_file_format[1])
 
-                    for percentile_key in percentiles.keys():
-                        suffix = f"_{int(percentile_key * 100)}" if percentile_key < 1 else ""
-                        group = input_dict[const.PRF_CORE_GROUP]# if percentile == 1 else f"{input_dict[const.PRF_CORE_GROUP]}, {int(percentile * 100)}ph"
-                        percentile = percentiles[percentile_key]
+                # it is necessity to generate file?
+                if self._only_new:
+                    # in case of focusing on only_new and file exists, jump it
+                    if os.path.exists(os.path.join(output_dir_target, file_name)):
+                        file_name = None
+                        continue
 
-                        # core items
-                        if group in percentile.executors:
-                            percentile.executors[group].append(input_dict[const.PRF_CORE_REAL_EXECUTOR])
-                            if self._raw_format:
-                                total_calls_sec_raw = input_dict.get(const.PRF_CORE_TOTAL_CALL_PER_SEC_RAW + suffix, None)
-                                if total_calls_sec_raw is None:
-                                    total_calls_sec_raw = input_dict[const.PRF_CORE_TOTAL_CALL_PER_SEC + suffix] / bulk[0]
-                                percentile.total_performance[group].append(total_calls_sec_raw)
-                            else:
-                                percentile.total_performance[group].append(input_dict[const.PRF_CORE_TOTAL_CALL_PER_SEC + suffix])
-                            percentile.avrg_time[group].append(input_dict[const.PRF_CORE_AVRG_TIME + suffix])
-                            percentile.std_deviation[group].append(input_dict[const.PRF_CORE_STD_DEVIATION + suffix])
-                            if input_dict.get(const.PRF_CORE_MIN + suffix, None):
-                                percentile.min[group].append(input_dict[const.PRF_CORE_MIN + suffix])
-                            if input_dict.get(const.PRF_CORE_MAX + suffix, None):
-                                percentile.max[group].append(input_dict[const.PRF_CORE_MAX + suffix])
+                title = f"'{label}', {report_date}, bulk {bulk[0]}/{bulk[1]}, duration '{self._readable_duration(duration)}'"
+            elif (input_dict[const.PRF_TYPE] == const.PRF_CORE_TYPE) and file_name:
+
+                for percentile_key in percentiles.keys():
+                    suffix = f"_{int(percentile_key * 100)}" if percentile_key < 1 else ""
+                    group = input_dict[const.PRF_CORE_GROUP]# if percentile == 1 else f"{input_dict[const.PRF_CORE_GROUP]}, {int(percentile * 100)}ph"
+                    percentile = percentiles[percentile_key]
+
+                    # core items
+                    if group in percentile.executors:
+                        percentile.executors[group].append(input_dict[const.PRF_CORE_REAL_EXECUTOR])
+                        if self._raw_format:
+                            total_calls_sec_raw = input_dict.get(const.PRF_CORE_TOTAL_CALL_PER_SEC_RAW + suffix, None)
+                            if total_calls_sec_raw is None:
+                                total_calls_sec_raw = input_dict[const.PRF_CORE_TOTAL_CALL_PER_SEC + suffix] / bulk[0]
+                            percentile.total_performance[group].append(total_calls_sec_raw)
                         else:
-                            percentile.executors[group] = [input_dict[const.PRF_CORE_REAL_EXECUTOR]]
-                            if self._raw_format:
-                                total_calls_sec_raw = input_dict.get(const.PRF_CORE_TOTAL_CALL_PER_SEC_RAW + suffix, None)
-                                if total_calls_sec_raw is None:
-                                    total_calls_sec_raw = input_dict[const.PRF_CORE_TOTAL_CALL_PER_SEC + suffix] / bulk[0]
-                                percentile.total_performance[group] = [total_calls_sec_raw]
-                            else:
-                                percentile.total_performance[group] = [input_dict[const.PRF_CORE_TOTAL_CALL_PER_SEC + suffix]]
-                            percentile.avrg_time[group] = [input_dict[const.PRF_CORE_AVRG_TIME + suffix]]
-                            percentile.std_deviation[group] = [input_dict[const.PRF_CORE_STD_DEVIATION + suffix]]
-                            if input_dict.get(const.PRF_CORE_MIN + suffix, None):
-                                percentile.min[group] = [input_dict[const.PRF_CORE_MIN + suffix]]
-                            if input_dict.get(const.PRF_CORE_MAX + suffix, None):
-                                percentile.max[group] = [input_dict[const.PRF_CORE_MAX + suffix]]
+                            percentile.total_performance[group].append(input_dict[const.PRF_CORE_TOTAL_CALL_PER_SEC + suffix])
+                        percentile.avrg_time[group].append(input_dict[const.PRF_CORE_AVRG_TIME + suffix])
+                        percentile.std_deviation[group].append(input_dict[const.PRF_CORE_STD_DEVIATION + suffix])
+                        if input_dict.get(const.PRF_CORE_MIN + suffix, None):
+                            percentile.min[group].append(input_dict[const.PRF_CORE_MIN + suffix])
+                        if input_dict.get(const.PRF_CORE_MAX + suffix, None):
+                            percentile.max[group].append(input_dict[const.PRF_CORE_MAX + suffix])
+                    else:
+                        percentile.executors[group] = [input_dict[const.PRF_CORE_REAL_EXECUTOR]]
+                        if self._raw_format:
+                            total_calls_sec_raw = input_dict.get(const.PRF_CORE_TOTAL_CALL_PER_SEC_RAW + suffix, None)
+                            if total_calls_sec_raw is None:
+                                total_calls_sec_raw = input_dict[const.PRF_CORE_TOTAL_CALL_PER_SEC + suffix] / bulk[0]
+                            percentile.total_performance[group] = [total_calls_sec_raw]
+                        else:
+                            percentile.total_performance[group] = [input_dict[const.PRF_CORE_TOTAL_CALL_PER_SEC + suffix]]
+                        percentile.avrg_time[group] = [input_dict[const.PRF_CORE_AVRG_TIME + suffix]]
+                        percentile.std_deviation[group] = [input_dict[const.PRF_CORE_STD_DEVIATION + suffix]]
+                        if input_dict.get(const.PRF_CORE_MIN + suffix, None):
+                            percentile.min[group] = [input_dict[const.PRF_CORE_MIN + suffix]]
+                        if input_dict.get(const.PRF_CORE_MAX + suffix, None):
+                            percentile.max[group] = [input_dict[const.PRF_CORE_MAX + suffix]]
         return output_list
 
 

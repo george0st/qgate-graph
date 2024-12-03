@@ -8,6 +8,7 @@ class FileMarker:
     PRF_HDR_LABEL="label"
     PRF_HDR_BULK="bulk"
     PRF_HDR_DURATION = "duration"
+    PRF_HDR_RESPONSE_UNIT = "responsetime_unit"
     PRF_HDR_PERCENTILE = "percentile"
     PRF_HDR_AVIALABLE_CPU = "cpu"
     PRF_HDR_HOST="host"

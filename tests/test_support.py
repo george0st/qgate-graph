@@ -1,6 +1,7 @@
 import unittest
 import numpy as np
 from qgate_graph.graph_performance import GraphPerformance
+from qgate_graph.graph_setup import GraphSetup
 
 class TestCaseBasic(unittest.TestCase):
 
@@ -39,3 +40,6 @@ class TestCaseBasic(unittest.TestCase):
         precision = graph._expected_round(np.array([1.1, 1.0, 1.3]))
         self.assertTrue(precision == 1)
 
+    def test_graph_setup(self):
+        GraphSetup().response_time_unit="JS"
+        print(GraphSetup().response_time_unit)
