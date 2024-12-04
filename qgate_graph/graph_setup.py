@@ -11,6 +11,6 @@ class GraphSetup(metaclass=Singleton):
 
     def __init__(self):
         self.response_time_unit = "sec"
-        self.response_time_line = False
-        self.use_std = True
+        # self.response_time_line = False
+        # self.use_std = True
 

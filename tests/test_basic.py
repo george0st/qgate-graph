@@ -17,6 +17,7 @@ class TestCaseBasic(unittest.TestCase):
     INPUT_FILE4 = "input/prf_cassandra-W1-low-percentile-three-lines.txt"
     INPUT_FILE5 = "input/prf_cassandra-W2-med-percentile-one-line.txt"
     INPUT_FILE6 = "input/perf_test.txt"
+    INPUT_FILE7 = "input/prf_cassandra-without-std.txt"
 
     INPUT_ADR = "input"
 
@@ -38,6 +39,7 @@ class TestCaseBasic(unittest.TestCase):
         TestCaseBasic.INPUT_FILE4 = path.join(prefix, TestCaseBasic.INPUT_FILE4)
         TestCaseBasic.INPUT_FILE5 = path.join(prefix, TestCaseBasic.INPUT_FILE5)
         TestCaseBasic.INPUT_FILE6 = path.join(prefix, TestCaseBasic.INPUT_FILE6)
+        TestCaseBasic.INPUT_FILE7 = path.join(prefix, TestCaseBasic.INPUT_FILE7)
         TestCaseBasic.INPUT_ADR = path.join(prefix, TestCaseBasic.INPUT_ADR)
 
         # clean directory
@@ -181,3 +183,8 @@ class TestCaseBasic(unittest.TestCase):
         output = graph.generate_from_file(TestCaseBasic.INPUT_FILE6, os.path.join(self.OUTPUT_ADR,"only_new"))
         self.assertTrue(len(output) == 0)
 
+    def test_perf_without_stdev(self):
+        graph = GraphPerformance()
+        output = graph.generate_from_file(TestCaseBasic.INPUT_FILE7, self.OUTPUT_ADR)
+        for file in output:
+            self.assertTrue(file.find("RAW") == -1)
