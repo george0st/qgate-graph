@@ -180,16 +180,28 @@ class GraphPerformance(GraphBase):
             ax=plt.subplot(2, key_count, key_view)
 
             for percentile in percentiles.values():
-                ax.errorbar(percentile.executors[key], percentile.avrg_time[key], percentile.std_deviation[key],
-                            alpha = alpha.next(),
-                            color = color.item(),
-                            linestyle = 'none', #'-' if (len(percentiles) > 1 and percentile.percentile != 1) or (len(percentiles) == 1) else 'none',
-                            marker = '_' if (len(percentiles) > 1 and percentile.percentile != 1) or (len(percentiles) == 1) else 'none',
-                            linewidth = 2 if (len(percentiles) > 1 and percentile.percentile != 1) or (len(percentiles) == 1) else 1,
-                            capsize = 6 if (len(percentiles) > 1 and percentile.percentile != 1) or (len(percentiles) == 1) else 6)
-                self._watermark(plt, ax)
-                ax.legend(['avrg ± std', f"avrg ± std {str(int(percentile.percentile*100))+'ph ' if percentile.percentile != 1 else ''}"],
-                          fontsize = 'small')
+                if len(percentile.std_deviation)==0:
+                    ax.errorbar(x = percentile.executors[key], y = percentile.avrg_time[key],
+                                alpha = alpha.next(),
+                                color = color.item(),
+                                linestyle = '-', #'-' if (len(percentiles) > 1 and percentile.percentile != 1) or (len(percentiles) == 1) else 'none',
+                                marker = '_' if (len(percentiles) > 1 and percentile.percentile != 1) or (len(percentiles) == 1) else 'none',
+                                linewidth = 2 if (len(percentiles) > 1 and percentile.percentile != 1) or (len(percentiles) == 1) else 1,
+                                capsize = 6 if (len(percentiles) > 1 and percentile.percentile != 1) or (len(percentiles) == 1) else 6)
+                    self._watermark(plt, ax)
+                    ax.legend(['avrg', f"avrg {str(int(percentile.percentile*100))+'ph ' if percentile.percentile != 1 else ''}"],
+                              fontsize = 'small')
+                else:
+                    ax.errorbar(x = percentile.executors[key], y = percentile.avrg_time[key], yerr = percentile.std_deviation[key],
+                                alpha = alpha.next(),
+                                color = color.item(),
+                                linestyle = 'none', #'-' if (len(percentiles) > 1 and percentile.percentile != 1) or (len(percentiles) == 1) else 'none',
+                                marker = '_' if (len(percentiles) > 1 and percentile.percentile != 1) or (len(percentiles) == 1) else 'none',
+                                linewidth = 2 if (len(percentiles) > 1 and percentile.percentile != 1) or (len(percentiles) == 1) else 1,
+                                capsize = 6 if (len(percentiles) > 1 and percentile.percentile != 1) or (len(percentiles) == 1) else 6)
+                    self._watermark(plt, ax)
+                    ax.legend(['avrg ± std', f"avrg ± std {str(int(percentile.percentile*100))+'ph ' if percentile.percentile != 1 else ''}"],
+                              fontsize = 'small')
 
                 # add table
                 # val1 = ["{:X}".format(i) for i in range(10)]
@@ -387,7 +399,9 @@ class GraphPerformance(GraphBase):
                         else:
                             percentile.total_performance[group].append(input_dict[const.PRF_CORE_TOTAL_CALL_PER_SEC + suffix])
                         percentile.avrg_time[group].append(input_dict[const.PRF_CORE_AVRG_TIME + suffix])
-                        percentile.std_deviation[group].append(input_dict[const.PRF_CORE_STD_DEVIATION + suffix])
+                        # optional STD_DEVIATION
+                        if input_dict.get(const.PRF_CORE_STD_DEVIATION + suffix, None):
+                            percentile.std_deviation[group].append(input_dict[const.PRF_CORE_STD_DEVIATION + suffix])
                         if input_dict.get(const.PRF_CORE_MIN + suffix, None):
                             percentile.min[group].append(input_dict[const.PRF_CORE_MIN + suffix])
                         if input_dict.get(const.PRF_CORE_MAX + suffix, None):
@@ -402,7 +416,9 @@ class GraphPerformance(GraphBase):
                         else:
                             percentile.total_performance[group] = [input_dict[const.PRF_CORE_TOTAL_CALL_PER_SEC + suffix]]
                         percentile.avrg_time[group] = [input_dict[const.PRF_CORE_AVRG_TIME + suffix]]
-                        percentile.std_deviation[group] = [input_dict[const.PRF_CORE_STD_DEVIATION + suffix]]
+                        # optional STD_DEVIATION
+                        if input_dict.get(const.PRF_CORE_STD_DEVIATION + suffix, None):
+                            percentile.std_deviation[group] = [input_dict[const.PRF_CORE_STD_DEVIATION + suffix]]
                         if input_dict.get(const.PRF_CORE_MIN + suffix, None):
                             percentile.min[group] = [input_dict[const.PRF_CORE_MIN + suffix]]
                         if input_dict.get(const.PRF_CORE_MAX + suffix, None):
