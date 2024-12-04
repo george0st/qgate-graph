@@ -186,5 +186,23 @@ class TestCaseBasic(unittest.TestCase):
     def test_perf_without_stdev(self):
         graph = GraphPerformance()
         output = graph.generate_from_file(TestCaseBasic.INPUT_FILE7, self.OUTPUT_ADR)
+
+        self.assertTrue(len(output)==1)
+        for file in output:
+            self.assertTrue(file.find("RAW") == -1)
+
+    def read_file_all(self, file) -> str:
+        with open(file) as f:
+            content = ""
+            for itm in f.readlines():
+                content += f"{itm.strip()}\n"
+            return content[:-1]
+    def test_perf_source_text(self):
+        graph = GraphPerformance()
+        text = self.read_file_all(TestCaseBasic.INPUT_FILE7)
+
+        output = graph.generate_from_text(text,self.OUTPUT_ADR)
+
+        self.assertTrue(len(output)==1)
         for file in output:
             self.assertTrue(file.find("RAW") == -1)
