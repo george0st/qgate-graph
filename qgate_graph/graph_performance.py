@@ -402,6 +402,8 @@ class GraphPerformance(GraphBase):
                         # optional STD_DEVIATION
                         if input_dict.get(const.PRF_CORE_STD_DEVIATION + suffix, None):
                             percentile.std_deviation[group].append(input_dict[const.PRF_CORE_STD_DEVIATION + suffix])
+                        else:
+                            percentile.std_deviation[group].append(0.0)
                         if input_dict.get(const.PRF_CORE_MIN + suffix, None):
                             percentile.min[group].append(input_dict[const.PRF_CORE_MIN + suffix])
                         if input_dict.get(const.PRF_CORE_MAX + suffix, None):
@@ -419,6 +421,8 @@ class GraphPerformance(GraphBase):
                         # optional STD_DEVIATION
                         if input_dict.get(const.PRF_CORE_STD_DEVIATION + suffix, None):
                             percentile.std_deviation[group] = [input_dict[const.PRF_CORE_STD_DEVIATION + suffix]]
+                        else:
+                            percentile.std_deviation[group] = [0.0]
                         if input_dict.get(const.PRF_CORE_MIN + suffix, None):
                             percentile.min[group] = [input_dict[const.PRF_CORE_MIN + suffix]]
                         if input_dict.get(const.PRF_CORE_MAX + suffix, None):

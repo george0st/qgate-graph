@@ -107,10 +107,12 @@ class GraphBase:
             for percentile in percentiles_sort:
                 suffix = f" {int(percentile * 100)}ph" if percentile < 1 else ""
                 table.add_column(f"Avrg{suffix}", percentiles[percentile].avrg_time[group])
-            for percentile in percentiles_sort:
-                suffix = f" {int(percentile * 100)}ph" if percentile < 1 else ""
-                table.add_column(f"Std{suffix}", percentiles[percentile].std_deviation[group])
 
+            # optional
+            for percentile in percentiles_sort:
+                if len(percentiles[percentile].std_deviation)>0:
+                    suffix = f" {int(percentile * 100)}ph" if percentile < 1 else ""
+                    table.add_column(f"Std{suffix}", percentiles[percentile].std_deviation[group])
             for percentile in percentiles_sort:
                 if len(percentiles[percentile].min) > 0:
                     suffix = f" {int(percentile * 100)}ph" if percentile < 1 else ""

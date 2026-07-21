@@ -72,7 +72,7 @@ class TestCasePerformanceCsv(unittest.TestCase):
         graph = GraphPerformanceCsv(raw_format=True)
         output = graph.generate_from_dir(TestCasePerformanceCsv.INPUT_ADR, self.OUTPUT_ADR)
 
-        self.assertTrue(len(output) == 12)
+        self.assertTrue(len(output) == 13)
         for file in output:
             self.assertTrue(file.find("RAW") != -1)
             self.assertTrue(file.find("CSV-PRF-") == -1)
@@ -89,7 +89,7 @@ class TestCasePerformanceCsv(unittest.TestCase):
         graph = GraphPerformanceCsv()
         output = graph.generate_from_dir(TestCasePerformanceCsv.INPUT_ADR, self.OUTPUT_ADR)
 
-        self.assertTrue(len(output) == 12)
+        self.assertTrue(len(output) == 13)
         for file in output:
             self.assertTrue(file.find("RAW") == -1)
             self.assertTrue(file.find("CSV-PRF-") == -1)
