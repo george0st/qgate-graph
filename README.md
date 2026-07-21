@@ -13,7 +13,7 @@ The QGate graph generates graphical outputs based on performance tests (QGate Pe
 It is a quick way, how you can identify real performance for your python solution.
 
 NOTE: These graphs only visualize outputs from performance tests (QGate Perf), it is not replacement of
-detail views from Grafana, Prometheus, etc. in detail of CPU, GPU, RAM, I/O etc. on 
+detail views from Grafana, Zabbix, Prometheus, etc. in detail of CPU, GPU, RAM, I/O etc. on 
 side of testing system. 
 
 ## Usage
