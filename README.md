@@ -7,16 +7,16 @@
 # QGate-Graph
 
 The QGate graph generates graphical outputs based on performance tests (QGate Perf). Key benefits:
- - provide graphs about Performance/Throughput and Response time (on typically client side)
+ - provide graphs about Performance/Throughput and Response time (on client or server side)
  - provide graphs about Executors in time
 
-It is a quick way, how you can identify real performance for your python solution.
+It is a quick way, how you can identify real performance not only for your python solution.
 
 NOTE: These graphs only visualize outputs from performance tests (QGate Perf), it is not replacement of
 detail views from Grafana, Zabbix, Prometheus, etc. in detail of CPU, GPU, RAM, I/O etc. on 
 side of testing system. 
 
-## Usage
+## 1. Usage
 
 ```python
 from qgate_graph.graph_performance_txt import GraphPerformanceTxt
@@ -46,17 +46,60 @@ graph=GraphPerformanceCsv()
 graph.generate_from_dir()
 ```
 
-## Sample of outputs
-#### Performance/Throughput & Response time
+## 2. Sample of outputs
+#### 2.1 Performance/Throughput & Response time
 ![graph](https://github.com/george0st/qgate-graph/blob/main/assets/PRF-Calc-2023-05-06_18-22-19-bulk-1x10.png?raw=true)
 ![graph](https://github.com/george0st/qgate-graph/blob/main/assets/PRF-NoSQL_igz_nonprod-2023-04-23_14-41-18-bulk-100x50.png?raw=true)
 
-#### Executors in time
+#### 2.2 Executors in time
 ![graph](https://github.com/george0st/qgate-graph/blob/main/assets/EXE-Calc-2023-05-06_18-22-19-bulk-1x10-plan-128x4.png?raw=true)
 ![graph](https://github.com/george0st/qgate-graph/blob/main/assets/EXE-NoSQL-2023-05-04_19-33-30-bulk-1x50-plan-8x2.png?raw=true)
 
-#### Performance/Throughput & Response time in [TXT form](https://github.com/george0st/qgate-graph/blob/main/assets/TXT-cassandra-163551-W1-low-RAW-2024-10-11_14-36-07-bulk-200x10.txt?raw=true)
+#### 2.3 Performance/Throughput & Response time in [TXT form](https://github.com/george0st/qgate-graph/blob/main/assets/TXT-cassandra-163551-W1-low-RAW-2024-10-11_14-36-07-bulk-200x10.txt?raw=true)
 ![Performance in TXT](https://github.com/george0st/qgate-graph/blob/main/assets/TXT-cassandra-163551-W1-low-RAW-2024-10-11_14-36-07-bulk-200x10.png?raw=true)
 
-#### Performance/Throughput & Response time in [CSV form](https://github.com/george0st/qgate-graph/blob/main/assets/CSV-cassandra-235115-W2-med-RAW-2024-10-11_22-14-47-bulk-200x20.csv?raw=true)
+#### 2.4 Performance/Throughput & Response time in [CSV form](https://github.com/george0st/qgate-graph/blob/main/assets/CSV-cassandra-235115-W2-med-RAW-2024-10-11_22-14-47-bulk-200x20.csv?raw=true)
 ![Performance in CSV](https://github.com/george0st/qgate-graph/blob/main/assets/CSV-cassandra-235115-W2-med-RAW-2024-10-11_22-14-47-bulk-200x20.png?raw=true)
+
+## 3. Expected structure of input file
+
+#### 3.1 Without 'std_dev' and with 'responsetime_unit' in 'msec'
+
+```txt
+############### 2024-10-07 09:06:51.706216 ###############
+{"type":"headr","label":"cassandra-110538-W1-low","bulk":[200,10],"duration":5,"cpu":12,"mem":"15.2 GB","mem_free":"5.2 GB","host":"HCI-L3204/172.31.128.1","now":"2024-10-07 09:06:51.706216","responsetime_unit": "msec"}
+    {"type":"detail","processid":15392,"calls":100,"avrg":0.04605551800006651,"min":0.028453799997805618,"max":0.11998010000388604,"total":4.605551800006651,"initexec":"2024-10-07 09:06:55.562050","startexec":"2024-10-07 09:06:55.562050","endexec":"2024-10-07 09:07:00.588229"}
+    {"type":"detail","processid":22396,"calls":100,"avrg":0.04602383199991891,"min":0.03069359999790322,"max":0.1104017999896314,"total":4.602383199991891,"initexec":"2024-10-07 09:06:55.567618","startexec":"2024-10-07 09:06:55.567618","endexec":"2024-10-07 09:07:00.572755"}
+  {"type":"core","plan_executors":2,"plan_executors_detail":[2,1],"real_executors":2,"group":"1x threads","total_calls":200,"total_call_per_sec_raw":43.44079318544964,"total_call_per_sec":8688.158637089928,"avrg_time":0.046039674999992716,"endexec":"2024-10-07 09:07:00.757860"}
+    {"type":"detail","processid":18716,"calls":100,"avrg":0.04663490700011607,"min":0.03173600000445731,"max":0.0762247000093339,"total":4.663490700011607,"initexec":"2024-10-07 09:07:04.841761","startexec":"2024-10-07 09:07:04.842686","endexec":"2024-10-07 09:07:09.866037"}
+    {"type":"detail","processid":23936,"calls":101,"avrg":0.04566342079243162,"min":0.0317265000048792,"max":0.09115889998793136,"total":4.612005500035593,"initexec":"2024-10-07 09:07:04.727149","startexec":"2024-10-07 09:07:04.727149","endexec":"2024-10-07 09:07:09.744927"}
+    {"type":"detail","processid":26484,"calls":100,"avrg":0.04640899100020761,"min":0.02922150000813417,"max":0.07789100000809412,"total":4.640899100020761,"initexec":"2024-10-07 09:07:04.763005","startexec":"2024-10-07 09:07:04.763005","endexec":"2024-10-07 09:07:09.808944"}
+    {"type":"detail","processid":14756,"calls":99,"avrg":0.04672212727342008,"min":0.028102800002670847,"max":0.09830240000155754,"total":4.625490600068588,"initexec":"2024-10-07 09:07:06.153211","startexec":"2024-10-07 09:07:06.153211","endexec":"2024-10-07 09:07:11.184577"}
+  {"type":"core","plan_executors":8,"plan_executors_detail":[8,1],"real_executors":8,"group":"1x threads","total_calls_95":18173,"total_call_per_sec_raw_95":417.813479143004,"total_call_per_sec_95":83562.6958286008,"avrg_time_95":0.089147299930124706,"total_calls":19124,"total_call_per_sec_raw":369.3477278895531,"total_call_per_sec":73869.54557791061,"avrg_time":0.081659805640911533,"endexec":"2024-10-11 14:37:17.983998"}
+############### State: OK,  Duration: 1 min 33 sec (93.3 seconds) ###############
+```
+
+#### 3.2 With 'std_dev' and defined 'percentile'
+
+```txt
+############### 2024-10-18 06:26:48.103622 ###############
+{"type":"headr","label":"GIL_impact","bulk":[1,10],"duration":1,"percentile":0.9,"cpu":12,"mem":"15.2 GB","mem_free":"2.9 GB","host":"HCI-L3204/172.23.112.1","now":"2024-10-18 06:26:48.103622"}
+    {"type":"detail","processid":28796,"calls_90":73886,"avrg_90":9.28218238879005e-06,"min_90":7.2999391704797745e-06,"max_90":1.2199976481497288e-05,"st-dev_90":1.5504113713186287e-06,"total_90":0.6858233279781416,"calls":82095,"avrg":9.969992579464478e-06,"min":7.2999391704797745e-06,"max":0.001089800032787025,"st-dev":9.926936153337876e-06,"total":0.8184865408111364,"initexec":"2024-10-18 06:26:49.437703","startexec":"2024-10-18 06:26:49.437703","endexec":"2024-10-18 06:26:50.447639"}
+    {"type":"detail","processid":13296,"calls_90":71775,"avrg_90":9.436781729987713e-06,"min_90":7.2999391704797745e-06,"max_90":1.2400094419717789e-05,"st-dev_90":1.631204344467602e-06,"total_90":0.6773250086698681,"calls":79750,"avrg":1.022757179918334e-05,"min":7.2999391704797745e-06,"max":0.003838100004941225,"st-dev":1.6809570810073316e-05,"total":0.8156488509848714,"initexec":"2024-10-18 06:26:49.431964","startexec":"2024-10-18 06:26:49.431964","endexec":"2024-10-18 06:26:50.437636"}
+    {"type":"detail","processid":34408,"calls_90":76123,"avrg_90":8.93041791613276e-06,"min_90":7.0999376475811005e-06,"max_90":1.2199976481497288e-05,"st-dev_90":1.4444318449307255e-06,"total_90":0.6798102030297741,"calls":84581,"avrg":9.719212596751311e-06,"min":7.0999376475811005e-06,"max":0.0024772000033408403,"st-dev":1.5354614572105147e-05,"total":0.8220607206458226,"initexec":"2024-10-18 06:26:49.479421","startexec":"2024-10-18 06:26:49.479421","endexec":"2024-10-18 06:26:50.485329"}
+    {"type":"detail","processid":7456,"calls_90":75814,"avrg_90":9.12450595571667e-06,"min_90":7.2999391704797745e-06,"max_90":1.7399899661540985e-05,"st-dev_90":1.5475463275655218e-06,"total_90":0.6917652945267037,"calls":84237,"avrg":9.788886485911994e-06,"min":7.2999391704797745e-06,"max":0.0009055000264197588,"st-dev":8.440684877270826e-06,"total":0.8245864309137687,"initexec":"2024-10-18 06:26:49.451719","startexec":"2024-10-18 06:26:49.451719","endexec":"2024-10-18 06:26:50.457772"}
+  {"type":"core","plan_executors":4,"plan_executors_detail":[4,1],"real_executors":4,"group":"","total_calls_90":297598,"total_call_per_sec_raw_90":435091.3344838062,"total_call_per_sec_90":435091.3344838062,"avrg_time_90":9.193471997656798e-06,"std_deviation_90":1.5433984720706196e-06,"min_90":7.0999376475811005e-06,"max_90":1.7399899661540985e-05,"total_calls":330663,"total_call_per_sec_raw":402965.1844400049,"total_call_per_sec":402965.1844400049,"avrg_time":9.926415865327781e-06,"std_deviation":1.2632951603196792e-05,"min":7.0999376475811005e-06,"max":0.003838100004941225,"endexec":"2024-10-18 06:26:50.581013"}
+############### State: OK,  Duration: 2 sec (2.5 seconds) ###############
+############### 2024-10-18 06:26:50.697075 ###############
+{"type":"headr","label":"GIL_impact","bulk":[1,10],"duration":1,"percentile":0.95,"cpu":12,"mem":"15.2 GB","mem_free":"2.9 GB","host":"HCI-L3204/172.23.112.1","now":"2024-10-18 06:26:50.697075"}
+    {"type":"detail","processid":16552,"calls_95":15883,"avrg_95":4.9436094733893865e-05,"min_95":9.09995287656784e-06,"max_95":0.00011739996261894703,"st-dev_95":2.5031917075088525e-05,"total_95":0.7851934926584363,"calls":16718,"avrg":5.430893610889042e-05,"min":9.09995287656784e-06,"max":0.00046769995242357254,"st-dev":3.352971385795046e-05,"total":0.90793679386843,"initexec":"2024-10-18 06:26:51.958925","startexec":"2024-10-18 06:26:51.960001","endexec":"2024-10-18 06:26:52.965246"}
+    {"type":"detail","processid":16552,"calls_95":15921,"avrg_95":4.935850125541116e-05,"min_95":8.800067007541656e-06,"max_95":0.00011439993977546692,"st-dev_95":2.4849540379122412e-05,"total_95":0.785836698487401,"calls":16758,"avrg":5.426288325267753e-05,"min":8.800067007541656e-06,"max":0.0013072999427095056,"st-dev":3.579075964852232e-05,"total":0.9093373975483701,"initexec":"2024-10-18 06:26:51.960518","startexec":"2024-10-18 06:26:51.960518","endexec":"2024-10-18 06:26:52.966788"}
+    {"type":"detail","processid":32284,"calls_95":15713,"avrg_95":5.0139558757413794e-05,"min_95":8.599949069321156e-06,"max_95":0.00011770008131861687,"st-dev_95":2.4470565904627166e-05,"total_95":0.7878428867552429,"calls":16540,"avrg":5.51116375402945e-05,"min":8.599949069321156e-06,"max":0.0012700000079348683,"st-dev":3.551343731849067e-05,"total":0.911546484916471,"initexec":"2024-10-18 06:26:51.984188","startexec":"2024-10-18 06:26:51.984188","endexec":"2024-10-18 06:26:52.991112"}
+    {"type":"detail","processid":32284,"calls_95":15834,"avrg_95":4.9727327183046145e-05,"min_95":8.79995059221983e-06,"max_95":0.00011709996033459902,"st-dev_95":2.4524557053828552e-05,"total_95":0.7873824986163527,"calls":16667,"avrg":5.466496657001015e-05,"min":8.79995059221983e-06,"max":0.0006014000391587615,"st-dev":3.3822171029970184e-05,"total":0.9111009978223592,"initexec":"2024-10-18 06:26:51.985187","startexec":"2024-10-18 06:26:51.985187","endexec":"2024-10-18 06:26:52.990800"}
+    {"type":"detail","processid":7076,"calls_95":15760,"avrg_95":4.9791091334767316e-05,"min_95":8.499948307871819e-06,"max_95":0.00011729996185749769,"st-dev_95":2.4512645183528515e-05,"total_95":0.7847075994359329,"calls":16589,"avrg":5.476363843263221e-05,"min":8.499948307871819e-06,"max":0.0014908999437466264,"st-dev":3.559626501137762e-05,"total":0.9084739979589358,"initexec":"2024-10-18 06:26:52.003182","startexec":"2024-10-18 06:26:52.003182","endexec":"2024-10-18 06:26:53.007681"}
+    {"type":"detail","processid":7076,"calls_95":15591,"avrg_95":5.045349848692095e-05,"min_95":9.599956683814526e-06,"max_95":0.0001218999968841672,"st-dev_95":2.4906209824027573e-05,"total_95":0.7866204949095845,"calls":16411,"avrg":5.5402632109581585e-05,"min":9.599956683814526e-06,"max":0.000597700010985136,"st-dev":3.420816970059563e-05,"total":0.9092125955503434,"initexec":"2024-10-18 06:26:52.004179","startexec":"2024-10-18 06:26:52.004179","endexec":"2024-10-18 06:26:53.007487"}
+    {"type":"detail","processid":29336,"calls_95":15657,"avrg_95":4.9893970190769694e-05,"min_95":9.299954399466515e-06,"max_95":0.00011869997251778841,"st-dev_95":2.539127489379609e-05,"total_95":0.7811898912768811,"calls":16481,"avrg":5.488740935632118e-05,"min":9.299954399466515e-06,"max":0.0012237000046297908,"st-dev":3.5838392491381726e-05,"total":0.9045993936015293,"initexec":"2024-10-18 06:26:52.038375","startexec":"2024-10-18 06:26:52.038375","endexec":"2024-10-18 06:26:53.038817"}
+    {"type":"detail","processid":29336,"calls_95":15991,"avrg_95":4.870400903941591e-05,"min_95":8.999952115118504e-06,"max_95":0.00011619995348155499,"st-dev_95":2.4618625272080484e-05,"total_95":0.7788258085492998,"calls":16832,"avrg":5.38818504976816e-05,"min":8.999952115118504e-06,"max":0.0013601999962702394,"st-dev":3.795932293362317e-05,"total":0.9069393075769767,"initexec":"2024-10-18 06:26:52.039377","startexec":"2024-10-18 06:26:52.039377","endexec":"2024-10-18 06:26:53.041180"}
+  {"type":"core","plan_executors":8,"plan_executors_detail":[4,2],"real_executors":8,"group":"","total_calls_95":126350,"total_call_per_sec_raw_95":161004.64848584958,"total_call_per_sec_95":161004.64848584958,"avrg_time_95":4.9688006372704864e-05,"std_deviation_95":2.4788166948262412e-05,"min_95":8.499948307871819e-06,"max_95":0.0001218999968841672,"total_calls":132996,"total_call_per_sec_raw":146357.98874821325,"total_call_per_sec":146357.98874821325,"avrg_time":5.466049423351115e-05,"std_deviation":3.528227899898897e-05,"min":8.499948307871819e-06,"max":0.0014908999437466264,"endexec":"2024-10-18 06:26:53.142234"}
+############### State: OK,  Duration: 2 sec (2.5 seconds) ###############
+```
