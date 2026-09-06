@@ -1,10 +1,25 @@
 # How you can read graphs
 
+This description aims to teach you how to read these types of graphs
+correctly, extract the maximum amount of information, and draw the 
+right conclusions based on them.
+
 ## 1. Theory
+
+Let's take a look at what each chart actually shows and focus on
+this sample chart.
 
 ![graph](https://github.com/george0st/qgate-graph/blob/main/assets/sample00.png?raw=true)
 
-### 1.1 The main graph (performance/througput per second)
+### 1.1 Title
+
+The title contain specification of execution details, in this case:
+ - 4 wave, HASH, General, 30000 docs
+ - 8 CPU, 8 GB RAM
+ - Date time
+ - others
+
+### 1.2 The main graph (performance/througput per second)
  - The graph with red label 1.
  - The axe Y, amount of calls per second
  - The axe X, amount of executors (= amount of processes * amount of threads)
@@ -18,7 +33,7 @@
  - You can see in graph performance/throughput for specific amount of 
    executors (multiplication of processes * threads)  
    
-### 1.2 The small graphs (response time in milliseconds)
+### 1.3 The small graphs (response time in milliseconds)
  - The graphs with red label 2., 3. and 4.
  - The axe Y, response time in milliseconds
  - The axe X, amount of executors for specific amount of process 
@@ -36,12 +51,8 @@ the throughput go down and the response time speedup growing.
 
 You can see in the main graph the throughput per second for three different
 curves with one (green curve), two (purple curve) and three (red curve)
-processes.
-
-Is it important to mention, the graph title with specification of 
-execution details, in this case:
- - 4 wave, HASH, General, 30000 docs
- - 8 CPU, 8 GB RAM
+processes. The graph specify detail such as HASH, General, 30000 docs and
+important information about HW configuration (8 CPU, 8 GB RAM).
 
 NOTE: In case of e.g. more cores, memory, etc. the outputs can be different.
 
@@ -98,3 +109,9 @@ NOTE: In case of e.g. more cores, memory, etc. the outputs can be different.
  - NOTE: You can predicate systems crash based on the reaching 
    the limited the response time or based on out of memory error
    (or performance degradation based on disk swapping). 
+
+## 3. The conclusion
+
+I hope this description helped you understand these charts better 
+and faster. If you have any suggestions for improvement, please 
+contact me 'steuer(dot)j(at)seznam(dot)cz'
