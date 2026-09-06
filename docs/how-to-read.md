@@ -1,4 +1,4 @@
-# How you can read graphs:
+# How you can read graphs
 
 ## 1. Theory
 
@@ -42,6 +42,7 @@ Is it important to mention, the graph title with specification of
 execution details, in this case:
  - 4 wave, HASH, General, 30000 docs
  - 8 CPU, 8 GB RAM
+
 NOTE: In case of e.g. more cores, memory, etc. the outputs can be different.
 
 ### 2.1 About one process (green curve):
@@ -52,7 +53,7 @@ NOTE: In case of e.g. more cores, memory, etc. the outputs can be different.
  - The response time is relatively small till 4 threads and dramatically 
    grows in case of more than 4 threads, 8 threads have response time 61.4 ms, 
    16 threads have value 124 ms and 32 threads have value 251.5 ms
- - Summary
+ - **The summary**
    - The testing code can reach for one process maximal throughput
      130.3 calls/sec for 4 threads
 
@@ -67,7 +68,7 @@ NOTE: In case of e.g. more cores, memory, etc. the outputs can be different.
    grows in case of more than 8 executors. The 16 executors have response time
    69.5 ms, 32 executors have value 139.9 ms and 64 executors have 
    value 288.8 ms
- - The summary
+ - **The summary**
    - The testing code can reach for two processes maximal throughput
      230.28 calls/sec for 8 executors (it means two processes each
      with 4 threads)
@@ -83,7 +84,7 @@ NOTE: In case of e.g. more cores, memory, etc. the outputs can be different.
      executors (the curve go down) and the response time growing, see 
      96 executors have response time 440.5 ms and the performance
      is ~220 calls/sec
- - The summary
+ - **The summary**
    - The testing code in case to three processes does not improve
      performance, you can see system overloading, it means lower
      performance in case of more executors, together with growing 
@@ -93,7 +94,7 @@ NOTE: In case of e.g. more cores, memory, etc. the outputs can be different.
  - It makes sense to scale the code till two processes (each with 
    4 threads, it meas 8 executors as total). The higher values for 
    amount of processes/threads does not bring more efficiency, only
-   consume more sources (efficiency go down).
+   consumes more sources (efficiency go down).
  - NOTE: You can predicate systems crash based on the reaching 
    the limited the response time or based on out of memory error
    (or performance degradation based on disk swapping). 
