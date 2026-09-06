@@ -13,7 +13,7 @@ this sample chart.
 
 ### 1.1 Title
 
-The title contain specification of execution details, in this case:
+The title contains specification of execution details, in this case:
  - 4 wave, HASH, General, 30000 docs
  - 8 CPU, 8 GB RAM
  - Date time
