@@ -1,10 +1,25 @@
 # How you can read graphs
 
+This description aims to teach you how to read these types of graphs
+correctly, extract the maximum amount of information, and draw the 
+right conclusions based on them.
+
 ## 1. Theory
+
+Let's take a look at what each chart actually shows and focus on
+this sample chart.
 
 ![graph](https://github.com/george0st/qgate-graph/blob/main/assets/sample00.png?raw=true)
 
-### 1.1 The main graph (performance/througput per second)
+### 1.1 Title
+
+The title contain specification of execution details, in this case:
+ - 4 wave, HASH, General, 30000 docs
+ - 8 CPU, 8 GB RAM
+ - Date time
+ - others
+
+### 1.2 The main graph (performance/througput per second)
  - The graph with red label 1.
  - The axe Y, amount of calls per second
  - The axe X, amount of executors (= amount of processes * amount of threads)
@@ -18,7 +33,7 @@
  - You can see in graph performance/throughput for specific amount of 
    executors (multiplication of processes * threads)  
    
-### 1.2 The small graphs (response time in milliseconds)
+### 1.3 The small graphs (response time in milliseconds)
  - The graphs with red label 2., 3. and 4.
  - The axe Y, response time in milliseconds
  - The axe X, amount of executors for specific amount of process 
@@ -32,18 +47,17 @@ the throughput go down and the response time speedup growing.
 
 ## 2. Practical explanation
 
+Let's break down one sample chart.
+
 ![graph](https://github.com/george0st/qgate-graph/blob/main/assets/sample01.png?raw=true)
 
 You can see in the main graph the throughput per second for three different
 curves with one (green curve), two (purple curve) and three (red curve)
-processes.
+processes. The graph specify details such as HASH, General, 30000 docs and
+important information about HW configuration (8 CPU, 8 GB RAM).
 
-Is it important to mention, the graph title with specification of 
-execution details, in this case:
- - 4 wave, HASH, General, 30000 docs
- - 8 CPU, 8 GB RAM
-
-NOTE: In case of e.g. more cores, memory, etc. the outputs can be different.
+NOTE: In case of e.g. more cores, memory, etc. the outputs/graphs can be
+different.
 
 ### 2.1 About one process (green curve):
  - The throughput for one process 
@@ -57,7 +71,7 @@ NOTE: In case of e.g. more cores, memory, etc. the outputs can be different.
    - The testing code can reach for one process maximal throughput
      130.3 calls/sec for 4 threads
 
-### 2.2 About two process (purple curve):
+### 2.2 About two processes (purple curve):
  - The throughput for two process (2 processes with 1, 2, 3, 4, 8,
    16, 32 threads)
    - go linear up till 8 executors and max value is 230.28 calls/sec
@@ -75,7 +89,7 @@ NOTE: In case of e.g. more cores, memory, etc. the outputs can be different.
    - In case of performance compare between one and two processes, the
      throughput grow +76.6% (from value 130.4 calls/sec to 230.28 calls/sec)
 
-### 2.3 About three process (red curve):
+### 2.3 About three processes (red curve):
  - The throughput for three processes (3 processes with 1, 2, 3, 4, 8, 16,
    32 threads)
    - the curve seems very similar as for two processes and the maximal
@@ -97,4 +111,10 @@ NOTE: In case of e.g. more cores, memory, etc. the outputs can be different.
    consumes more sources (efficiency go down).
  - NOTE: You can predicate systems crash based on the reaching 
    the limited the response time or based on out of memory error
-   (or performance degradation based on disk swapping). 
+   (or performance degradation based on disk swapping).
+
+## 3. The conclusion
+
+I hope this description helped you understand these charts better 
+and faster. If you have any suggestions for improvement, please 
+contact me 'steuer(dot)j(at)seznam(dot)cz'
