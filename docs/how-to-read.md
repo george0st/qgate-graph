@@ -105,13 +105,13 @@ different.
      response time till value 440.5 ms for 96 executors
 
 ### 2.4 Final summary
- - It makes sense to scale the code till two processes (each with 
-   4 threads, it meas 8 executors as total). The higher values for 
+ - It makes sense to scale the code till two processes, each with 
+   4 threads (it means 8 executors as total). The higher values for 
    amount of processes/threads does not bring more efficiency, only
    consumes more sources (efficiency go down).
  - NOTE: You can predicate systems crash based on the reaching 
-   the limited the response time or based on out of memory error
-   (or performance degradation based on disk swapping).
+   the limited of response time (e.g. till 30 seconds) or based on
+   out of memory error (or performance degradation based on disk swapping).
 
 ## 3. The conclusion
 
