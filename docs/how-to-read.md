@@ -38,6 +38,12 @@ You can see in the main graph the throughput per second for three different
 curves with one (green curve), two (purple curve) and three (red curve)
 processes.
 
+Is it important to mention, the graph title with specification of 
+execution details, in this case:
+ - 4 wave, HASH, General, 30000 docs
+ - 8 CPU, 8 GB RAM
+NOTE: In case of e.g. more cores, memory, etc. the outputs can be different.
+
 ### 2.1 About one process (green curve):
  - The throughput for one process 
    - go linear up till 4 threads/executors and max value is 130.4 calls/second
