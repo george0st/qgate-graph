@@ -117,4 +117,4 @@ different.
 
 I hope this description helped you understand these charts better 
 and faster. If you have any suggestions for improvement, please 
-contact me 'steuer(dot)j(at)seznam(dot)cz'
+contact me 'steuer(dot)j(at)seznam(dot)cz'.
