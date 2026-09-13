@@ -19,11 +19,11 @@ The title contains specification of execution details, in this case:
  - Date time
  - others
 
-### 1.2 The main graph (performance/througput per second)
+### 1.2 The main graph (performance/throughput per second)
  - The graph with red label 1.
  - The axe Y, amount of calls per second
  - The axe X, amount of executors (= amount of processes * amount of threads)
- - Different curves specify amount of processes, typically
+ - Different curves specify amount of processes, in this graph
    - one process with e.g. 1, 2, 3, 4, 8, 16, 32 threads (executors 1, 2, 3, 4,
      8, 16, 32)
    - two processes, each with e.g. 1, 2, 3, 4, 8, 16, 32 threads (executors 2, 4, 6, 8, 16,
