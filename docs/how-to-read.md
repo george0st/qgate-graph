@@ -52,14 +52,14 @@ Let's break down one sample chart.
 ![graph](https://github.com/george0st/qgate-graph/blob/main/assets/sample01.png?raw=true)
 
 You can see in the main graph the throughput per second for three different
-curves with one (green curve), two (purple curve) and three (red curve)
+curves with one (azure curve), two (purple curve) and three (red curve)
 processes. The graph specify details such as HASH, General, 30000 docs and
 important information about HW configuration (8 CPU, 8 GB RAM).
 
 NOTE: In case of e.g. more cores, memory, etc. the outputs/graphs can be
 different.
 
-### 2.1 About one process (green curve):
+### 2.1 About one process (azure curve):
  - The throughput for one process 
    - go linear up till 4 threads/executors and max value is 130.4 calls/second
    - the growing is stopping in case of 4 threads/executors and the 
