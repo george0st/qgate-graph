@@ -17,7 +17,7 @@ The title contains specification of execution details, in this case:
  - 4 wave, HASH, General, 30000 docs
  - 8 CPU, 8 GB RAM
  - Date time
- - others
+ - other information
 
 ### 1.2 The main graph (performance/throughput per second)
  - The graph with red label 1.
@@ -99,13 +99,13 @@ different.
      96 executors have response time 440.5 ms and the performance
      is ~220 calls/sec
  - **The summary**
-   - The testing code in case to three processes does not improve
+   - The testing code in case of three processes does not improve
      performance, you can see system overloading, it means lower
      performance in case of more executors, together with growing 
      response time till value 440.5 ms for 96 executors
 
 ### 2.4 Final summary
- - It makes sense to scale the code till two processes, each with 
+ - It makes sense to scale this code till two processes, each with 
    4 threads (it means 8 executors as total). The higher values for 
    amount of processes/threads does not bring more efficiency, only
    consumes more sources (efficiency go down).
