@@ -105,7 +105,7 @@ different.
      response time till value 440.5 ms for 96 executors
 
 ### 2.4 Final summary
- - It makes sense to scale the code till two processes, each with 
+ - It makes sense to scale this code till two processes, each with 
    4 threads (it means 8 executors as total). The higher values for 
    amount of processes/threads does not bring more efficiency, only
    consumes more sources (efficiency go down).
